@@ -9,7 +9,9 @@ import { resolveAlignment } from "../src/server/audio/align.mjs";
 import {
   DEFAULT_VOICE_SETTINGS,
   loadAudioConfig,
+  readApiKey,
 } from "../src/server/audio/config.mjs";
+import { createStore } from "../src/server/store.mjs";
 import { synthesizeSpeech } from "../src/server/audio/elevenlabs.mjs";
 import {
   signAudioGrant,
@@ -96,6 +98,7 @@ describe("audio narration server", { concurrency: 1 }, () => {
   test("loadAudioConfig hides the API key and does not default max characters", async () => {
     await withEnv(
       {
+        DATABASE_PATH: join(tmpdir(), "hana-audio-missing", "no.sqlite"),
         ELEVENLABS_API_KEY: "super-secret-test-key-xyz",
         ELEVENLABS_VOICE_ID: "voice-1",
         ELEVENLABS_MAX_CHARACTERS: "",
@@ -117,6 +120,7 @@ describe("audio narration server", { concurrency: 1 }, () => {
     );
     await withEnv(
       {
+        DATABASE_PATH: join(tmpdir(), "hana-audio-missing", "no.sqlite"),
         ELEVENLABS_API_KEY: "",
         ELEVENLABS_MAX_CHARACTERS: "2500",
       },
@@ -758,5 +762,94 @@ describe("audio narration server", { concurrency: 1 }, () => {
     assert.equal(verifyAudioGrant("nope", { now: 1_000_000 }), false);
     assert.equal(verifyAudioGrant("v2.1.abc", { now: 1_000_000 }), false);
     assert.equal(verifyAudioGrant("v1.abc.def", { now: 1_000_000 }), false);
+  });
+
+  test("database audio settings win over env", async () => {
+    const dir = await mkdtemp(join(tmpdir(), "hana-audio-db-"));
+    const dbPath = join(dir, "learning.sqlite");
+    const key = Buffer.alloc(32, 9).toString("base64");
+    await withEnv(
+      {
+        DATABASE_PATH: dbPath,
+        SETTINGS_ENCRYPTION_KEY: key,
+        ELEVENLABS_API_KEY: "env-key-should-lose",
+        ELEVENLABS_VOICE_ID: "env-voice",
+        ELEVENLABS_MODEL_ID: "env-model",
+        ELEVENLABS_MAX_CHARACTERS: "99",
+      },
+      async () => {
+        const store = createStore(dbPath);
+        try {
+          store.registerParent({
+            name: "مديرة",
+            email: "audio-admin@example.test",
+            password: "valid-password-123",
+          });
+          const admin = store.promoteAdmin("audio-admin@example.test");
+          store.saveAdminSettings(admin.id, {
+            elevenlabs_voice_id: "db-voice",
+            elevenlabs_model_id: "db-model",
+            elevenlabs_max_characters: 2500,
+            elevenlabs_api_key: "db-key-should-win",
+          });
+        } finally {
+          store.close();
+        }
+        const config = await loadAudioConfig();
+        assert.equal(config.voiceId, "db-voice");
+        assert.equal(config.modelId, "db-model");
+        assert.equal(config.maxCharacters, 2500);
+        assert.equal(config.hasApiKey, true);
+        assert.equal("apiKey" in config, false);
+        assert.ok(!JSON.stringify(config).includes("db-key-should-win"));
+        assert.ok(!JSON.stringify(config).includes("env-key-should-lose"));
+        assert.equal(readApiKey(), "db-key-should-win");
+      },
+    );
+    await rm(dir, { recursive: true, force: true });
+  });
+
+  test("env is the fallback when the database has no audio settings", async () => {
+    const dir = await mkdtemp(join(tmpdir(), "hana-audio-env-"));
+    const dbPath = join(dir, "learning.sqlite");
+    createStore(dbPath).close();
+    await withEnv(
+      {
+        DATABASE_PATH: dbPath,
+        SETTINGS_ENCRYPTION_KEY: "",
+        ELEVENLABS_API_KEY: "env-only-key",
+        ELEVENLABS_VOICE_ID: "env-only-voice",
+        ELEVENLABS_MODEL_ID: "env-only-model",
+        ELEVENLABS_MAX_CHARACTERS: "4242",
+      },
+      async () => {
+        const config = await loadAudioConfig();
+        assert.equal(config.voiceId, "env-only-voice");
+        assert.equal(config.modelId, "env-only-model");
+        assert.equal(config.maxCharacters, 4242);
+        assert.equal(config.hasApiKey, true);
+        assert.equal(readApiKey(), "env-only-key");
+        assert.ok(!JSON.stringify(config).includes("env-only-key"));
+      },
+    );
+    await rm(dir, { recursive: true, force: true });
+  });
+
+  test("CLI plan still runs with an empty database", async () => {
+    const dir = await mkdtemp(join(tmpdir(), "hana-audio-empty-"));
+    const dbPath = join(dir, "learning.sqlite");
+    const libraryPath = join(dir, "audio");
+    createStore(dbPath).close();
+    const plan = await spawnAudio(["plan", "--page", "nutrients"], {
+      DATABASE_PATH: dbPath,
+      NARRATION_DIR: fixtureDir,
+      AUDIO_LIBRARY_PATH: libraryPath,
+      ELEVENLABS_VOICE_ID: "voice-test",
+      ELEVENLABS_MODEL_ID: "eleven_multilingual_v2",
+      ELEVENLABS_OUTPUT_FORMAT: "mp3_44100_128",
+    });
+    assert.equal(plan.code, 0, plan.stderr);
+    assert.match(plan.stdout, /needed_characters=\d+/);
+    await rm(dir, { recursive: true, force: true });
   });
 });
