@@ -6,19 +6,18 @@ import {
   ArrowLeft,
   ArrowRight,
   ArrowUpLeft,
-  BookOpen,
   FlaskConical,
   Brain,
   Check,
   Compass,
-  GraduationCap,
   Leaf,
-  Microscope,
   Sparkles,
   Users,
 } from "lucide-react";
 import { ScienceScene, PlateArt } from "./illustrations";
-import { lessonPath, sciencePath } from "@/content/curriculum";
+import { GradeCards } from "./grade-cards";
+import { lessonPath } from "@/content/curriculum";
+import { STAGES, type RegisteredLesson } from "@/content/catalog";
 const stories = [
   {
     eyebrow: "٠١ / نفهم الصورة الكبيرة",
@@ -42,7 +41,7 @@ const stories = [
     color: "red",
   },
 ];
-export function Home() {
+export function Home({ lessons }: { lessons: readonly RegisteredLesson[] }) {
   const [slide, setSlide] = useState(0);
   const story = stories[slide];
   return (
@@ -74,9 +73,9 @@ export function Home() {
               <br className="desktop-only" /> تصنع ثقةً كبيرة في التعلّم.
             </p>
             <div className="button-row">
-              <Link href={sciencePath} className="button primary">
-                استكشفي دروس العلوم <ArrowLeft size={19} />
-              </Link>
+              <a href="#grades" className="button primary">
+                اختاري مرحلتك <ArrowLeft size={19} />
+              </a>
               <a href="#how" className="text-link">
                 تعرّفي على التجربة <ArrowUpLeft size={18} />
               </a>
@@ -122,54 +121,32 @@ export function Home() {
             <h2>رحلتك تبدأ من صفّك.</h2>
           </div>
           <p>
-            نبدأ بالعلوم للصف الثامن،
+            ثلاث مراحل، واثنا عشر صفًا.
             <br />
-            ونفتح آفاقًا جديدة مع إضافة المحتوى.
+            نبدأ من المتوسطة ودرس العلوم المتاح.
           </p>
         </div>
-        <div className="grade-grid">
-          <Link href={sciencePath} className="grade-card grade-active">
-            <div className="grade-top">
-              <span className="pill green">
-                <span className="status-dot" /> متاح الآن
-              </span>
-              <ArrowUpLeft size={24} />
+        <div className="stage-catalog">
+          {STAGES.map((stage) => (
+            <div className="stage-block" key={stage.id}>
+              <div className="stage-block-head">
+                <div>
+                  <h3>
+                    <Link href={stage.href}>{stage.title}</Link>
+                  </h3>
+                  <p>{stage.description}</p>
+                </div>
+                <Link href={stage.href} className="text-link">
+                  اكتشفي المرحلة <ArrowUpLeft size={18} />
+                </Link>
+              </div>
+              <GradeCards
+                stage={stage}
+                lessons={lessons}
+                context="home"
+              />
             </div>
-            <span className="grade-number">٨</span>
-            <h3>الصف الثامن</h3>
-            <p>العلوم · الفصل الدراسي الأول</p>
-            <div className="grade-bottom">
-              <span>ابدئي الاكتشاف</span>
-              <ArrowLeft size={20} />
-            </div>
-            <AtomDoodle />
-          </Link>
-          <div className="grade-card grade-future">
-            <div className="grade-top">
-              <span className="pill muted">في رحلتنا القادمة</span>
-              <BookOpen size={23} />
-            </div>
-            <span className="grade-number">٥</span>
-            <h3>الصف الخامس</h3>
-            <p>مساحة جديدة للتعلّم، قريبًا.</p>
-            <div className="grade-bottom">
-              <span>المحتوى لم يُضف بعد</span>
-              <Compass size={19} />
-            </div>
-          </div>
-          <div className="grade-card grade-future yellow-card">
-            <div className="grade-top">
-              <span className="pill muted">في رحلتنا القادمة</span>
-              <GraduationCap size={25} />
-            </div>
-            <span className="grade-number">٢</span>
-            <h3>الصف الثاني</h3>
-            <p>اكتشافات صغيرة، لبدايات كبيرة.</p>
-            <div className="grade-bottom">
-              <span>المحتوى لم يُضف بعد</span>
-              <Sparkles size={19} />
-            </div>
-          </div>
+          ))}
         </div>
       </section>
       <section className="section lesson-feature-wrap">
@@ -284,12 +261,5 @@ export function Home() {
         </Link>
       </section>
     </>
-  );
-}
-function AtomDoodle() {
-  return (
-    <div className="grade-doodle" aria-hidden="true">
-      <Microscope size={94} strokeWidth={1.1} />
-    </div>
   );
 }

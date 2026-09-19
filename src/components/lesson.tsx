@@ -157,7 +157,11 @@ export function Lesson() {
           <div className="breadcrumbs">
             <Link href="/">الرئيسية</Link>
             <ChevronLeft size={14} />
-            <Link href={sciencePath}>علوم الصف الثامن</Link>
+            <Link href="/stage/intermediate">المرحلة المتوسطة</Link>
+            <ChevronLeft size={14} />
+            <Link href="/grade/8">الصف الثامن</Link>
+            <ChevronLeft size={14} />
+            <Link href={sciencePath}>العلوم</Link>
             <ChevronLeft size={14} />
             <span>المغذّيات</span>
           </div>

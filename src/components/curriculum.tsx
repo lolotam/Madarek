@@ -52,7 +52,9 @@ export function Curriculum({ published }: { published: boolean }) {
           <div className="breadcrumbs">
             <Link href="/">الرئيسية</Link>
             <ChevronLeft size={14} />
-            <span>الصف الثامن</span>
+            <Link href="/stage/intermediate">المرحلة المتوسطة</Link>
+            <ChevronLeft size={14} />
+            <Link href="/grade/8">الصف الثامن</Link>
             <ChevronLeft size={14} />
             <span>العلوم</span>
           </div>

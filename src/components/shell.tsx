@@ -28,6 +28,9 @@ export function Logo() {
 export function Header() {
   const path = usePathname(),
     { user } = useSession();
+  const scienceActive = path.startsWith(sciencePath);
+  const stagesActive =
+    path.startsWith("/stage") || /^\/grade\/\d+$/.test(path);
   const [open, setOpen] = useState(false);
   const menuButton = useRef<HTMLButtonElement>(null);
   const header = useRef<HTMLElement>(null);
@@ -83,8 +86,16 @@ export function Header() {
             </Link>
             <Link
               onClick={() => setOpen(false)}
-              className={path.startsWith("/grade") ? "active" : ""}
-              aria-current={path.startsWith("/grade") ? "location" : undefined}
+              className={stagesActive ? "active" : ""}
+              aria-current={stagesActive ? "location" : undefined}
+              href="/#grades"
+            >
+              المراحل الدراسية
+            </Link>
+            <Link
+              onClick={() => setOpen(false)}
+              className={scienceActive ? "active" : ""}
+              aria-current={scienceActive ? "location" : undefined}
               href={sciencePath}
             >
               استكشفي العلوم <FlaskConical size={16} />
@@ -123,6 +134,7 @@ export function Footer() {
         <Logo />
         <p>لكل سؤال، بداية اكتشاف.</p>
         <div>
+          <Link href="/#grades">المراحل الدراسية</Link>
           <Link href={sciencePath}>علوم الصف الثامن</Link>
           <span>الكويت · ٢٠٢٦–٢٠٢٧</span>
         </div>
