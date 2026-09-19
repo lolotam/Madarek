@@ -52,33 +52,17 @@ export function parseByteRange(rangeHeader, size) {
   return { type: "full" };
 }
 
-function audioHeaders(hash, isProtected, extra = {}) {
+function audioHeaders(hash, cache, extra = {}) {
   return {
     "Content-Type": "audio/mpeg",
     "Accept-Ranges": "bytes",
     ETag: `"${hash}"`,
-    "Cache-Control": cacheControl(isProtected),
+    "Cache-Control": cache,
     ...extra,
   };
 }
 
-export async function serveAudioClip(request, { segmentId, hash }) {
-  if (!SEGMENT_ID_RE.test(segmentId || "") || !HASH_RE.test(hash || "")) {
-    return jsonError(404, "غير موجود.");
-  }
-  const segment = await findSegmentById(segmentId);
-  if (!segment) return jsonError(404, "غير موجود.");
-  const metadata = await readMetadata(segment.page, segmentId, hash);
-  if (!metadata || metadata.review?.status !== "approved") {
-    return jsonError(404, "غير موجود.");
-  }
-  const isProtected = segment.protected === "answer";
-  const grant = new URL(request.url).searchParams.get("grant");
-  if (isProtected && !verifyAudioGrant(grant)) {
-    return jsonError(403, "غير مصرّح.");
-  }
-  const audio = await readAudio(segment.page, segmentId, hash);
-  if (!audio) return jsonError(404, "غير موجود.");
+function rangeResponse(request, audio, hash, cache) {
   const size = audio.length;
   const ifNoneMatch = request.headers.get("if-none-match");
   if (etagMatches(ifNoneMatch, hash)) {
@@ -87,7 +71,7 @@ export async function serveAudioClip(request, { segmentId, hash }) {
       headers: {
         ETag: `"${hash}"`,
         "Accept-Ranges": "bytes",
-        "Cache-Control": cacheControl(isProtected),
+        "Cache-Control": cache,
       },
     });
   }
@@ -98,7 +82,7 @@ export async function serveAudioClip(request, { segmentId, hash }) {
       headers: {
         "Content-Range": `bytes */${size}`,
         "Accept-Ranges": "bytes",
-        "Cache-Control": cacheControl(isProtected),
+        "Cache-Control": cache,
       },
     });
   }
@@ -106,7 +90,7 @@ export async function serveAudioClip(request, { segmentId, hash }) {
     const slice = audio.subarray(range.start, range.end + 1);
     return new Response(new Uint8Array(slice), {
       status: 206,
-      headers: audioHeaders(hash, isProtected, {
+      headers: audioHeaders(hash, cache, {
         "Content-Length": String(slice.length),
         "Content-Range": `bytes ${range.start}-${range.end}/${size}`,
       }),
@@ -114,8 +98,42 @@ export async function serveAudioClip(request, { segmentId, hash }) {
   }
   return new Response(new Uint8Array(audio), {
     status: 200,
-    headers: audioHeaders(hash, isProtected, {
+    headers: audioHeaders(hash, cache, {
       "Content-Length": String(size),
     }),
   });
+}
+
+async function resolveStoredClip(segmentId, hash) {
+  if (!SEGMENT_ID_RE.test(segmentId || "") || !HASH_RE.test(hash || "")) {
+    return { error: jsonError(404, "غير موجود.") };
+  }
+  const segment = await findSegmentById(segmentId);
+  if (!segment) return { error: jsonError(404, "غير موجود.") };
+  const metadata = await readMetadata(segment.page, segmentId, hash);
+  if (!metadata) return { error: jsonError(404, "غير موجود.") };
+  const audio = await readAudio(segment.page, segmentId, hash);
+  if (!audio) return { error: jsonError(404, "غير موجود.") };
+  return { segment, metadata, audio };
+}
+
+export async function serveAudioClip(request, { segmentId, hash }) {
+  const resolved = await resolveStoredClip(segmentId, hash);
+  if (resolved.error) return resolved.error;
+  const { segment, metadata, audio } = resolved;
+  if (metadata.review?.status !== "approved") {
+    return jsonError(404, "غير موجود.");
+  }
+  const isProtected = segment.protected === "answer";
+  const grant = new URL(request.url).searchParams.get("grant");
+  if (isProtected && !verifyAudioGrant(grant)) {
+    return jsonError(403, "غير مصرّح.");
+  }
+  return rangeResponse(request, audio, hash, cacheControl(isProtected));
+}
+
+export async function serveAdminAudioClip(request, { segmentId, hash }) {
+  const resolved = await resolveStoredClip(segmentId, hash);
+  if (resolved.error) return resolved.error;
+  return rangeResponse(request, resolved.audio, hash, "no-store");
 }

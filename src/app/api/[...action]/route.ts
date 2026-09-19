@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { store } from "@/server/db";
 import { publicQuestions, grade, modelReason } from "@/server/questions.mjs";
 import { signAudioGrant } from "@/server/audio/grant.mjs";
+import { readJsonBody } from "@/server/http.mjs";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 const cookieName = "hana_session";
@@ -33,23 +34,9 @@ export async function POST(
   { params }: { params: Promise<{ action: string[] }> },
 ) {
   try {
-    const origin = req.headers.get("origin");
-    // Next normalizes loopback hosts to localhost in nextUrl. The actual Host
-    // header preserves the browser origin; APP_ORIGIN pins it for deployment.
-    const expectedOrigin =
-      process.env.APP_ORIGIN ||
-      `${req.nextUrl.protocol}//${req.headers.get("host")}`;
-    if (origin && new URL(origin).origin !== new URL(expectedOrigin).origin) {
-      return response({ error: "طلب غير مسموح." }, 403);
-    }
-    if (!req.headers.get("content-type")?.includes("application/json"))
-      return response({ error: "صيغة غير صحيحة." }, 415);
-    const raw = await req.text();
-    if (raw.length > 16000)
-      return response({ error: "الطلب أكبر من المسموح." }, 413);
-    const body = JSON.parse(raw);
-    if (!body || typeof body !== "object" || Array.isArray(body))
-      return response({ error: "بيانات غير صحيحة." }, 400);
+    const parsed = await readJsonBody(req);
+    if (!parsed.ok) return response({ error: parsed.error }, parsed.status);
+    const body = parsed.body as any;
     const action = (await params).action.join("/");
     const token = req.cookies.get(cookieName)?.value;
     const user = store.sessionUser(token);

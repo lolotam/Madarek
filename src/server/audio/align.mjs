@@ -95,6 +95,40 @@ function resolveCue(text, characters, starts, ends, cue) {
 }
 
 /**
+ * Map a timed alignment cue back onto character offsets in the joined text.
+ * Used by the admin preview to mark the spoken span.
+ */
+export function cueTextRange(alignment, cue) {
+  if (!alignment || !cue) return null;
+  const characters = alignment.characters;
+  const starts = alignment.starts;
+  const ends = alignment.ends;
+  if (
+    !Array.isArray(characters) ||
+    !Array.isArray(starts) ||
+    !Array.isArray(ends) ||
+    characters.length !== starts.length ||
+    characters.length !== ends.length
+  ) {
+    return null;
+  }
+  let first = -1;
+  let last = -1;
+  for (let i = 0; i < starts.length; i++) {
+    if (starts[i] < cue.end && ends[i] > cue.start) {
+      if (first === -1) first = i;
+      last = i;
+    }
+  }
+  if (first === -1) return null;
+  let start = 0;
+  for (let i = 0; i < first; i++) start += String(characters[i]).length;
+  let end = start;
+  for (let i = first; i <= last; i++) end += String(characters[i]).length;
+  return { start, end };
+}
+
+/**
  * Map provider character alignment onto cue phrases. Throws on any mismatch;
  * never estimates timing.
  */
