@@ -9,8 +9,10 @@ import {
   Lightbulb,
   Check,
   LoaderCircle,
+  Headphones,
 } from "lucide-react";
 import { api, useSession } from "./providers";
+import { useAudio } from "./audio/audio-provider";
 import {
   quizFillTarget,
   quizOptionTarget,
@@ -33,6 +35,7 @@ export type Result = {
   preview?: boolean;
   review: string[];
   createdAt?: number;
+  audioGrant?: string;
   details: {
     id: string;
     prompt: string;
@@ -40,6 +43,7 @@ export type Result = {
     answer: string;
     correct: boolean;
     explanation: string;
+    concept: string;
   }[];
 };
 export function ResultDetails({ result }: { result: Result }) {
@@ -71,6 +75,8 @@ export function ResultDetails({ result }: { result: Result }) {
 }
 export function Quiz({ onComplete }: { onComplete?: () => void }) {
   const { user } = useSession();
+  const { registerReveal, notifyManualOverride, setAudioGrant, playResults } =
+    useAudio();
   const [questions, setQuestions] = useState<Question[]>([]),
     [index, setIndex] = useState(0),
     [answers, setAnswers] = useState<Record<string, string>>({}),
@@ -85,6 +91,15 @@ export function Quiz({ onComplete }: { onComplete?: () => void }) {
       .then((d) => setQuestions(d.questions))
       .catch((e) => setError(e.message));
   }, []);
+  useEffect(() => {
+    return registerReveal((reveal) => {
+      if (reveal.kind !== "quiz-question") return;
+      setIndex((current) => {
+        const next = questions.findIndex((q) => q.id === reveal.question);
+        return next >= 0 ? next : current;
+      });
+    });
+  }, [registerReveal, questions]);
   async function submit() {
     const unanswered = questions.filter((q) => !answers[q.id]?.trim()).length;
     if (unanswered && !confirm) {
@@ -97,6 +112,9 @@ export function Quiz({ onComplete }: { onComplete?: () => void }) {
     try {
       const nextResult = await api("quiz", { id: attemptId.current, answers });
       setResult(nextResult);
+      if (typeof nextResult.audioGrant === "string") {
+        setAudioGrant(nextResult.audioGrant);
+      }
       if (!nextResult.preview) onComplete?.();
       setTimeout(() => heading.current?.focus(), 40);
     } catch (e) {
@@ -144,6 +162,14 @@ export function Quiz({ onComplete }: { onComplete?: () => void }) {
           </div>
         )}
         <ResultDetails result={result} />
+        <button
+          type="button"
+          className="button outline"
+          onClick={() => playResults(result)}
+          aria-label="تشغيل شرح: النتيجة"
+        >
+          <Headphones size={18} /> اسمعي النتيجة
+        </button>
         <button
           className="button primary"
           onClick={() => {
@@ -250,6 +276,7 @@ export function Quiz({ onComplete }: { onComplete?: () => void }) {
           <button
             key={question.id}
             onClick={() => {
+              notifyManualOverride();
               setIndex(i);
               setConfirm(false);
             }}
@@ -278,7 +305,10 @@ export function Quiz({ onComplete }: { onComplete?: () => void }) {
       <div className="quiz-actions">
         <button
           className="button outline"
-          onClick={() => setIndex(index - 1)}
+          onClick={() => {
+            notifyManualOverride();
+            setIndex(index - 1);
+          }}
           disabled={index === 0 || busy}
         >
           <ArrowRight size={18} /> السابق
@@ -286,7 +316,10 @@ export function Quiz({ onComplete }: { onComplete?: () => void }) {
         {index < questions.length - 1 ? (
           <button
             className="button primary"
-            onClick={() => setIndex(index + 1)}
+            onClick={() => {
+              notifyManualOverride();
+              setIndex(index + 1);
+            }}
           >
             التالي <ArrowLeft size={18} />
           </button>

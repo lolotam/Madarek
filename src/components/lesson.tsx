@@ -23,6 +23,9 @@ import {
 import { Quiz } from "./quiz";
 import { PlateArt } from "./illustrations";
 import { api, useSession } from "./providers";
+import { AudioProvider } from "./audio/audio-provider";
+import { PlayerBar } from "./audio/player-bar";
+import { PartPlayButton } from "./audio/part-button";
 import { sciencePath } from "@/content/curriculum";
 import {
   fiberNoteTarget,
@@ -93,7 +96,7 @@ export function Lesson() {
     </div>
   );
   return (
-    <>
+    <AudioProvider page="nutrients">
       <section className="lesson-hero" data-audio-target={lessonHeroTarget.id}>
         <div className="container">
           <div className="breadcrumbs">
@@ -148,6 +151,7 @@ export function Lesson() {
         </div>
       </nav>
       <div className="container lesson-body">
+        <PlayerBar />
         <aside
           className="learning-goals"
           data-audio-target={learningGoalsTarget.id}
@@ -180,6 +184,7 @@ export function Lesson() {
             number="٠١"
             label="نفهم الصورة الكبيرة"
             title="جسمك فريق… والمغذّيات أعضاؤه."
+            part="map"
           />
           <p className="section-intro">
             المغذّيات مواد كيميائية توجد في الأطعمة، يحتاج إليها الجسم للنمو
@@ -197,6 +202,7 @@ export function Lesson() {
             number="٠٢"
             label="مختبرك الصغير"
             title="المعلومة تصبح حيّة حين تجرّبين."
+            part="explore"
           />
           <h3 className="activity-title">أ. ماذا يوجد في طعامك؟</h3>
           <p>اختاري طعامًا لتكتشفي بعض مغذّياته ووظائفها.</p>
@@ -225,6 +231,7 @@ export function Lesson() {
             number="٠٣"
             label="نجرّب دون ضغط"
             title="فكّري، أجيبي، وتعلّمي من المحاولة."
+            part="practice"
           />
           <Practice />
           {completeButton("practice")}
@@ -277,6 +284,7 @@ export function Lesson() {
             number="٠٤"
             label="حان وقت الاكتشاف"
             title="ماذا تعلّمتِ اليوم؟"
+            part="quiz"
           />
           <p className="section-intro">
             اختبار من اختيار متعدد وأكملي. لكل سؤال درجة، وستظهر التفسيرات بعد
@@ -310,17 +318,19 @@ export function Lesson() {
           ٢٠٢٦–٢٠٢٧، ص ٢٤–٢٨. الرسوم نماذج تعليمية مبسّطة.
         </p>
       </div>
-    </>
+    </AudioProvider>
   );
 }
 function SectionHeading({
   number,
   label,
   title,
+  part,
 }: {
   number: string;
   label: string;
   title: string;
+  part: "map" | "explore" | "practice" | "quiz";
 }) {
   return (
     <div className="lesson-section-heading">
@@ -329,6 +339,7 @@ function SectionHeading({
         <span className="eyebrow">{label}</span>
         <h2>{title}</h2>
       </div>
+      <PartPlayButton part={part} partName={label} />
     </div>
   );
 }

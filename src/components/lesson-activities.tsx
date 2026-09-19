@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import * as Tabs from "@radix-ui/react-tabs";
 import { motion, AnimatePresence } from "framer-motion";
@@ -30,10 +30,25 @@ import {
 } from "@/content/audio-targets";
 import { NutrientIcon } from "./nutrient-icon";
 import { api } from "./providers";
+import { useAudio } from "./audio/audio-provider";
 
 export function ConceptTree() {
   const [group, setGroup] = useState("major"),
     [selected, setSelected] = useState("carbs");
+  const { registerReveal, notifyManualOverride } = useAudio();
+  useEffect(() => {
+    return registerReveal((reveal) => {
+      if (reveal.kind === "concept-group") {
+        setGroup(reveal.group);
+        setSelected(reveal.group === "major" ? "carbs" : "vitamins");
+      } else if (reveal.kind === "concept-nutrient") {
+        const nutrient = nutrients.find((n) => n.id === reveal.nutrient);
+        if (!nutrient) return;
+        setGroup(nutrient.group);
+        setSelected(nutrient.id);
+      }
+    });
+  }, [registerReveal]);
   const nutrient = nutrients.find((n) => n.id === selected)!;
   return (
     <div className="concept-card">
@@ -47,6 +62,7 @@ export function ConceptTree() {
         dir="rtl"
         value={group}
         onValueChange={(value) => {
+          notifyManualOverride();
           setGroup(value);
           setSelected(value === "major" ? "carbs" : "vitamins");
         }}
@@ -74,7 +90,10 @@ export function ConceptTree() {
               .map((n) => (
                 <button
                   key={n.id}
-                  onClick={() => setSelected(n.id)}
+                  onClick={() => {
+                    notifyManualOverride();
+                    setSelected(n.id);
+                  }}
                   aria-pressed={selected === n.id}
                   data-audio-target={conceptNutrientTarget(n.id).id}
                   className={
@@ -127,6 +146,12 @@ export function ConceptTree() {
 
 export function FoodExplorer() {
   const [selected, setSelected] = useState("oats");
+  const { registerReveal, notifyManualOverride } = useAudio();
+  useEffect(() => {
+    return registerReveal((reveal) => {
+      if (reveal.kind === "food") setSelected(reveal.food);
+    });
+  }, [registerReveal]);
   const food = foods.find((f) => f.id === selected)!;
   return (
     <div className="food-lab">
@@ -137,7 +162,10 @@ export function FoodExplorer() {
               "food-option " + f.color + (selected === f.id ? " selected" : "")
             }
             key={f.id}
-            onClick={() => setSelected(f.id)}
+            onClick={() => {
+              notifyManualOverride();
+              setSelected(f.id);
+            }}
             aria-pressed={selected === f.id}
             data-audio-target={foodTarget(f.id).id}
           >
@@ -187,6 +215,15 @@ export function FoodExplorer() {
 export function EnergyLab() {
   const [mode, setMode] = useState<"energy" | "repair">("energy"),
     [step, setStep] = useState(0);
+  const { registerReveal, notifyManualOverride } = useAudio();
+  useEffect(() => {
+    return registerReveal((reveal) => {
+      if (reveal.kind === "lab") {
+        setMode(reveal.mode);
+        setStep(reveal.step);
+      }
+    });
+  }, [registerReveal]);
   const steps =
     mode === "energy"
       ? [
@@ -239,6 +276,7 @@ export function EnergyLab() {
             data-state={mode === value ? "active" : "inactive"}
             data-audio-target={labModeTarget(value).id}
             onClick={() => {
+              notifyManualOverride();
               setMode(value);
               setStep(0);
             }}
@@ -277,7 +315,10 @@ export function EnergyLab() {
       <div className="button-row">
         <button
           className="button primary"
-          onClick={() => setStep((step + 1) % 3)}
+          onClick={() => {
+            notifyManualOverride();
+            setStep((step + 1) % 3);
+          }}
         >
           {step === 2 ? <RotateCcw size={18} /> : <Play size={18} />}{" "}
           {step === 2 ? "أعيدي التجربة" : "الخطوة التالية"}
