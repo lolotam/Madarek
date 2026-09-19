@@ -1,44 +1,117 @@
 import type { ImageSlot } from "./image-slots";
 
-const LAYER_DIRECTION =
-  "One transparent-background PNG layer, 512x512, for a layered 2D avatar on an Arabic children's learning site. Friendly semi-realistic illustrated style, front-facing, head and shoulders, the same canvas, scale and alignment as the base template (avatar-base-2): face centred, chin at 62% height. Draw ONLY this layer so it stacks cleanly over the others. Palette accents #ffbe0b #fb5607 #ff006e #8338ec #3a86ff. No text, no logos, no background.";
+export const BASES = ["base-1", "base-2", "base-3"] as const;
+export const HAIRS = [
+  "hair-short",
+  "hair-curly",
+  "hair-long",
+  "hijab-violet",
+  "hijab-azure",
+  "hair-bun",
+  "hijab-stars",
+] as const;
+export const OUTFITS = [
+  "outfit-casual",
+  "outfit-lab-coat",
+  "outfit-doctor",
+  "outfit-explorer",
+  "outfit-astronaut",
+  "outfit-nutrition",
+] as const;
+export const BADGE_ACCESSORIES = [
+  "acc-glasses",
+  "acc-headphones",
+  "acc-backpack",
+  "acc-goggles",
+] as const;
 
-function layer(id: string, alt: string, subject: string, usage: string): ImageSlot {
-  return {
-    id,
-    path: `/images/avatar/${id}.png`,
-    width: 512,
-    height: 512,
-    alt,
-    prompt: `${LAYER_DIRECTION} Layer: ${subject}`,
-    usage,
-    ready: false,
-  };
+const ARABIC: Record<string, string> = {
+  "base-1": "بشرة فاتحة",
+  "base-2": "بشرة حنطية",
+  "base-3": "بشرة سمراء",
+  "hair-short": "شعر قصير",
+  "hair-curly": "شعر مجعّد",
+  "hair-long": "شعر طويل",
+  "hijab-violet": "حجاب بنفسجي",
+  "hijab-azure": "حجاب أزرق",
+  "hair-bun": "كعكة شعر",
+  "hijab-stars": "حجاب بنقشة نجوم",
+  "outfit-casual": "ملابس يومية",
+  "outfit-lab-coat": "معطف المختبر",
+  "outfit-doctor": "زيّ الطبيب",
+  "outfit-explorer": "زيّ المستكشف",
+  "outfit-astronaut": "بدلة رائد الفضاء",
+  "outfit-nutrition": "مريلة خبير التغذية",
+  "acc-glasses": "نظارة",
+  "acc-headphones": "سماعات",
+  "acc-backpack": "حقيبة ظهر",
+  "acc-goggles": "نظارة المختبر الواقية",
+};
+
+const ENGLISH: Record<string, string> = {
+  "base-1": "light skin",
+  "base-2": "medium wheat skin",
+  "base-3": "deep brown skin",
+  "hair-short": "short neat dark hair",
+  "hair-curly": "short curly dark hair",
+  "hair-long": "long straight dark hair",
+  "hijab-violet": "a neat violet hijab",
+  "hijab-azure": "a neat azure hijab",
+  "hair-bun": "dark hair in a tidy bun",
+  "hijab-stars": "a modest starred hijab",
+  "outfit-casual": "a casual azure crew-neck top",
+  "outfit-lab-coat": "a white lab coat",
+  "outfit-doctor": "light blue medical scrubs",
+  "outfit-explorer": "a khaki explorer vest",
+  "outfit-astronaut": "a white astronaut collar",
+  "outfit-nutrition": "a green nutrition apron",
+  "acc-glasses": "round violet reading glasses",
+  "acc-headphones": "amber over-ear headphones",
+  "acc-backpack": "an orange backpack",
+  "acc-goggles": "clear lab safety goggles",
+};
+
+function lookId(base: string, hair: string, outfit: string) {
+  return `look-${base}-${hair}-${outfit}`;
 }
 
-export const AVATAR_SLOTS: readonly ImageSlot[] = [
-  layer("base-1", "شخصية ببشرة فاتحة", "base head, neck and shoulders with light skin tone, neutral friendly smile, no hair, plain neckline.", "Avatar base layer"),
-  layer("base-2", "شخصية ببشرة حنطية", "base head, neck and shoulders with medium wheat skin tone, neutral friendly smile, no hair, plain neckline. This is the alignment template for every other layer.", "Avatar base layer (template)"),
-  layer("base-3", "شخصية ببشرة سمراء", "base head, neck and shoulders with deep brown skin tone, neutral friendly smile, no hair, plain neckline.", "Avatar base layer"),
-  layer("hair-short", "شعر قصير", "short neat dark hair only.", "Avatar hair layer"),
-  layer("hair-curly", "شعر مجعّد", "short curly dark hair only.", "Avatar hair layer"),
-  layer("hair-long", "شعر طويل", "long straight dark hair falling behind the shoulders only.", "Avatar hair layer"),
-  layer("hijab-violet", "حجاب بنفسجي", "a neat violet (#8338ec) hijab framing the face and covering the neck, modest and simple, no face drawn.", "Avatar hair layer (hijab)"),
-  layer("hijab-azure", "حجاب أزرق", "a neat azure (#3a86ff) hijab framing the face and covering the neck, modest and simple, no face drawn.", "Avatar hair layer (hijab)"),
-  layer("hair-bun", "كعكة شعر", "dark hair pulled into a tidy top bun only.", "Avatar hair layer (shop, 60 coins)"),
-  layer("hijab-stars", "حجاب بنقشة نجوم", "a modest hijab with a subtle small-star pattern in violet and amber, framing the face and covering the neck, no face drawn.", "Avatar hair layer (shop, 60 coins)"),
-  layer("outfit-casual", "ملابس يومية", "a plain casual crew-neck top in soft azure, shoulders only.", "Avatar outfit layer (default)"),
-  layer("outfit-lab-coat", "معطف المختبر", "a white lab coat with a small violet pen in the pocket over a plain top, shoulders only.", "Avatar outfit layer (shop, 120 coins)"),
-  layer("outfit-doctor", "زيّ الطبيب", "light blue medical scrubs with a stethoscope around the neck, shoulders only.", "Avatar outfit layer (shop, 150 coins)"),
-  layer("outfit-explorer", "زيّ المستكشف", "a khaki explorer vest with pockets over a plain top, shoulders only.", "Avatar outfit layer (shop, 150 coins)"),
-  layer("outfit-astronaut", "بدلة رائد الفضاء", "a white astronaut suit collar and shoulders with small azure and orange patches, no helmet, no flags.", "Avatar outfit layer (shop, 250 coins)"),
-  layer("outfit-nutrition", "مريلة خبير التغذية", "a green nutrition-expert apron with a small leaf badge over a plain top, shoulders only.", "Avatar outfit layer (earned: Nutrients mastery)"),
-  layer("acc-glasses", "نظارة", "round violet-framed reading glasses only, positioned on the eyes of the template.", "Avatar accessory layer (shop, 60 coins)"),
-  layer("acc-headphones", "سماعات", "over-ear headphones in amber resting on the head only.", "Avatar accessory layer (shop, 70 coins)"),
-  layer("acc-backpack", "حقيبة ظهر", "backpack straps over both shoulders with a small orange bag top visible behind one shoulder only.", "Avatar accessory layer (shop, 80 coins)"),
-  layer("acc-goggles", "نظارة المختبر الواقية", "clear lab safety goggles with an azure strap, positioned on the eyes of the template only.", "Avatar accessory layer (earned: level 3)"),
-];
+export const LOOK_SLOTS: readonly ImageSlot[] = BASES.flatMap((base) =>
+  HAIRS.flatMap((hair) =>
+    OUTFITS.map((outfit) => ({
+      id: lookId(base, hair, outfit),
+      path: `/images/avatar/looks/${lookId(base, hair, outfit)}.png`,
+      width: 448,
+      height: 448,
+      alt: `شخصية الطالب، ${ARABIC[base]} و${ARABIC[hair]} و${ARABIC[outfit]}`,
+      prompt: `Head-and-shoulders student portrait with ${ENGLISH[base]}, ${ENGLISH[hair]}, and ${ENGLISH[outfit]}, opaque 448x448 on flat #F2EAFF. No text.`,
+      usage: "Avatar portrait",
+      ready: true,
+    })),
+  ),
+);
 
-export function avatarSlot(itemId: string): ImageSlot | undefined {
-  return AVATAR_SLOTS.find((slot) => slot.id === itemId);
+export const BADGE_SLOTS: readonly ImageSlot[] = BADGE_ACCESSORIES.map((id) => ({
+  id,
+  path: `/images/avatar/badges/${id}.png`,
+  width: 192,
+  height: 192,
+  alt: ARABIC[id],
+  prompt: `Transparent 192x192 circular sticker of ${ENGLISH[id]}. No person, no text.`,
+  usage: "Avatar accessory badge",
+  ready: true,
+}));
+
+export const AVATAR_SLOTS: readonly ImageSlot[] = [...LOOK_SLOTS, ...BADGE_SLOTS];
+
+export function lookSlot(
+  base: string,
+  hair: string,
+  outfit: string,
+): ImageSlot | undefined {
+  const id = lookId(base, hair, outfit);
+  return LOOK_SLOTS.find((slot) => slot.id === id);
+}
+
+export function badgeSlot(accessoryId: string): ImageSlot | undefined {
+  return BADGE_SLOTS.find((slot) => slot.id === accessoryId);
 }

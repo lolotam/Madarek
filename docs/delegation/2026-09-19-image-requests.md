@@ -1,14 +1,16 @@
-# Task C image requests — pending Codex Desktop generation
+# Task C image requests — generated 2026-09-19
 
-Date: 2026-09-19. No images were generated, downloaded, or fabricated in this lane. Connecting an asset later means: drop the PNG at the output path and set `ready: true` on the matching record in `src/content/image-slots.ts`. The UI already renders through `src/components/ui/image-slot.tsx`.
+Date: 2026-09-19. All fourteen PNGs are on disk and the matching records in `src/content/image-slots.ts` are `ready: true`. The UI renders them through `src/components/ui/image-slot.tsx`.
 
-Do not edit original textbook files. Do not rasterize Arabic titles into the images. Do not relabel existing files in `public/images/` (`science-discovery.png`, `nutrients-plate.png`, `food-*.png`) as new Task C assets.
+They were generated with the AtlasCloud model `openai/gpt-image-2-developer/text-to-image`, quality low, **text-to-image only**. The textbook pages were **not** attached as image references; prompts described their content. Square images were resized to slot size. `life-header` was generated at 2560×1088 and cropped to 1600×400.
 
-Shared still-life / classroom-model direction for the six curriculum slots:
+Do not edit original textbook files. Do not rasterize Arabic titles into the images. Do not relabel existing files in `public/images/` (`science-discovery.png`, `nutrients-plate.png`, `food-*.png`) as Task C assets. Digestive-anatomy images should still be reviewed against the book by a teacher.
+
+Shared still-life / classroom-model direction for the six curriculum slots (used as prompt text, not as an attached reference):
 
 > Use the attached Kuwaiti grade-8 science textbook page as the factual visual reference. Create a realistic educational still-life or clean three-dimensional classroom anatomical model, age-appropriate, anatomically consistent with the reference, ivory studio background with restrained azure #3a86ff / violet #8338ec / amber #ffbe0b accents. No text, no labels, no watermark, no disturbing tissue detail. One clear central concept, legible at card scale.
 
-Orchestrator visual check on 2026-09-19 (starting references, not deliverables): `علوم-24.jpg`, `علوم-29.jpg`, `علوم-38.jpg`, `علوم-43.jpg`, `علوم-48.jpg` under `GRADE-8/FIRST-TERM/SCIENCE/علوم/` match printed pages 24 / 29 / 38 / 43 / 48. Page 43 includes salivary glands and the abdominal accessory organs.
+Orchestrator visual check on 2026-09-19 (starting references, not attached at generation): `علوم-24.jpg`, `علوم-29.jpg`, `علوم-38.jpg`, `علوم-43.jpg`, `علوم-48.jpg` under `GRADE-8/FIRST-TERM/SCIENCE/علوم/` match printed pages 24 / 29 / 38 / 43 / 48. Page 43 includes salivary glands and the abdominal accessory organs.
 
 ## Curriculum slots
 
@@ -37,7 +39,7 @@ Orchestrator visual check on 2026-09-19 (starting references, not deliverables):
 - Size: 800 × 800
 - Alt: نموذج صفي لجهاز هضمي كامل
 - Usage: science lesson card تركيب الجهاز الهضمي
-- Prompt: shared direction plus a full digestive-tract classroom model in the textbook arrangement. Educational model only, not a medical reference.
+- Prompt: shared direction plus a full digestive-tract classroom model in the textbook arrangement. Educational model only, not a medical reference. **Teacher review against the book is still required.**
 
 ### digestive-accessories
 
@@ -46,7 +48,7 @@ Orchestrator visual check on 2026-09-19 (starting references, not deliverables):
 - Size: 800 × 800
 - Alt: الغدد اللعابية والكبد والمرارة والبنكرياس في سياقها
 - Usage: science lesson card ملحقات الجهاز الهضمي
-- Prompt: shared direction plus salivary glands with liver, gallbladder and pancreas in the page-43 context. Do not reverse left/right relative to the figure.
+- Prompt: shared direction plus salivary glands with liver, gallbladder and pancreas in the page-43 context. Do not reverse left/right relative to the figure. **Teacher review against the book is still required.**
 
 ### digestion
 
@@ -55,20 +57,20 @@ Orchestrator visual check on 2026-09-19 (starting references, not deliverables):
 - Size: 800 × 800
 - Alt: مسار مبسّط للطعام عبر أعضاء الهضم
 - Usage: science lesson card عملية الهضم
-- Prompt: shared direction plus a food journey through simplified anatomically ordered organs matching the stomach-centered textbook figure.
+- Prompt: shared direction plus a food journey through simplified anatomically ordered organs matching the stomach-centered textbook figure. **Teacher review against the book is still required.**
 
 ### life-header
 
 - References: `GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-29.jpg`, `علوم-38.jpg`, `علوم-43.jpg`
 - Output: `public/images/curriculum/life-header.png`
-- Size: 1600 × 400 (4:1)
+- Size: 1600 × 400 (4:1), cropped from a 2560 × 1088 generation
 - Alt: تصوير عن الغذاء والجسم لوحدة علوم الحياة
 - Usage: left pane of the علوم الحياة unit header; live HTML title stays on the right
 - Prompt: shared direction plus landscape 4:1, rich imagery on LEFT 55% (foods beside a clean digestive model), RIGHT 45% quiet ivory negative space. No text inside the image. Display crop uses `object-position: left` so the rich side fills the left pane.
 
 ## Subject-card slots
 
-Square 768 × 768 still-lifes. No people, no text, no logos. The live العلوم card still uses the older `/images/science-discovery.png` until `science` is flipped to ready.
+Square 768 × 768 still-lifes. No people, no text, no logos. The live العلوم card now uses `science.png`; `/images/science-discovery.png` remains on the homepage only.
 
 | id | Output | Alt | Reference |
 | --- | --- | --- | --- |
@@ -78,7 +80,7 @@ Square 768 × 768 still-lifes. No people, no text, no logos. The live العلو
 | science | `public/images/subjects/science.png` | مجهر وقارورة ونبتة على طاولة علوم | `GRADE-8/FIRST-TERM/SCIENCE/علوم.pdf` and `GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-1.jpg` |
 | quran | `public/images/subjects/quran.png` | مصحف مغلق على حامل خشبي هادئ | `GRADE-8/FIRST-TERM/ISLAMIC/كتاب ثامن قرآن ٢٠٢٧.pdf` |
 | islamic | `public/images/subjects/islamic.png` | سبحة وكتاب مغلق على قماش هادئ | `GRADE-8/FIRST-TERM/ISLAMIC/كتاب ثامن إسلامية ٢٠٢٧.pdf` |
-| social-studies | `public/images/subjects/social-studies.png` | خريطة صامتة وبوصلة على مكتب دراسة | `GRADE-8/FIRST-TERM/SOCIAL STUDIES/ثامن_اجتماعيات_حل_الكتاب_للفصل_الاول_2025.pdf` (2025 solution booklet; no 2026–2027 student cover inspected) |
+| social-studies | `public/images/subjects/social-studies.png` | مجسم كرة أرضية وبوصلة على مكتب دراسة | `GRADE-8/FIRST-TERM/SOCIAL STUDIES/ثامن_اجتماعيات_حل_الكتاب_للفصل_الاول_2025.pdf` (2025 solution booklet; no 2026–2027 student cover inspected). First map prompt returned no image; regenerated as a small plain classroom desk globe with no printed names beside a brass compass and a closed notebook on a wooden desk. |
 | home-economics | `public/images/subjects/home-economics.png` | أدوات مطبخ بسيطة على منديل كتّان | `GRADE-8/FIRST-TERM/ECONMIC/الاقنصاد المنزلي.pdf` |
 
 Full English prompts, including the shared direction, live on each record in `src/content/image-slots.ts`.

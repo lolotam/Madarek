@@ -1,13 +1,12 @@
 import Image from "next/image";
-import { avatarSlot } from "@/content/avatar-slots";
+import { badgeSlot, lookSlot } from "@/content/avatar-slots";
 import { frameClass } from "@/content/shop";
 import type { AvatarConfig } from "@/components/shop/types";
 
-const PAINT_ORDER = ["base", "outfit", "hair", "accessory"] as const;
-
 /**
- * Layered avatar. Layers render only once their PNG is ready; until the base
- * layer exists the student's initial shows inside the chosen frame.
+ * Full-portrait avatar. The look PNG covers the circle; a ready accessory
+ * badge sits outside the clipped inner so the sticker is not cropped. Until
+ * the look file is ready the student's initial shows inside the chosen frame.
  */
 export function Avatar({
   config,
@@ -18,10 +17,9 @@ export function Avatar({
   name: string;
   size?: "sm" | "md" | "lg";
 }) {
-  const layers = PAINT_ORDER.map((layer) => avatarSlot(config[layer])).filter(
-    (slot): slot is NonNullable<typeof slot> => Boolean(slot?.ready),
-  );
-  const hasBase = layers.some((slot) => slot.id === config.base);
+  const look = lookSlot(config.base, config.hair, config.outfit);
+  const badge = badgeSlot(config.accessory);
+  const sizes = size === "lg" ? "220px" : size === "sm" ? "52px" : "104px";
   return (
     <span
       className={`avatar-figure avatar-${size} ${frameClass(config.frame)}`}
@@ -29,23 +27,30 @@ export function Avatar({
       aria-label={`شخصية ${name}`}
     >
       <span className="avatar-inner">
-        {hasBase ? (
-          layers.map((slot) => (
-            <Image
-              key={slot.id}
-              className="avatar-layer"
-              src={slot.path}
-              alt=""
-              width={slot.width}
-              height={slot.height}
-            />
-          ))
+        {look?.ready ? (
+          <Image
+            className="avatar-look"
+            src={look.path}
+            alt=""
+            fill
+            sizes={sizes}
+            style={{ objectFit: "cover" }}
+          />
         ) : (
           <span className="avatar-initial" aria-hidden="true">
             {name.slice(0, 1)}
           </span>
         )}
       </span>
+      {badge?.ready ? (
+        <Image
+          className="avatar-badge"
+          src={badge.path}
+          alt=""
+          width={badge.width}
+          height={badge.height}
+        />
+      ) : null}
     </span>
   );
 }

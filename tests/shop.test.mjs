@@ -1,5 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import {
   SHOP_ITEMS,
   AVATAR_LAYERS,
@@ -9,7 +11,21 @@ import {
   isOwned,
   validateAvatar,
 } from "../src/server/shop.mjs";
-import { AVATAR_SLOTS, avatarSlot } from "../src/content/avatar-slots.ts";
+import {
+  AVATAR_SLOTS,
+  BADGE_ACCESSORIES,
+  BADGE_SLOTS,
+  BASES,
+  HAIRS,
+  LOOK_SLOTS,
+  OUTFITS,
+  badgeSlot,
+  lookSlot,
+} from "../src/content/avatar-slots.ts";
+
+function publicFile(slotPath) {
+  return join(process.cwd(), "public", ...slotPath.replace(/^\//, "").split("/"));
+}
 
 const fresh = { level: 1, bestStreak: 0, masteredLessons: [] };
 const strong = { level: 3, bestStreak: 7, masteredLessons: ["nutrients"] };
@@ -64,17 +80,65 @@ test("an avatar is valid only when every layer is an owned item of that layer", 
   );
 });
 
-test("every drawable item has a pending 512px layer slot; frames and 'no accessory' have none", () => {
-  const drawable = SHOP_ITEMS.filter((i) => i.layer !== "frame" && i.id !== "acc-none")
-    .map((i) => i.id)
-    .sort();
-  assert.deepEqual(AVATAR_SLOTS.map((s) => s.id).sort(), drawable);
-  for (const slot of AVATAR_SLOTS) {
-    assert.equal(slot.ready, false, slot.id);
-    assert.equal(slot.path, `/images/avatar/${slot.id}.png`);
-    assert.deepEqual([slot.width, slot.height], [512, 512]);
-    assert.ok(slot.alt.length > 3 && slot.prompt.length > 80, slot.id);
+test("every look and badge slot is ready with a file on disk", () => {
+  assert.equal(BASES.length, 3);
+  assert.equal(HAIRS.length, 7);
+  assert.equal(OUTFITS.length, 6);
+  assert.equal(LOOK_SLOTS.length, 126);
+  assert.equal(BADGE_SLOTS.length, 4);
+  assert.equal(AVATAR_SLOTS.length, 130);
+  assert.deepEqual(
+    [...BADGE_SLOTS.map((slot) => slot.id)],
+    [...BADGE_ACCESSORIES],
+  );
+
+  const expectedLookIds = [];
+  for (const base of BASES) {
+    for (const hair of HAIRS) {
+      for (const outfit of OUTFITS) {
+        expectedLookIds.push(`look-${base}-${hair}-${outfit}`);
+      }
+    }
   }
-  assert.equal(avatarSlot("frame-violet"), undefined);
-  assert.equal(avatarSlot("outfit-lab-coat").id, "outfit-lab-coat");
+  assert.deepEqual(
+    LOOK_SLOTS.map((slot) => slot.id),
+    expectedLookIds,
+  );
+
+  for (const slot of LOOK_SLOTS) {
+    assert.equal(slot.ready, true, slot.id);
+    assert.equal(slot.path, `/images/avatar/looks/${slot.id}.png`);
+    assert.deepEqual([slot.width, slot.height], [448, 448]);
+    assert.equal(slot.usage, "Avatar portrait");
+    assert.ok(slot.alt.length > 3 && slot.prompt.length > 20, slot.id);
+  }
+  for (const slot of BADGE_SLOTS) {
+    assert.equal(slot.ready, true, slot.id);
+    assert.equal(slot.path, `/images/avatar/badges/${slot.id}.png`);
+    assert.deepEqual([slot.width, slot.height], [192, 192]);
+    assert.ok(slot.alt.length > 3 && slot.prompt.length > 20, slot.id);
+  }
+  assert.equal(
+    AVATAR_SLOTS.every((slot) => slot.ready === true),
+    true,
+  );
+
+  assert.equal(
+    lookSlot("base-2", "hair-short", "outfit-casual")?.id,
+    "look-base-2-hair-short-outfit-casual",
+  );
+  assert.equal(
+    lookSlot("base-2", "hair-short", "outfit-casual")?.path,
+    "/images/avatar/looks/look-base-2-hair-short-outfit-casual.png",
+  );
+  assert.equal(lookSlot("nope", "hair-short", "outfit-casual"), undefined);
+  assert.equal(badgeSlot("acc-glasses")?.id, "acc-glasses");
+  assert.equal(badgeSlot("acc-none"), undefined);
+  assert.equal(badgeSlot("frame-violet"), undefined);
+
+  if (!process.env.SKIP_IMAGE_FILES) {
+    for (const slot of AVATAR_SLOTS) {
+      assert.equal(existsSync(publicFile(slot.path)), true, slot.path);
+    }
+  }
 });

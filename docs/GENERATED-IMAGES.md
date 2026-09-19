@@ -18,11 +18,17 @@ Create a photorealistic editorial photograph for an Arabic middle-school science
 
 Create a photorealistic editorial photograph for an Arabic middle-school science learning website. Real physical textures, soft natural daylight, premium but approachable, crisp natural detail, no illustration, no 3D render, no text, labels, lettering, logos, watermark or people. Warm ivory setting, restrained props in amber gold #ffbe0b, orange #fb5607, pink #ff006e, violet #8338ec and azure #3a86ff; food and plants retain accurate natural colors. Square image, centered subject fully visible with 12% breathing room for responsive cropping. Scene: overhead food photograph of one large white ceramic plate containing distinct recognizable groups: brown rice, two hard-boiled egg halves with natural yellow yolks, cooked chickpeas, fresh lettuce, cucumber slices and cherry tomatoes. Around the plate a small glass of milk and a small glass cruet of olive oil. All items edible, natural portion sizes and accurate food textures, no suggestion of exact nutritional proportions, no labels or diagram. Ivory linen surface with a folded azure blue napkin at the edge, entire plate fully visible.
 
-## Task C (2026-09-19) — not generated here
+## Task C curriculum and subject cards (2026-09-19)
 
-The earlier entries in this file remain the 2026-09-19 photographic set. They were not regenerated, replaced, or re-attributed in Task C.
+The earlier entries in this file remain the 2026-09-19 photographic set (`science-discovery`, `nutrients-plate`, `food-*`). They were not regenerated, replaced, or re-attributed when the Task C slots were filled.
 
-Task C curriculum and subject-card images are **pending**. They are registered as `ready: false` slots in `src/content/image-slots.ts`, listed in `docs/delegation/2026-09-19-image-requests.md`. Placeholders render until each PNG is dropped at its path and `ready` is set to true. Do not treat icons or the files above as those textbook-derived assets.
+The fourteen curriculum and subject-card files under `public/images/curriculum/` and `public/images/subjects/` were generated on 2026-09-19 with the AtlasCloud model `openai/gpt-image-2-developer/text-to-image`, quality low, **text-to-image only**. Textbook pages were **not** attached as image references; prompts in `src/content/image-slots.ts` described their content, including `GRADE-8/` paths. All fourteen slots are `ready: true`.
+
+- Curriculum: `nutrients`, `balanced-diet`, `digestive-structure`, `digestive-accessories`, `digestion` (800×800), and `life-header`.
+- Subjects: `arabic`, `english`, `math`, `science`, `quran`, `islamic`, `social-studies`, `home-economics` (768×768).
+- `life-header` was generated at 2560×1088 and cropped to 1600×400. Square images were resized to their slot size.
+- The first `social-studies` prompt (untitled desk map) returned no image. It was regenerated with: a small plain classroom desk globe with no printed names beside a brass compass and a closed notebook on a wooden desk.
+- Anatomy still-lifes should still be reviewed against the textbook by a teacher. Do not treat the older files above as these textbook-described assets.
 
 
 ## food-oats

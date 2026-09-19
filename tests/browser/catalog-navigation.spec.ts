@@ -245,18 +245,17 @@ test("catalog intro stays readable at 390px and headings are not clipped", async
   await assertNoHorizontalOverflow(page, "/stage/intermediate 390");
 });
 
-test("science catalog uses pending image slots, 19 lessons, and a left header visual", async ({
+test("science catalog uses ready image slots, 19 lessons, and a left header visual", async ({
   page,
 }) => {
   await page.goto("/grade/8");
   await expect(page.locator(".subject-card")).toHaveCount(8);
-  await expect(page.locator(".subject-card-media img")).toHaveCount(1);
-  await expect(page.locator('.subject-card-media img')).toHaveAttribute(
-    "alt",
-    "مجهر وقارورة ماء ملوّن ونبتة صغيرة ودفتر على طاولة علوم",
-  );
-  await expect(page.locator(".subject-card .image-slot-placeholder")).toHaveCount(7);
-  await expect(page.locator('.subject-card img[src*="/images/subjects/"]')).toHaveCount(0);
+  await expect(page.locator(".subject-card-media img")).toHaveCount(8);
+  await expect(
+    page.locator(".subject-card", { hasText: "العلوم" }).locator("img"),
+  ).toHaveAttribute("alt", "مجهر وقارورة ونبتة على طاولة علوم");
+  await expect(page.locator(".subject-card .image-slot-placeholder")).toHaveCount(0);
+  await expect(page.locator(".subject-card .image-slot[data-ready='true']")).toHaveCount(8);
 
   await page.goto("/grade/8/science");
   await expect(page.locator(".lesson-card")).toHaveCount(19);
@@ -275,10 +274,10 @@ test("science catalog uses pending image slots, 19 lessons, and a left header vi
   ]) {
     const slot = page.locator(`[data-slot="${id}"]`);
     await expect(slot).toHaveCount(1);
-    await expect(slot).toHaveAttribute("data-ready", "false");
-    await expect(slot.locator("img")).toHaveCount(0);
+    await expect(slot).toHaveAttribute("data-ready", "true");
+    await expect(slot.locator("img")).toHaveCount(1);
   }
-  await expect(page.locator(".lesson-card .image-slot-placeholder")).toHaveCount(5);
+  await expect(page.locator(".lesson-card .image-slot-placeholder")).toHaveCount(0);
   await expect(page.locator(".lesson-card-visual")).toHaveCount(19);
 
   const headerCopy = page.locator("#life .life-unit-copy");

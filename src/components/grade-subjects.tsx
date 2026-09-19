@@ -73,7 +73,9 @@ export function GradeSubjects({
           const slot = subjectVisual(subject.id);
           const media = (
             <div className="subject-card-media">
-              {subject.image ? (
+              {slot?.ready ? (
+                <ImageSlot slot={slot} icon={Icon} sizes="96px" />
+              ) : subject.image ? (
                 <Image
                   src={subject.image}
                   alt={subject.imageAlt}

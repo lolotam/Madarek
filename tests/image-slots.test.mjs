@@ -1,5 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { GRADE_8_SUBJECTS } from "../src/content/catalog.ts";
 import {
   IMAGE_SLOTS,
@@ -8,6 +10,10 @@ import {
   subjectVisual,
   lifeHeaderVisual,
 } from "../src/content/image-slots.ts";
+
+function publicFile(slotPath) {
+  return join(process.cwd(), "public", ...slotPath.replace(/^\//, "").split("/"));
+}
 
 const CURRICULUM_IDS = [
   "nutrients",
@@ -18,7 +24,7 @@ const CURRICULUM_IDS = [
   "life-header",
 ];
 
-test("every Task C image is a pending slot with a local output path", () => {
+test("every Task C image is a ready slot with a file on disk", () => {
   const ids = IMAGE_SLOTS.map((slot) => slot.id);
   for (const id of CURRICULUM_IDS) {
     assert.equal(ids.includes(id), true, `missing curriculum slot ${id}`);
@@ -28,10 +34,13 @@ test("every Task C image is a pending slot with a local output path", () => {
   }
   assert.equal(IMAGE_SLOTS.length, CURRICULUM_IDS.length + GRADE_8_SUBJECTS.length);
   assert.equal(
-    IMAGE_SLOTS.every((slot) => slot.ready === false),
+    IMAGE_SLOTS.every((slot) => slot.ready === true),
     true,
-    "asset generation is pending; no slot may claim ready",
+    "every curriculum and subject slot is ready",
   );
+  for (const slot of IMAGE_SLOTS) {
+    assert.equal(existsSync(publicFile(slot.path)), true, slot.path);
+  }
 });
 
 test("slot records carry dimensions, Arabic alt, usage, and textbook-path prompts", () => {

@@ -20,7 +20,7 @@ import {
 import { api } from "../providers";
 import { Avatar } from "../avatar/avatar";
 import { ImageSlot } from "../ui/image-slot";
-import { AVATAR_SLOTS, avatarSlot } from "@/content/avatar-slots";
+import { AVATAR_SLOTS, badgeSlot, lookSlot } from "@/content/avatar-slots";
 import { LAYER_LABELS, LAYER_ORDER, frameClass, unlockHint } from "@/content/shop";
 import type { AvatarConfig, AvatarLayer, ShopItem, ShopState } from "./types";
 
@@ -33,16 +33,30 @@ const LAYER_ICON: Record<Exclude<AvatarLayer, "frame">, LucideIcon> = {
 const n = (value: number) => value.toLocaleString("ar-KW");
 const artPending = AVATAR_SLOTS.some((slot) => !slot.ready);
 
-function ItemPicture({ item }: { item: ShopItem }) {
+function noneSwatch() {
+  return (
+    <span className="frame-swatch none" aria-hidden="true">
+      <X size={28} />
+    </span>
+  );
+}
+
+function ItemPicture({ item, draft }: { item: ShopItem; draft: AvatarConfig }) {
   if (item.layer === "frame")
     return <span className={`frame-swatch ${frameClass(item.id)}`} aria-hidden="true" />;
-  const slot = avatarSlot(item.id);
-  if (!slot)
-    return (
-      <span className="frame-swatch none" aria-hidden="true">
-        <X size={28} />
-      </span>
-    );
+  if (item.layer === "accessory") {
+    if (item.id === "acc-none") return noneSwatch();
+    const badge = badgeSlot(item.id);
+    if (!badge) return noneSwatch();
+    return <ImageSlot slot={badge} icon={LAYER_ICON.accessory} sizes="160px" />;
+  }
+  const slot =
+    item.layer === "base"
+      ? lookSlot(item.id, draft.hair, draft.outfit)
+      : item.layer === "hair"
+        ? lookSlot(draft.base, item.id, draft.outfit)
+        : lookSlot(draft.base, draft.hair, item.id);
+  if (!slot) return noneSwatch();
   return <ImageSlot slot={slot} icon={LAYER_ICON[item.layer]} sizes="160px" />;
 }
 
@@ -162,7 +176,7 @@ export function Shop({ initial, name }: { initial: ShopState; name: string }) {
                           (!item.owned && item.unlock ? " locked" : "")
                         }
                       >
-                        <ItemPicture item={item} />
+                        <ItemPicture item={item} draft={draft} />
                         <b>{item.name}</b>
                         {item.owned ? (
                           <button

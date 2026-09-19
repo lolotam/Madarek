@@ -4641,6 +4641,9 @@ html[data-audio-dock] .lesson-section-heading {
 .avatar-figure {
   --frame: var(--violet);
   display: inline-grid;
+  grid-template: 1fr / 1fr;
+  position: relative;
+  overflow: visible;
   flex: none;
   padding: 4px;
   border-radius: 50%;
@@ -4651,19 +4654,28 @@ html[data-audio-dock] .lesson-section-heading {
 .avatar-md { width: 104px; }
 .avatar-lg { width: min(220px, 60vw); }
 .avatar-inner {
+  grid-area: 1 / 1;
   position: relative;
   display: grid;
   place-items: center;
   overflow: hidden;
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
   background: var(--violet-soft);
 }
-.avatar-layer {
+.avatar-look {
+  object-fit: cover;
+}
+.avatar-badge {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  left: 0;
+  bottom: 0;
+  z-index: 1;
+  width: 34%;
+  height: 34%;
   object-fit: contain;
+  pointer-events: none;
 }
 .avatar-initial {
   font-weight: 800;
