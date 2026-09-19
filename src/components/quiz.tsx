@@ -11,6 +11,14 @@ import {
   LoaderCircle,
 } from "lucide-react";
 import { api, useSession } from "./providers";
+import {
+  quizFillTarget,
+  quizOptionTarget,
+  quizQuestionTarget,
+  resultDetailTarget,
+  resultReviewTarget,
+  resultScoreTarget,
+} from "@/content/audio-targets";
 type Question = {
   id: string;
   kind: string;
@@ -38,7 +46,7 @@ export function ResultDetails({ result }: { result: Result }) {
   return (
     <div className="result-details">
       {result.details.map((d, i) => (
-        <details key={d.id}>
+        <details key={d.id} data-audio-target={resultDetailTarget(d.id).id}>
           <summary>
             <span className={d.correct ? "success-text" : "retry-text"}>
               {d.correct ? <CheckCircle2 size={19} /> : <Lightbulb size={19} />}
@@ -109,7 +117,7 @@ export function Quiz({ onComplete }: { onComplete?: () => void }) {
             ? "أحسنتِ، اكتشافات رائعة!"
             : "بداية جميلة، لنكمل الفهم!"}
         </h3>
-        <div className="result-score">
+        <div className="result-score" data-audio-target={resultScoreTarget.id}>
           {result.score.toLocaleString("ar-KW")}
           <small>٪</small>
         </div>
@@ -123,7 +131,7 @@ export function Quiz({ onComplete }: { onComplete?: () => void }) {
             : "حُفظت محاولتك ويمكن لولي أمرك متابعتها."}
         </p>
         {result.review.length > 0 && (
-          <div className="review-box">
+          <div className="review-box" data-audio-target={resultReviewTarget.id}>
             <b>نراجع معًا:</b>
             <div className="feature-tags">
               {result.review.map((r) => (
@@ -192,7 +200,7 @@ export function Quiz({ onComplete }: { onComplete?: () => void }) {
       >
         <span style={{ width: `${(answered / questions.length) * 100}%` }} />
       </div>
-      <fieldset>
+      <fieldset data-audio-target={quizQuestionTarget(q.id).id}>
         <legend>{q.prompt}</legend>
         {q.kind === "choice" ? (
           <div className="quiz-choices">
@@ -202,6 +210,7 @@ export function Quiz({ onComplete }: { onComplete?: () => void }) {
                   "quiz-choice " + (answers[q.id] === value ? "selected" : "")
                 }
                 key={value}
+                data-audio-target={quizOptionTarget(q.id, value).id}
               >
                 <input
                   type="radio"
@@ -225,6 +234,7 @@ export function Quiz({ onComplete }: { onComplete?: () => void }) {
             <input
               autoComplete="off"
               maxLength={100}
+              data-audio-target={quizFillTarget(q.id).id}
               value={answers[q.id] || ""}
               onChange={(e) => {
                 setAnswers({ ...answers, [q.id]: e.target.value });

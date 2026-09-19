@@ -24,6 +24,16 @@ import { Quiz } from "./quiz";
 import { PlateArt } from "./illustrations";
 import { api, useSession } from "./providers";
 import { sciencePath } from "@/content/curriculum";
+import {
+  fiberNoteTarget,
+  learningGoalsTarget,
+  lessonHeroTarget,
+  lessonSummaryTarget,
+  sectionExploreTarget,
+  sectionMapTarget,
+  sectionPracticeTarget,
+  sectionQuizTarget,
+} from "@/content/audio-targets";
 const steps = [
   { id: "map", name: "نفهم", icon: Network },
   { id: "explore", name: "نجرّب", icon: FlaskConical },
@@ -84,7 +94,7 @@ export function Lesson() {
   );
   return (
     <>
-      <section className="lesson-hero">
+      <section className="lesson-hero" data-audio-target={lessonHeroTarget.id}>
         <div className="container">
           <div className="breadcrumbs">
             <Link href="/">الرئيسية</Link>
@@ -138,7 +148,10 @@ export function Lesson() {
         </div>
       </nav>
       <div className="container lesson-body">
-        <aside className="learning-goals">
+        <aside
+          className="learning-goals"
+          data-audio-target={learningGoalsTarget.id}
+        >
           <span className="goal-icon">
             <Lightbulb size={26} />
           </span>
@@ -158,7 +171,11 @@ export function Lesson() {
             </button>
           </div>
         )}
-        <section id="map" className="lesson-section">
+        <section
+          id="map"
+          className="lesson-section"
+          data-audio-target={sectionMapTarget.id}
+        >
           <SectionHeading
             number="٠١"
             label="نفهم الصورة الكبيرة"
@@ -171,7 +188,11 @@ export function Lesson() {
           <ConceptTree />
           {completeButton("map")}
         </section>
-        <section id="explore" className="lesson-section">
+        <section
+          id="explore"
+          className="lesson-section"
+          data-audio-target={sectionExploreTarget.id}
+        >
           <SectionHeading
             number="٠٢"
             label="مختبرك الصغير"
@@ -183,7 +204,7 @@ export function Lesson() {
           <h3 className="activity-title">ب. من الطعام… إلى ما يفعله الجسم</h3>
           <p>تحكّمي في الخطوات وراقبي العلاقة بين المغذّي ووظيفته.</p>
           <EnergyLab />
-          <div className="fiber-note">
+          <div className="fiber-note" data-audio-target={fiberNoteTarget.id}>
             <Leaf size={29} />
             <div>
               <h3>ولا ننسى الألياف!</h3>
@@ -195,7 +216,11 @@ export function Lesson() {
           </div>
           {completeButton("explore")}
         </section>
-        <section id="practice" className="lesson-section">
+        <section
+          id="practice"
+          className="lesson-section"
+          data-audio-target={sectionPracticeTarget.id}
+        >
           <SectionHeading
             number="٠٣"
             label="نجرّب دون ضغط"
@@ -204,7 +229,10 @@ export function Lesson() {
           <Practice />
           {completeButton("practice")}
         </section>
-        <section className="lesson-summary">
+        <section
+          className="lesson-summary"
+          data-audio-target={lessonSummaryTarget.id}
+        >
           <div>
             <span className="eyebrow">خلاصة في دقيقة</span>
             <h2>
@@ -240,7 +268,11 @@ export function Lesson() {
             </li>
           </ul>
         </section>
-        <section id="quiz" className="lesson-section">
+        <section
+          id="quiz"
+          className="lesson-section"
+          data-audio-target={sectionQuizTarget.id}
+        >
           <SectionHeading
             number="٠٤"
             label="حان وقت الاكتشاف"

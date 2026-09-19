@@ -14,6 +14,20 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { nutrients, foods } from "@/content/nutrients";
+import {
+  conceptDetailTarget,
+  conceptGroupTarget,
+  conceptNutrientTarget,
+  conceptRootTarget,
+  foodDetailTarget,
+  foodTarget,
+  labCaptionTarget,
+  labModeTarget,
+  labStepTarget,
+  practiceChoiceTarget,
+  practiceReasonTarget,
+  type LabStep,
+} from "@/content/audio-targets";
 import { NutrientIcon } from "./nutrient-icon";
 import { api } from "./providers";
 
@@ -23,7 +37,7 @@ export function ConceptTree() {
   const nutrient = nutrients.find((n) => n.id === selected)!;
   return (
     <div className="concept-card">
-      <div className="tree-root">
+      <div className="tree-root" data-audio-target={conceptRootTarget.id}>
         <Sparkles size={23} />
         <strong>المغذّيات</strong>
         <span>للنمو والطاقة والصحة</span>
@@ -38,11 +52,17 @@ export function ConceptTree() {
         }}
       >
         <Tabs.List className="tree-branches" aria-label="تصنيف المغذيات">
-          <Tabs.Trigger value="major">
+          <Tabs.Trigger
+            value="major"
+            data-audio-target={conceptGroupTarget("major").id}
+          >
             <b>المغذّيات الكبرى</b>
             <span>نحتاجها بكميات كبيرة</span>
           </Tabs.Trigger>
-          <Tabs.Trigger value="minor">
+          <Tabs.Trigger
+            value="minor"
+            data-audio-target={conceptGroupTarget("minor").id}
+          >
             <b>المغذّيات الصغرى</b>
             <span>نحتاجها بكميات قليلة</span>
           </Tabs.Trigger>
@@ -56,6 +76,7 @@ export function ConceptTree() {
                   key={n.id}
                   onClick={() => setSelected(n.id)}
                   aria-pressed={selected === n.id}
+                  data-audio-target={conceptNutrientTarget(n.id).id}
                   className={
                     "nutrient-node " +
                     n.color +
@@ -76,6 +97,7 @@ export function ConceptTree() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0 }}
           className={"nutrient-detail " + nutrient.color}
+          data-audio-target={conceptDetailTarget(selected).id}
           aria-live="polite"
         >
           <div className="detail-icon">
@@ -117,6 +139,7 @@ export function FoodExplorer() {
             key={f.id}
             onClick={() => setSelected(f.id)}
             aria-pressed={selected === f.id}
+            data-audio-target={foodTarget(f.id).id}
           >
             <Image
               src={f.image}
@@ -129,7 +152,10 @@ export function FoodExplorer() {
           </button>
         ))}
       </div>
-      <div className={"food-reveal " + food.color}>
+      <div
+        className={"food-reveal " + food.color}
+        data-audio-target={foodDetailTarget(selected).id}
+      >
         <motion.div
           key={selected}
           initial={{ scale: 0.85, opacity: 0 }}
@@ -211,6 +237,7 @@ export function EnergyLab() {
             type="button"
             aria-pressed={mode === value}
             data-state={mode === value ? "active" : "inactive"}
+            data-audio-target={labModeTarget(value).id}
             onClick={() => {
               setMode(value);
               setStep(0);
@@ -225,6 +252,7 @@ export function EnergyLab() {
           <div
             key={s.name}
             className={"energy-step " + (i <= step ? "lit" : "")}
+            data-audio-target={labStepTarget(mode, i as LabStep).id}
           >
             <motion.div
               animate={{
@@ -239,7 +267,11 @@ export function EnergyLab() {
           </div>
         ))}
       </div>
-      <p className="experiment-caption" aria-live="polite">
+      <p
+        className="experiment-caption"
+        aria-live="polite"
+        data-audio-target={labCaptionTarget.id}
+      >
         {steps[step].text}
       </p>
       <div className="button-row">
@@ -276,7 +308,10 @@ export function Practice() {
   }
   return (
     <div className="practice-grid">
-      <div className="practice-card">
+      <div
+        className="practice-card"
+        data-audio-target={practiceChoiceTarget.id}
+      >
         <span className="pill blue">اختاري · تدريب</span>
         <h3>يحتاج الجسم إلى الفيتامينات بكميات…</h3>
         <div className="practice-choices">
@@ -312,7 +347,10 @@ export function Practice() {
           تذكّري: القليل في الكمية قد يكون كبيرًا في الأهمية.
         </p>
       </div>
-      <div className="practice-card">
+      <div
+        className="practice-card"
+        data-audio-target={practiceReasonTarget.id}
+      >
         <span className="pill yellow">علّلي · نفكّر معًا</span>
         <h3>لماذا تُنصح المصابة بجرح بتناول البروتينات ضمن غذائها؟</h3>
         <label className="field">
