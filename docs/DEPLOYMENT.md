@@ -105,7 +105,7 @@ Back up the `madarek-data` volume: both the database and the approved audio. Los
 
 ## Updating
 
-Push to `main` and redeploy, or enable **Autodeploy** in Dokploy. The volume keeps accounts, progress and audio across deploys. Schema changes migrate in place on startup.
+Push to `main`. With **Autodeploy** on, GitHub notifies Dokploy and it deploys the new commit. To deploy by hand, use **Deploy**, not **Redeploy**: Redeploy rebuilds the code Dokploy already has checked out and does not pull new commits. The volume keeps accounts, progress and audio across deploys. Schema changes migrate in place on startup.
 
 ## Before opening sign-up to the public
 
