@@ -29,6 +29,15 @@ import {
   secretLast4,
 } from "./settings.mjs";
 import { parseYouTubeId, parseDuration, VIDEO_KINDS } from "./videos.mjs";
+import {
+  AVATAR_LAYERS,
+  SHOP_ITEMS,
+  DEFAULT_AVATAR,
+  shopItem,
+  isUnlocked,
+  isOwned,
+  validateAvatar,
+} from "./shop.mjs";
 
 export function fail(message, status = 400) {
   const error = new Error(message);
@@ -121,6 +130,8 @@ export function createStore(filename, { now = Date.now } = {}) {
     CREATE TABLE IF NOT EXISTS reward_ledger(id TEXT PRIMARY KEY,user_id TEXT NOT NULL REFERENCES users(id),source TEXT NOT NULL,source_key TEXT NOT NULL,xp INTEGER NOT NULL,coins INTEGER NOT NULL,created_at INTEGER NOT NULL,UNIQUE(user_id,source,source_key));
     CREATE TABLE IF NOT EXISTS activity_days(user_id TEXT NOT NULL REFERENCES users(id),day TEXT NOT NULL,PRIMARY KEY(user_id,day));
     CREATE TABLE IF NOT EXISTS streaks(user_id TEXT PRIMARY KEY REFERENCES users(id),current INTEGER NOT NULL,best INTEGER NOT NULL,last_day TEXT,freezes INTEGER NOT NULL);
+    CREATE TABLE IF NOT EXISTS purchases(user_id TEXT NOT NULL REFERENCES users(id),item_id TEXT NOT NULL,price INTEGER NOT NULL,created_at INTEGER NOT NULL,PRIMARY KEY(user_id,item_id));
+    CREATE TABLE IF NOT EXISTS avatars(user_id TEXT PRIMARY KEY REFERENCES users(id),config TEXT NOT NULL,updated_at INTEGER NOT NULL);
     INSERT OR IGNORE INTO settings(key,value) VALUES('published','true');`);
   const userColumns = new Set(
     db
@@ -298,12 +309,65 @@ export function createStore(filename, { now = Date.now } = {}) {
       );
     return granted.filter(Boolean);
   }
+  function purchasedIds(userId) {
+    return new Set(
+      db
+        .prepare("SELECT item_id FROM purchases WHERE user_id=?")
+        .all(userId)
+        .map((r) => r.item_id),
+    );
+  }
+  function coinsSpent(userId) {
+    return db
+      .prepare("SELECT COALESCE(SUM(price),0) AS n FROM purchases WHERE user_id=?")
+      .get(userId).n;
+  }
+  function coinsEarned(userId) {
+    return db
+      .prepare("SELECT COALESCE(SUM(coins),0) AS n FROM reward_ledger WHERE user_id=?")
+      .get(userId).n;
+  }
+  /** What unlock rules look at: level from XP, best streak, fully mastered lessons. */
+  function shopProgress(user) {
+    const xp = db
+      .prepare("SELECT COALESCE(SUM(xp),0) AS n FROM reward_ledger WHERE user_id=?")
+      .get(user.id).n;
+    const streak = db.prepare("SELECT best FROM streaks WHERE user_id=?").get(user.id);
+    const mastery = conceptMastery(quizConcepts(), childAttempts(user.id));
+    return {
+      level: levelFor(xp, user.gender).level,
+      bestStreak: streak?.best ?? 0,
+      masteredLessons:
+        mastery.length && mastery.every((m) => m.status === "secure") ? [LESSON_ID] : [],
+    };
+  }
+  /** The saved avatar with any no-longer-owned layer reset to its default. */
+  function avatarFor(user, purchased = purchasedIds(user.id), progress = shopProgress(user)) {
+    const row = db.prepare("SELECT config FROM avatars WHERE user_id=?").get(user.id);
+    let saved = {};
+    try {
+      saved = row ? JSON.parse(row.config) : {};
+    } catch {
+      saved = {};
+    }
+    const out = {};
+    for (const layer of AVATAR_LAYERS) {
+      const item = shopItem(saved?.[layer]);
+      out[layer] =
+        item && item.layer === layer && isOwned(item, purchased, progress)
+          ? item.id
+          : DEFAULT_AVATAR[layer];
+    }
+    return out;
+  }
   function rewardSummary(user) {
     const totals = db
       .prepare(
         "SELECT COALESCE(SUM(xp),0) AS xp,COALESCE(SUM(coins),0) AS coins FROM reward_ledger WHERE user_id=?",
       )
       .get(user.id);
+    const earned = totals.coins;
+    const spent = coinsSpent(user.id);
     const streak = db
       .prepare("SELECT * FROM streaks WHERE user_id=?")
       .get(user.id);
@@ -313,7 +377,9 @@ export function createStore(filename, { now = Date.now } = {}) {
       gap !== null && (gap <= 1 || (gap === 2 && streak.freezes > 0));
     return {
       xp: totals.xp,
-      coins: totals.coins,
+      coins: earned - spent,
+      coinsEarned: earned,
+      coinsSpent: spent,
       ...levelFor(totals.xp, user.gender),
       streak: {
         current: alive ? streak.current : 0,
@@ -366,6 +432,7 @@ export function createStore(filename, { now = Date.now } = {}) {
         .map((row) => ({ ...row })),
       rewards: rewardSummary(user),
       mastery: conceptMastery(quizConcepts(), attempts),
+      avatar: avatarFor(user),
     };
   }
   const LESSON_KEY = /^[a-z][a-z0-9-]{1,59}$/;
@@ -642,6 +709,59 @@ export function createStore(filename, { now = Date.now } = {}) {
       ].filter(Boolean);
       return { mode: "model_answer", feedback: modelReason, rewards };
     },
+    shop(userId) {
+      requireRole(userId, ["student"]);
+      const user = raw(userId);
+      const purchased = purchasedIds(userId);
+      const progress = shopProgress(user);
+      return {
+        balance: coinsEarned(userId) - coinsSpent(userId),
+        avatar: avatarFor(user, purchased, progress),
+        items: SHOP_ITEMS.map((item) => ({
+          ...item,
+          owned: isOwned(item, purchased, progress),
+          unlocked: isUnlocked(item, progress),
+        })),
+      };
+    },
+    buyItem(userId, itemId) {
+      requireRole(userId, ["student"]);
+      const item = shopItem(itemId);
+      if (!item || item.price <= 0) fail("هذا العنصر غير متاح للشراء.");
+      db.exec("BEGIN IMMEDIATE");
+      try {
+        if (
+          db
+            .prepare("SELECT 1 FROM purchases WHERE user_id=? AND item_id=?")
+            .get(userId, item.id)
+        )
+          fail("تملكين هذا العنصر بالفعل.", 409);
+        if (coinsEarned(userId) - coinsSpent(userId) < item.price)
+          fail("عملاتك لا تكفي لهذا العنصر بعد. أكملي مهام التعلّم لتجمعي المزيد.");
+        db.prepare(
+          "INSERT INTO purchases(user_id,item_id,price,created_at) VALUES(?,?,?,?)",
+        ).run(userId, item.id, item.price, now());
+        db.exec("COMMIT");
+      } catch (e) {
+        try {
+          db.exec("ROLLBACK");
+        } catch {
+          /* transaction already closed */
+        }
+        throw e;
+      }
+      return api.shop(userId);
+    },
+    saveAvatar(userId, config) {
+      requireRole(userId, ["student"]);
+      const user = raw(userId);
+      const avatar = validateAvatar(config, purchasedIds(userId), shopProgress(user));
+      if (!avatar) fail("اختاري عناصر تملكينها فقط.");
+      db.prepare(
+        "INSERT INTO avatars(user_id,config,updated_at) VALUES(?,?,?) ON CONFLICT(user_id) DO UPDATE SET config=excluded.config,updated_at=excluded.updated_at",
+      ).run(userId, JSON.stringify(avatar), now());
+      return { avatar };
+    },
     snapshot(userId) {
       const user = raw(userId);
       if (!user) fail("يلزم تسجيل الدخول.", 401);
@@ -910,7 +1030,7 @@ export function createStore(filename, { now = Date.now } = {}) {
         db.prepare(
           `DELETE FROM practice WHERE user_id IN (${placeholders})`,
         ).run(...ids);
-        for (const table of ["reward_ledger", "activity_days", "streaks"])
+        for (const table of ["reward_ledger", "activity_days", "streaks", "purchases", "avatars"])
           db.prepare(
             `DELETE FROM ${table} WHERE user_id IN (${placeholders})`,
           ).run(...ids);

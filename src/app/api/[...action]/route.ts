@@ -34,6 +34,10 @@ export async function GET(
       if (!user) return response({ error: "يلزم تسجيل الدخول." }, 401);
       return response(store.snapshot(user.id));
     }
+    if (action === "shop") {
+      if (!user) return response({ error: "يلزم تسجيل الدخول." }, 401);
+      return response(store.shop(user.id));
+    }
     if (action.startsWith("admin/")) {
       if (!user) return response({ error: "يلزم تسجيل الدخول." }, 401);
       const q = req.nextUrl.searchParams.get("q") || "";
@@ -126,6 +130,10 @@ export async function POST(
       );
     }
     if (!user) return response({ error: "يلزم تسجيل الدخول." }, 401);
+    if (action === "shop/buy")
+      return response(store.buyItem(user.id, body.itemId));
+    if (action === "avatar")
+      return response(store.saveAvatar(user.id, body.avatar));
     if (action === "children")
       return response(store.createChild(user.id, body));
     if (action === "children/reset")
