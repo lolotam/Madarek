@@ -10,12 +10,14 @@ export function ModalDialog({
   title,
   description,
   children,
+  className,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   title: string;
   description?: string;
   children: ReactNode;
+  className?: string;
 }) {
   const reduceMotion = useReducedMotion();
   const y = reduceMotion ? 0 : 8;
@@ -24,40 +26,44 @@ export function ModalDialog({
       <AnimatePresence>
         {open ? (
           <DialogPrimitive.Portal forceMount>
-            <DialogPrimitive.Overlay asChild>
-              <motion.div
-                className="admin-dialog-overlay"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              />
-            </DialogPrimitive.Overlay>
-            <DialogPrimitive.Content asChild>
-              <motion.div
-                className="admin-dialog"
-                initial={{ opacity: 0, y }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y }}
-                transition={{ duration: 0.22 }}
-              >
-                <DialogPrimitive.Title className="admin-dialog-title">
-                  {title}
-                </DialogPrimitive.Title>
-                <DialogPrimitive.Description
-                  className={description ? "admin-dialog-copy" : "sr-only"}
+            <div className="admin-dialog-layer">
+              <DialogPrimitive.Overlay asChild>
+                <motion.div
+                  className="admin-dialog-overlay"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                />
+              </DialogPrimitive.Overlay>
+              <DialogPrimitive.Content asChild>
+                <motion.div
+                  className={
+                    "admin-dialog" + (className ? " " + className : "")
+                  }
+                  initial={{ opacity: 0, y }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y }}
+                  transition={{ duration: 0.22 }}
                 >
-                  {description || title}
-                </DialogPrimitive.Description>
-                {children}
-                <DialogPrimitive.Close
-                  className="icon-button admin-dialog-close"
-                  aria-label="إغلاق"
-                >
-                  <X size={18} />
-                </DialogPrimitive.Close>
-              </motion.div>
-            </DialogPrimitive.Content>
+                  <DialogPrimitive.Title className="admin-dialog-title">
+                    {title}
+                  </DialogPrimitive.Title>
+                  <DialogPrimitive.Description
+                    className={description ? "admin-dialog-copy" : "sr-only"}
+                  >
+                    {description || title}
+                  </DialogPrimitive.Description>
+                  {children}
+                  <DialogPrimitive.Close
+                    className="icon-button admin-dialog-close"
+                    aria-label="إغلاق"
+                  >
+                    <X size={18} />
+                  </DialogPrimitive.Close>
+                </motion.div>
+              </DialogPrimitive.Content>
+            </div>
           </DialogPrimitive.Portal>
         ) : null}
       </AnimatePresence>

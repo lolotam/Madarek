@@ -16,13 +16,24 @@ import {
   KeyRound,
 } from "lucide-react";
 import { api, useSession, User } from "./providers";
+import { VideoCarousel } from "./video-carousel";
 import { Result, ResultDetails } from "./quiz";
 import { lessonPath } from "@/content/curriculum";
+import {
+  DailyMission,
+  MasteryList,
+  RewardLog,
+  RewardsHero,
+} from "./rewards/student-rewards";
+import { ChildInsights } from "./rewards/child-insights";
+import type { Mastery, RewardSummary } from "./rewards/types";
 type ChildData = {
   user: User;
   progress: { sections: string[] };
   attempts: Result[];
   practice: { answer: string; feedback: string; createdAt: number }[];
+  rewards: RewardSummary;
+  mastery: Mastery;
 };
 type Snapshot = {
   user: User;
@@ -74,6 +85,10 @@ export function Dashboard({ initial }: { initial: Snapshot }) {
   }
   const children = data.children || [];
   const student = data as ChildData;
+  const nextSection =
+    ["map", "explore", "practice", "quiz"].find(
+      (s) => !student.progress?.sections.includes(s),
+    ) || "quiz";
   return (
     <section className="container dashboard section">
       <div className="dashboard-heading">
@@ -231,10 +246,13 @@ export function Dashboard({ initial }: { initial: Snapshot }) {
           {children.map((c) => (
             <ChildPanel key={c.user.id} child={c} />
           ))}
+          <VideoCarousel lessonId="platform" title="دليل استخدام مدارك" />
         </>
       )}
       {user.role === "student" && (
         <>
+          <RewardsHero rewards={student.rewards} />
+          <DailyMission rewards={student.rewards} nextSection={nextSection} />
           <div className="dashboard-stats">
             <Stat
               icon={CheckCircle2}
@@ -266,13 +284,7 @@ export function Dashboard({ initial }: { initial: Snapshot }) {
               <p>الطعام أكثر من طعم لذيذ… لنكتشف ما يفعله في جسمك.</p>
             </div>
             <Link
-              href={
-                lessonPath +
-                "#" +
-                (["map", "explore", "practice", "quiz"].find(
-                  (s) => !student.progress.sections.includes(s),
-                ) || "quiz")
-              }
+              href={lessonPath + "#" + nextSection}
               className="button primary"
             >
               {student.progress.sections.length
@@ -281,7 +293,13 @@ export function Dashboard({ initial }: { initial: Snapshot }) {
               <ArrowLeft size={18} />
             </Link>
           </div>
+          <MasteryList
+            mastery={student.mastery}
+            heading="ماذا أتقنتِ في المغذّيات؟"
+          />
+          <RewardLog entries={student.rewards.recent} />
           <History attempts={student.attempts} />
+          <VideoCarousel lessonId="platform" title="كيف تستخدمين مدارك؟" />
         </>
       )}
       {user.role === "admin" && (
@@ -382,6 +400,7 @@ function ChildPanel({ child }: { child: ChildData }) {
             : "لم يبدأ الاختبار"}
         </p>
       </div>
+      <ChildInsights rewards={child.rewards} mastery={child.mastery} />
       {last && last.review.length > 0 && (
         <div className="review-box">
           <b>موضوعات للمراجعة من آخر محاولة</b>

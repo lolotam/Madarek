@@ -24,6 +24,12 @@ export async function GET(
       return store.isPublished()
         ? response({ questions: publicQuestions() })
         : response({ error: "الدرس غير متاح حاليًا." }, 404);
+    if (action === "videos")
+      return response({
+        videos: store.publishedVideos(
+          req.nextUrl.searchParams.get("lesson") || "",
+        ),
+      });
     if (action === "dashboard") {
       if (!user) return response({ error: "يلزم تسجيل الدخول." }, 401);
       return response(store.snapshot(user.id));
@@ -38,6 +44,8 @@ export async function GET(
         return response(store.getAdminSettings(user.id));
       if (action === "admin/audit")
         return response(store.listAdminAudit(user.id));
+      if (action === "admin/videos")
+        return response(store.listLessonVideos(user.id));
     }
     return response({ error: "غير موجود." }, 404);
   } catch (error: unknown) {
@@ -138,6 +146,10 @@ export async function POST(
       return response(store.createAdminFamily(user.id, body));
     if (action === "admin/settings")
       return response(store.saveAdminSettings(user.id, body));
+    if (action === "admin/videos/save")
+      return response(store.saveLessonVideo(user.id, body));
+    if (action === "admin/videos/delete")
+      return response(store.deleteLessonVideo(user.id, body));
     return response({ error: "غير موجود." }, 404);
   } catch (error: unknown) {
     const e = error as Error & { status?: number };
