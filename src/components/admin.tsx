@@ -121,6 +121,27 @@ function formatAuditDetail(action: string, detail: unknown) {
         : "";
     return [segmentId, decision].filter(Boolean).join(" · ");
   }
+  if (
+    (action === "videos.save" || action === "videos.delete") &&
+    detail &&
+    typeof detail === "object" &&
+    !Array.isArray(detail)
+  ) {
+    const row = detail as {
+      title?: unknown;
+      lessonId?: unknown;
+      published?: unknown;
+    };
+    const title = typeof row.title === "string" ? row.title : "";
+    const lessonId = typeof row.lessonId === "string" ? row.lessonId : "";
+    const published =
+      action === "videos.save"
+        ? row.published === true
+          ? "منشور"
+          : "مسودة"
+        : "";
+    return [title, lessonId, published].filter(Boolean).join(" · ");
+  }
   return typeof detail === "string" ? detail : JSON.stringify(detail);
 }
 

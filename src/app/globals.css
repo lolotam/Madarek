@@ -4164,4 +4164,18 @@ audio[data-audio-engine] {
   .rewards-numbers dd {
     font-size: 20px;
   }
+  .streak-days {
+    gap: 6px;
+  }
+  .streak-days li {
+    width: 32px;
+    height: 32px;
+  }
+  .streak-days.small li {
+    width: 24px;
+    height: 24px;
+  }
+}
+.audit-list .micro-copy {
+  overflow-wrap: anywhere;
 }

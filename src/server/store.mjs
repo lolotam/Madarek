@@ -1115,15 +1115,21 @@ export function createStore(filename, { now = Date.now } = {}) {
         id,
         lessonId: input.lessonId,
         published: Boolean(published),
+        title,
       });
       return videoRow(videoById(id));
     },
     deleteLessonVideo(adminId, input) {
       requireRole(adminId, ["admin"]);
       const id = input && typeof input === "object" ? input.id : null;
-      if (!videoById(id)) fail("الفيديو غير موجود.", 404);
+      const row = videoById(id);
+      if (!row) fail("الفيديو غير موجود.", 404);
       db.prepare("DELETE FROM lesson_videos WHERE id=?").run(id);
-      writeAudit(adminId, "videos.delete", null, { id });
+      writeAudit(adminId, "videos.delete", null, {
+        id,
+        title: row.title,
+        lessonId: row.lesson_id,
+      });
       return { ok: true };
     },
     listAdminAudit(adminId) {

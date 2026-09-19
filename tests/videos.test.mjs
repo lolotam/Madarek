@@ -99,11 +99,21 @@ test("only admins manage videos; students see published ones in order", () => {
     );
     assert.deepEqual(store.publishedVideos("platform"), []);
     assert.equal(store.listLessonVideos(admin.id).videos.length, 2);
+    const savedAudit = store
+      .listAdminAudit(admin.id)
+      .entries.find(
+        (e) => e.action === "videos.save" && e.detail.title === "تجربة الكشف عن النشا",
+      );
+    assert.equal(savedAudit.detail.title, "تجربة الكشف عن النشا");
     store.deleteLessonVideo(admin.id, { id: draft.id });
     assert.equal(store.publishedVideos("nutrients").length, 1);
     const actions = store.listAdminAudit(admin.id).entries.map((e) => e.action);
     assert.ok(actions.includes("videos.save"));
     assert.ok(actions.includes("videos.delete"));
+    const deletedAudit = store
+      .listAdminAudit(admin.id)
+      .entries.find((e) => e.action === "videos.delete");
+    assert.equal(deletedAudit.detail.title, "كيف نقرأ الملصق الغذائي؟");
   } finally {
     store.close();
   }
