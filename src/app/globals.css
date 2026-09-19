@@ -3984,3 +3984,184 @@ audio[data-audio-engine] {
     grid-template-columns: 1fr;
   }
 }
+
+/* Rewards — student and parent dashboards */
+.rewards-hero {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 24px;
+  align-items: center;
+  background: linear-gradient(135deg, var(--violet-soft), var(--azure-soft));
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 27px;
+  margin-bottom: 25px;
+}
+.rewards-level {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--violet-ink);
+}
+.rewards-hero h2 {
+  margin: 4px 0 14px;
+}
+.xp-track {
+  height: 12px;
+  border-radius: 999px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.xp-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--violet), var(--pink));
+}
+.rewards-numbers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 0;
+}
+.rewards-numbers > div {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 14px 8px;
+  text-align: center;
+}
+.rewards-numbers dt {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  color: var(--muted);
+}
+.rewards-numbers dd {
+  margin: 6px 0 0;
+  font-size: 26px;
+  font-weight: 800;
+}
+.mission-card {
+  display: grid;
+  gap: 14px;
+  background: var(--white);
+  border: 2px dashed var(--amber);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 25px;
+}
+.mission-card.done {
+  border: 1px solid var(--line);
+  background: var(--amber-soft);
+}
+.mission-card h2 {
+  margin: 4px 0;
+}
+.mission-card > .button {
+  justify-self: start;
+}
+.streak-days {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0;
+  margin: 0;
+}
+.streak-days li {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--line);
+}
+.streak-days li.on {
+  border-color: var(--orange);
+  background: var(--orange-soft);
+  color: var(--orange);
+}
+.streak-days.small li {
+  width: 26px;
+  height: 26px;
+}
+.streak-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+.mastery-list,
+.reward-log ul {
+  list-style: none;
+  display: grid;
+  gap: 4px;
+  padding: 0;
+  margin: 12px 0 0;
+}
+.mastery-list li,
+.reward-log li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+.reward-log li > span:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.reward-amount {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--violet-ink);
+}
+.reward-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+.reward-chips span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--amber-soft);
+  color: var(--amber-ink);
+  font-weight: 700;
+}
+.child-insights {
+  display: grid;
+  gap: 16px;
+  margin: 16px 0;
+}
+.child-insights h4 {
+  margin: 0 0 8px;
+  font-size: 14px;
+}
+.insight-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+@media (max-width: 640px) {
+  .rewards-hero {
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
+  .rewards-numbers dd {
+    font-size: 20px;
+  }
+}

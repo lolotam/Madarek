@@ -13,6 +13,8 @@ import {
 } from "lucide-react";
 import { api, useSession } from "./providers";
 import { useAudio } from "./audio/audio-provider";
+import { RewardChips } from "./rewards/student-rewards";
+import type { RewardEntry } from "./rewards/types";
 import {
   quizFillTarget,
   quizOptionTarget,
@@ -36,6 +38,7 @@ export type Result = {
   review: string[];
   createdAt?: number;
   audioGrant?: string;
+  rewards?: RewardEntry[];
   details: {
     id: string;
     prompt: string;
@@ -148,6 +151,7 @@ export function Quiz({ onComplete }: { onComplete?: () => void }) {
             ? "هذه تجربة غير محفوظة. ادخلي بحساب الطالب لحفظ المحاولات."
             : "حُفظت محاولتك ويمكن لولي أمرك متابعتها."}
         </p>
+        <RewardChips rewards={result.rewards} />
         {result.review.length > 0 && (
           <div className="review-box" data-audio-target={resultReviewTarget.id}>
             <b>نراجع معًا:</b>

@@ -84,10 +84,16 @@ export function Lesson() {
     try {
       const data = await api("progress", { section });
       setSections(data.sections);
+      const gained = (data.rewards ?? []).reduce(
+        (sum: number, r: { xp: number }) => sum + r.xp,
+        0,
+      );
       setFeedback({
         section,
         tone: "success",
-        text: "حُفظ تقدّمك. خطوة رائعة!",
+        text: gained
+          ? `حُفظ تقدّمك. +${gained.toLocaleString("ar-KW")} خبرة!`
+          : "حُفظ تقدّمك. خطوة رائعة!",
       });
     } catch (e) {
       setFeedback({ section, tone: "error", text: (e as Error).message });

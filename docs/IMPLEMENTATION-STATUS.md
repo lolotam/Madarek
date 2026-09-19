@@ -63,3 +63,12 @@
   - مفتاح بصلاحيات كافية.
 - صياغة الموقع بحسب جنس الطفل.
 - الصور الجديدة مواضع مؤقتة يُولّدها المالك لاحقًا.
+
+## Rewards (Phase 1)
+
+- Study day = midnight Asia/Kuwait. Only learning actions count (lesson section, practice, quiz submission), not logging in.
+- Daily reward: 20 XP + 10–50 coins (capped at day 5). Milestones at 7 and 30 days. Every 7th day earns a freeze (max 2) that covers one missed day.
+- Quiz: XP = best score × 10 (max 1,000 per lesson); retakes pay only the improvement. Serious attempt (all answered): +20 XP once per lesson per day.
+- XP sets level and title and never decreases; coins are kept for the Phase 2 shop; mastery per concept is separate from points.
+- All grants go through `reward_ledger` with `UNIQUE(user_id, source, source_key)`, so every reward is paid at most once and is computed on the server.
+- Numbers live in `src/server/rewards.mjs` and are provisional until real usage data exists.
