@@ -1,0 +1,1596 @@
+[
+  {
+    "id": "map.intro",
+    "page": "nutrients",
+    "part": "map",
+    "order": 1,
+    "version": 1,
+    "text": "أهلاً بيكم في درس المغذّيات. تعالوا نشوف: إزاي الأكل بيساعد جسمنا على النمو والحركة والاكتشاف؟ في نهاية رحلتنا، هتقدروا تصنّفوا المغذّيات، وتربطوا كل نوع بوظيفته، وتكتشفوا مصادره في أطعمة حياتنا اليومية.",
+    "cues": [
+      {
+        "phrase": "أهلاً بيكم",
+        "target": "section-map",
+        "reveal": true
+      },
+      {
+        "phrase": "درس المغذّيات",
+        "target": "lesson-hero",
+        "reveal": true
+      },
+      {
+        "phrase": "في نهاية رحلتنا",
+        "target": "learning-goals",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "map.definition",
+    "page": "nutrients",
+    "part": "map",
+    "order": 2,
+    "version": 1,
+    "text": "تعالوا نفهم الصورة الكبيرة. المغذّيات مواد كيميائية توجد في الأطعمة، يحتاج إليها الجسم للنمو والحصول على الطاقة والمحافظة على الصحة. جسمنا فريق، والمغذّيات أعضاؤه اللي بتتعاون مع بعض.",
+    "cues": [
+      {
+        "phrase": "نفهم الصورة الكبيرة",
+        "target": "section-map",
+        "reveal": true
+      },
+      {
+        "phrase": "المغذّيات مواد كيميائية",
+        "target": "concept-root",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "map.groups",
+    "page": "nutrients",
+    "part": "map",
+    "order": 3,
+    "version": 1,
+    "text": "عندنا مجموعتين: المغذّيات الكبرى، والمغذّيات الصغرى. الكبرى يعني جسمنا بيحتاج منها كمية كبيرة، زي الكربوهيدرات، والبروتينات، والدهون، والمَيّه. أما الصغرى، فبنحتاج منها كمية قليلة، بس هي مهمة برضه، زي الفيتامينات، والأملاح المعدنية. كبرى وصغرى بيوصفوا الكمية، مش الأهمية.",
+    "cues": [
+      {
+        "phrase": "المغذّيات الكبرى",
+        "target": "concept-group-major",
+        "reveal": true
+      },
+      {
+        "phrase": "المغذّيات الصغرى",
+        "target": "concept-group-minor",
+        "reveal": true
+      },
+      {
+        "phrase": "كمية كبيرة",
+        "target": "concept-group-major",
+        "reveal": true
+      },
+      {
+        "phrase": "الكربوهيدرات",
+        "target": "concept-nutrient-carbs",
+        "reveal": true
+      },
+      {
+        "phrase": "البروتينات",
+        "target": "concept-nutrient-protein",
+        "reveal": true
+      },
+      {
+        "phrase": "الدهون",
+        "target": "concept-nutrient-fat",
+        "reveal": true
+      },
+      {
+        "phrase": "المَيّه",
+        "target": "concept-nutrient-water",
+        "reveal": true
+      },
+      {
+        "phrase": "كمية قليلة",
+        "target": "concept-group-minor",
+        "reveal": true
+      },
+      {
+        "phrase": "الفيتامينات",
+        "target": "concept-nutrient-vitamins",
+        "reveal": true
+      },
+      {
+        "phrase": "الأملاح المعدنية",
+        "target": "concept-nutrient-minerals",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "map.carbs",
+    "page": "nutrients",
+    "part": "map",
+    "order": 4,
+    "version": 1,
+    "text": "تعالوا نشوف الكربوهيدرات: دي وقود الحركة. يحوّل الجسم الكربوهيدرات إلى سكريات بسيطة، أهمها الجلوكوز، الذي تستخدمه الخلايا مصدرًا رئيسيًا للطاقة. بنلاقيها في الخبز، والأرز، والبطاطا والحبوب. والخبز الأسمر والشوفان يوفّران أيضًا الألياف الغذائية.",
+    "cues": [
+      {
+        "phrase": "الكربوهيدرات",
+        "target": "concept-nutrient-carbs",
+        "reveal": true
+      },
+      {
+        "phrase": "الجلوكوز",
+        "target": "concept-detail-carbs",
+        "reveal": true
+      },
+      {
+        "phrase": "الخبز، والأرز",
+        "target": "concept-detail-carbs",
+        "reveal": true
+      },
+      {
+        "phrase": "الألياف الغذائية",
+        "target": "concept-detail-carbs",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "map.protein",
+    "page": "nutrients",
+    "part": "map",
+    "order": 5,
+    "version": 1,
+    "text": "تعالوا نشوف البروتينات: دي للبناء والإصلاح. تسهم في بناء العضلات وإصلاح الأنسجة التالفة والتئام الجروح، وتدعم المناعة ووظائف الجسم الحيوية. بنلاقيها في اللحوم والبيض ومنتجات الحليب، والبقوليات والمكسرات. وللبروتينات مصادر حيوانية ومصادر نباتية.",
+    "cues": [
+      {
+        "phrase": "البروتينات",
+        "target": "concept-nutrient-protein",
+        "reveal": true
+      },
+      {
+        "phrase": "بناء العضلات",
+        "target": "concept-detail-protein",
+        "reveal": true
+      },
+      {
+        "phrase": "اللحوم والبيض",
+        "target": "concept-detail-protein",
+        "reveal": true
+      },
+      {
+        "phrase": "مصادر حيوانية ومصادر نباتية",
+        "target": "concept-detail-protein",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "map.fat",
+    "page": "nutrients",
+    "part": "map",
+    "order": 6,
+    "version": 1,
+    "text": "تعالوا نشوف الدهون: طاقة وحماية. هي مصدر مركّز للطاقة. تدخل في تكوين أغشية الخلايا، وتساعد على العزل الحراري وامتصاص بعض الفيتامينات. بنلاقيها في زيت الزيتون، والمكسرات والأسماك. وبتساعد على امتصاص فيتامين إيه، ودي، وإي، وكيه، ونتناولها باعتدال.",
+    "cues": [
+      {
+        "phrase": "الدهون",
+        "target": "concept-nutrient-fat",
+        "reveal": true
+      },
+      {
+        "phrase": "أغشية الخلايا",
+        "target": "concept-detail-fat",
+        "reveal": true
+      },
+      {
+        "phrase": "زيت الزيتون",
+        "target": "concept-detail-fat",
+        "reveal": true
+      },
+      {
+        "phrase": "فيتامين إيه",
+        "target": "concept-detail-fat",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "map.water",
+    "page": "nutrients",
+    "part": "map",
+    "order": 7,
+    "version": 1,
+    "text": "تعالوا نشوف الماء: للنقل والتنظيم. المَيّه تساعد على تنظيم درجة حرارة الجسم ونقل المواد والتخلّص من الفضلات. يحتاجه الجسم بكميات منتظمة. بنلاقيها في ماء الشرب والماء الموجود في الأطعمة. والماء مغذٍ أساسي، لكنه لا يزوّد الجسم بالسعرات الحرارية.",
+    "cues": [
+      {
+        "phrase": "الماء",
+        "target": "concept-nutrient-water",
+        "reveal": true
+      },
+      {
+        "phrase": "المَيّه",
+        "target": "concept-detail-water",
+        "reveal": true
+      },
+      {
+        "phrase": "ماء الشرب",
+        "target": "concept-detail-water",
+        "reveal": true
+      },
+      {
+        "phrase": "السعرات الحرارية",
+        "target": "concept-detail-water",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "map.vitamins",
+    "page": "nutrients",
+    "part": "map",
+    "order": 8,
+    "version": 1,
+    "text": "تعالوا نشوف الفيتامينات: دعم الوظائف الحيوية. يحتاج إليها الجسم بكميات قليلة. يساعد فيتامين دي على امتصاص الكالسيوم، ويسهم فيتامين سي في دعم المناعة والتئام الجروح. بنلاقيها في الفواكه والخضراوات والحليب وأطعمة أخرى متنوعة. وتفتكروا: قليلة في الكمية لا تعني قليلة في الأهمية.",
+    "cues": [
+      {
+        "phrase": "الفيتامينات",
+        "target": "concept-nutrient-vitamins",
+        "reveal": true
+      },
+      {
+        "phrase": "فيتامين دي",
+        "target": "concept-detail-vitamins",
+        "reveal": true
+      },
+      {
+        "phrase": "فيتامين سي",
+        "target": "concept-detail-vitamins",
+        "reveal": true
+      },
+      {
+        "phrase": "الفواكه والخضراوات",
+        "target": "concept-detail-vitamins",
+        "reveal": true
+      },
+      {
+        "phrase": "قليلة في الكمية",
+        "target": "concept-detail-vitamins",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "map.minerals",
+    "page": "nutrients",
+    "part": "map",
+    "order": 9,
+    "version": 1,
+    "text": "تعالوا نشوف الأملاح المعدنية: عظام ودم. يدخل الكالسيوم في بناء العظام والأسنان، والحديد ضروري لنقل الأكسجين في الدم. بنلاقيها في الحليب والخضراوات واللحوم وأطعمة أخرى متنوعة. ونحتاج أنواعًا مختلفة من الأملاح المعدنية لوظائف مختلفة.",
+    "cues": [
+      {
+        "phrase": "الأملاح المعدنية",
+        "target": "concept-nutrient-minerals",
+        "reveal": true
+      },
+      {
+        "phrase": "الكالسيوم",
+        "target": "concept-detail-minerals",
+        "reveal": true
+      },
+      {
+        "phrase": "الحديد",
+        "target": "concept-detail-minerals",
+        "reveal": true
+      },
+      {
+        "phrase": "الحليب والخضراوات واللحوم",
+        "target": "concept-detail-minerals",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "explore.intro",
+    "page": "nutrients",
+    "part": "explore",
+    "order": 10,
+    "version": 1,
+    "text": "دلوقتي ندخل مختبرنا الصغير. المعلومة بتبقى حيّة لما نجرّب. تعالوا نختار طعامًا ونكتشف بعض مغذّياته ووظائفها. دي أمثلة تعليمية؛ معظم الأطعمة تحتوي أكثر من نوع من المغذّيات.",
+    "cues": [
+      {
+        "phrase": "مختبرنا الصغير",
+        "target": "section-explore",
+        "reveal": true
+      },
+      {
+        "phrase": "نختار طعامًا",
+        "target": "section-explore",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "explore.oats",
+    "page": "nutrients",
+    "part": "explore",
+    "order": 11,
+    "version": 1,
+    "text": "تعالوا نبصّ على الشوفان. المغذّي الأساسي فيه الكربوهيدرات، ومعاه الألياف والبروتينات. توفّر الكربوهيدرات الطاقة، وتدعم الألياف حركة الأمعاء. الحبة الواحدة تجمع أكثر من مغذٍ.",
+    "cues": [
+      {
+        "phrase": "الشوفان",
+        "target": "food-oats",
+        "reveal": true
+      },
+      {
+        "phrase": "الكربوهيدرات",
+        "target": "food-detail-oats",
+        "reveal": true
+      },
+      {
+        "phrase": "الألياف والبروتينات",
+        "target": "food-detail-oats",
+        "reveal": true
+      },
+      {
+        "phrase": "حركة الأمعاء",
+        "target": "food-detail-oats",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "explore.lentils",
+    "page": "nutrients",
+    "part": "explore",
+    "order": 12,
+    "version": 1,
+    "text": "تعالوا نبصّ على العدس. المغذّي الأساسي فيه البروتينات النباتية، ومعاه الكربوهيدرات والألياف. البروتين لا يأتي من اللحوم فقط! البقوليات، ومنها العدس، من مصادره النباتية.",
+    "cues": [
+      {
+        "phrase": "العدس",
+        "target": "food-lentils",
+        "reveal": true
+      },
+      {
+        "phrase": "البروتينات النباتية",
+        "target": "food-detail-lentils",
+        "reveal": true
+      },
+      {
+        "phrase": "الكربوهيدرات والألياف",
+        "target": "food-detail-lentils",
+        "reveal": true
+      },
+      {
+        "phrase": "البقوليات",
+        "target": "food-detail-lentils",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "explore.oil",
+    "page": "nutrients",
+    "part": "explore",
+    "order": 13,
+    "version": 1,
+    "text": "تعالوا نبصّ على زيت الزيتون. المغذّي الأساسي فيه الدهون، والدهون تساعد على امتصاص فيتامينات ذائبة فيها. تدخل الدهون في أغشية الخلايا وتوفّر طاقة مركّزة. نحتاجها باعتدال ضمن غذاء متوازن.",
+    "cues": [
+      {
+        "phrase": "زيت الزيتون",
+        "target": "food-oil",
+        "reveal": true
+      },
+      {
+        "phrase": "الدهون",
+        "target": "food-detail-oil",
+        "reveal": true
+      },
+      {
+        "phrase": "فيتامينات ذائبة فيها",
+        "target": "food-detail-oil",
+        "reveal": true
+      },
+      {
+        "phrase": "أغشية الخلايا",
+        "target": "food-detail-oil",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "explore.milk",
+    "page": "nutrients",
+    "part": "explore",
+    "order": 14,
+    "version": 1,
+    "text": "تعالوا نبصّ على الحليب. فيه الكالسيوم والبروتينات، ومعاه الماء والكربوهيدرات ومغذّيات أخرى. الكالسيوم يدخل في بناء العظام والأسنان، والبروتين يسهم في البناء وإصلاح الأنسجة.",
+    "cues": [
+      {
+        "phrase": "الحليب",
+        "target": "food-milk",
+        "reveal": true
+      },
+      {
+        "phrase": "الكالسيوم والبروتينات",
+        "target": "food-detail-milk",
+        "reveal": true
+      },
+      {
+        "phrase": "الماء والكربوهيدرات",
+        "target": "food-detail-milk",
+        "reveal": true
+      },
+      {
+        "phrase": "بناء العظام والأسنان",
+        "target": "food-detail-milk",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "explore.energy.0",
+    "page": "nutrients",
+    "part": "explore",
+    "order": 15,
+    "version": 1,
+    "text": "تعالوا نبدأ رحلة الطاقة، ونراقب العلاقة بين المغذّي ووظيفته خطوة خطوة. الخطوة الأولى: الكربوهيدرات. نبدأ بطعام يحتوي كربوهيدرات، مثل الخبز أو الأرز. وده نموذج مبسّط للفهم.",
+    "cues": [
+      {
+        "phrase": "رحلة الطاقة",
+        "target": "lab-mode-energy",
+        "reveal": true
+      },
+      {
+        "phrase": "الكربوهيدرات",
+        "target": "lab-step-energy-0",
+        "reveal": true
+      },
+      {
+        "phrase": "نبدأ بطعام يحتوي كربوهيدرات",
+        "target": "lab-caption",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "explore.energy.1",
+    "page": "nutrients",
+    "part": "explore",
+    "order": 16,
+    "version": 1,
+    "text": "الخطوة التانية في رحلة الطاقة: الجلوكوز. يحوّل الجسم الكربوهيدرات إلى سكريات بسيطة، أهمها الجلوكوز. ركّزوا مع التحويل من الكربوهيدرات إلى سكريات بسيطة، أهمها الجلوكوز.",
+    "cues": [
+      {
+        "phrase": "الجلوكوز",
+        "target": "lab-step-energy-1",
+        "reveal": true
+      },
+      {
+        "phrase": "يحوّل الجسم الكربوهيدرات",
+        "target": "lab-caption",
+        "reveal": true
+      },
+      {
+        "phrase": "سكريات بسيطة",
+        "target": "lab-caption",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "explore.energy.2",
+    "page": "nutrients",
+    "part": "explore",
+    "order": 17,
+    "version": 1,
+    "text": "الخطوة التالتة في رحلة الطاقة: طاقة للخلايا. تستخدم الخلايا الجلوكوز للحصول على الطاقة اللازمة لأداء وظائفها. يعني الجلوكوز هو المصدر الرئيسي لطاقة الخلايا.",
+    "cues": [
+      {
+        "phrase": "طاقة للخلايا",
+        "target": "lab-step-energy-2",
+        "reveal": true
+      },
+      {
+        "phrase": "تستخدم الخلايا الجلوكوز",
+        "target": "lab-caption",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "explore.repair.0",
+    "page": "nutrients",
+    "part": "explore",
+    "order": 18,
+    "version": 1,
+    "text": "دلوقتي رحلة البناء والإصلاح. الخطوة الأولى: مصدر للبروتين. يمكن أن يأتي البروتين من البيض أو الحليب أو البقوليات مثل العدس. تعالوا نتابع الخطوات واحدة واحدة.",
+    "cues": [
+      {
+        "phrase": "البناء والإصلاح",
+        "target": "lab-mode-repair",
+        "reveal": true
+      },
+      {
+        "phrase": "مصدر للبروتين",
+        "target": "lab-step-repair-0",
+        "reveal": true
+      },
+      {
+        "phrase": "البيض أو الحليب أو البقوليات",
+        "target": "lab-caption",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "explore.repair.1",
+    "page": "nutrients",
+    "part": "explore",
+    "order": 19,
+    "version": 1,
+    "text": "الخطوة التانية في رحلة البناء والإصلاح: البناء والإصلاح. يستخدم الجسم مكوّنات البروتينات لبناء العضلات وإصلاح الأنسجة التالفة. دي وظيفة البروتينات الأساسية هنا.",
+    "cues": [
+      {
+        "phrase": "البناء والإصلاح",
+        "target": "lab-step-repair-1",
+        "reveal": true,
+        "occurrence": 2
+      },
+      {
+        "phrase": "يستخدم الجسم مكوّنات البروتينات",
+        "target": "lab-caption",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "explore.repair.2",
+    "page": "nutrients",
+    "part": "explore",
+    "order": 20,
+    "version": 1,
+    "text": "الخطوة التالتة في رحلة البناء والإصلاح: دعم التئام الجروح. هذا يفسّر أهمية البروتينات في التئام الجروح والنمو. يعني البناء والإصلاح ظاهرين في التئام الجروح كمان.",
+    "cues": [
+      {
+        "phrase": "دعم التئام الجروح",
+        "target": "lab-step-repair-2",
+        "reveal": true
+      },
+      {
+        "phrase": "أهمية البروتينات في التئام الجروح والنمو",
+        "target": "lab-caption",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "explore.fiber",
+    "page": "nutrients",
+    "part": "explore",
+    "order": 21,
+    "version": 1,
+    "text": "ولا ننسى الألياف! توجد في الحبوب الكاملة والخضراوات والفواكه والبقوليات. تساعد على حركة الأمعاء والوقاية من الإمساك، وتدعم صحة الجهاز الهضمي. يعني الألياف مهمة لحركة الأمعاء.",
+    "cues": [
+      {
+        "phrase": "ولا ننسى الألياف",
+        "target": "fiber-note",
+        "reveal": true
+      },
+      {
+        "phrase": "حركة الأمعاء",
+        "target": "fiber-note",
+        "reveal": true
+      },
+      {
+        "phrase": "صحة الجهاز الهضمي",
+        "target": "fiber-note",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "practice.choice",
+    "page": "nutrients",
+    "part": "practice",
+    "order": 22,
+    "version": 1,
+    "text": "يلا نتدرّب من غير ضغط. فكّروا، وأجيبوا، وتعلّموا من المحاولة. السؤال: يحتاج الجسم إلى الفيتامينات بكميات نقط. الاختيار الأول: كبيرة. والاختيار التاني: قليلة. خدوا وقتكم.",
+    "cues": [
+      {
+        "phrase": "نتدرّب من غير ضغط",
+        "target": "section-practice",
+        "reveal": true
+      },
+      {
+        "phrase": "يحتاج الجسم إلى الفيتامينات بكميات نقط",
+        "target": "practice-choice",
+        "reveal": true
+      },
+      {
+        "phrase": "كبيرة",
+        "target": "practice-choice",
+        "reveal": true
+      },
+      {
+        "phrase": "قليلة",
+        "target": "practice-choice",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "practice.reason",
+    "page": "nutrients",
+    "part": "practice",
+    "order": 23,
+    "version": 1,
+    "text": "دلوقتي سؤال علّلي، والتدريب ده برّه الدرجة النهائية. السؤال: لماذا تُنصح المصابة بجرح بتناول البروتينات ضمن غذائها؟ فكّروا، واكتبوا الفكرة بأسلوبكم. بعدين تقدروا تقارنوا بالفكرة الأساسية.",
+    "cues": [
+      {
+        "phrase": "سؤال علّلي",
+        "target": "practice-reason",
+        "reveal": true
+      },
+      {
+        "phrase": "لماذا تُنصح المصابة بجرح بتناول البروتينات ضمن غذائها؟",
+        "target": "practice-reason",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "summary",
+    "page": "nutrients",
+    "part": "practice",
+    "order": 24,
+    "version": 1,
+    "text": "خلاصة في دقيقة: ست أفكار تفضل معانا. الكربوهيدرات طاقة للخلايا. البروتينات بناء وإصلاح. الدهون طاقة مركّزة وحماية. الماء نقل وتنظيم. الفيتامينات دعم الوظائف الحيوية. الأملاح المعدنية عظام ودم ووظائف أخرى.",
+    "cues": [
+      {
+        "phrase": "خلاصة في دقيقة",
+        "target": "lesson-summary",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "quiz.intro",
+    "page": "nutrients",
+    "part": "quiz",
+    "order": 25,
+    "version": 1,
+    "text": "حان وقت الاكتشاف: نختبر فهمنا. الاختبار من اختيار متعدد وأكملي. لكل سؤال درجة، والتفسيرات هتظهر بعد التسليم. مفيش مؤقّت، خدوا وقتكم، وممكن ترجعوا لأي سؤال قبل التسليم، وممكن تعيدوا المحاولة. ده اختبار للفهم، مش سباق مع الوقت.",
+    "cues": [
+      {
+        "phrase": "نختبر فهمنا",
+        "target": "section-quiz",
+        "reveal": true
+      },
+      {
+        "phrase": "مفيش مؤقّت",
+        "target": "section-quiz",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "quiz.q1",
+    "page": "nutrients",
+    "part": "quiz",
+    "order": 26,
+    "version": 1,
+    "text": "دلوقتي السؤال الأول. اسمعوا السؤال والاختيارات. إلى أي مجموعة ينتمي الماء؟ أ: المغذّيات الكبرى. ب: المغذّيات الصغرى. ج: ليس من المغذّيات. فكّروا بهدوء، وخدوا وقتكم.",
+    "cues": [
+      {
+        "phrase": "إلى أي مجموعة ينتمي الماء؟",
+        "target": "quiz-question-q1",
+        "reveal": true
+      },
+      {
+        "phrase": "أ: المغذّيات الكبرى",
+        "target": "quiz-option-q1-macro",
+        "reveal": true
+      },
+      {
+        "phrase": "ب: المغذّيات الصغرى",
+        "target": "quiz-option-q1-micro",
+        "reveal": true
+      },
+      {
+        "phrase": "ج: ليس من المغذّيات",
+        "target": "quiz-option-q1-none",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "quiz.q2",
+    "page": "nutrients",
+    "part": "quiz",
+    "order": 27,
+    "version": 1,
+    "text": "دلوقتي السؤال التاني. اسمعوا السؤال والاختيارات. أي مغذٍ يساعد أساسًا على بناء العضلات وإصلاح الأنسجة؟ أ: البروتينات. ب: الماء. ج: الألياف. فكّروا بهدوء، وخدوا وقتكم.",
+    "cues": [
+      {
+        "phrase": "أي مغذٍ يساعد أساسًا على بناء العضلات وإصلاح الأنسجة؟",
+        "target": "quiz-question-q2",
+        "reveal": true
+      },
+      {
+        "phrase": "أ: البروتينات",
+        "target": "quiz-option-q2-protein",
+        "reveal": true
+      },
+      {
+        "phrase": "ب: الماء",
+        "target": "quiz-option-q2-water",
+        "reveal": true
+      },
+      {
+        "phrase": "ج: الألياف",
+        "target": "quiz-option-q2-fiber",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "quiz.q3",
+    "page": "nutrients",
+    "part": "quiz",
+    "order": 28,
+    "version": 1,
+    "text": "دلوقتي السؤال التالت. اسمعوا السؤال والاختيارات. ما المغذّي الذي يساعد على امتصاص الفيتامينات إيه، ودي، وإي، وكيه؟ أ: الماء. ب: الدهون. ج: الألياف. فكّروا بهدوء، وخدوا وقتكم.",
+    "cues": [
+      {
+        "phrase": "ما المغذّي الذي يساعد على امتصاص الفيتامينات إيه، ودي، وإي، وكيه؟",
+        "target": "quiz-question-q3",
+        "reveal": true
+      },
+      {
+        "phrase": "أ: الماء",
+        "target": "quiz-option-q3-water",
+        "reveal": true
+      },
+      {
+        "phrase": "ب: الدهون",
+        "target": "quiz-option-q3-fat",
+        "reveal": true
+      },
+      {
+        "phrase": "ج: الألياف",
+        "target": "quiz-option-q3-fiber",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "quiz.q4",
+    "page": "nutrients",
+    "part": "quiz",
+    "order": 29,
+    "version": 1,
+    "text": "دلوقتي السؤال الرابع. اسمعوا السؤال والاختيارات. أي فيتامين يساعد الجسم على امتصاص الكالسيوم؟ أ: فيتامين سي. ب: فيتامين كيه. ج: فيتامين دي. فكّروا بهدوء، وخدوا وقتكم.",
+    "cues": [
+      {
+        "phrase": "أي فيتامين يساعد الجسم على امتصاص الكالسيوم؟",
+        "target": "quiz-question-q4",
+        "reveal": true
+      },
+      {
+        "phrase": "أ: فيتامين سي",
+        "target": "quiz-option-q4-C",
+        "reveal": true
+      },
+      {
+        "phrase": "ب: فيتامين كيه",
+        "target": "quiz-option-q4-K",
+        "reveal": true
+      },
+      {
+        "phrase": "ج: فيتامين دي",
+        "target": "quiz-option-q4-D",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "quiz.q5",
+    "page": "nutrients",
+    "part": "quiz",
+    "order": 30,
+    "version": 1,
+    "text": "دلوقتي السؤال الخامس. اسمعوا السؤال والاختيارات. ما الدور المهم للحديد في الجسم؟ أ: المساعدة في نقل الأكسجين في الدم. ب: العزل الحراري تحت الجلد. ج: توفير الطاقة مباشرة. فكّروا بهدوء، وخدوا وقتكم.",
+    "cues": [
+      {
+        "phrase": "ما الدور المهم للحديد في الجسم؟",
+        "target": "quiz-question-q5",
+        "reveal": true
+      },
+      {
+        "phrase": "أ: المساعدة في نقل الأكسجين في الدم",
+        "target": "quiz-option-q5-oxygen",
+        "reveal": true
+      },
+      {
+        "phrase": "ب: العزل الحراري تحت الجلد",
+        "target": "quiz-option-q5-insulation",
+        "reveal": true
+      },
+      {
+        "phrase": "ج: توفير الطاقة مباشرة",
+        "target": "quiz-option-q5-energy",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "quiz.q6",
+    "page": "nutrients",
+    "part": "quiz",
+    "order": 31,
+    "version": 1,
+    "text": "دلوقتي السؤال السادس. اسمعوا السؤال والاختيارات. لماذا يفيد تناول الأطعمة الغنية بالألياف؟ أ: لأن الألياف تبني العظام مباشرة. ب: لتسهيل حركة الأمعاء والوقاية من الإمساك. ج: لأنها دهون مركّزة. فكّروا بهدوء، وخدوا وقتكم.",
+    "cues": [
+      {
+        "phrase": "لماذا يفيد تناول الأطعمة الغنية بالألياف؟",
+        "target": "quiz-question-q6",
+        "reveal": true
+      },
+      {
+        "phrase": "أ: لأن الألياف تبني العظام مباشرة",
+        "target": "quiz-option-q6-bone",
+        "reveal": true
+      },
+      {
+        "phrase": "ب: لتسهيل حركة الأمعاء والوقاية من الإمساك",
+        "target": "quiz-option-q6-bowel",
+        "reveal": true
+      },
+      {
+        "phrase": "ج: لأنها دهون مركّزة",
+        "target": "quiz-option-q6-fat",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "quiz.q7",
+    "page": "nutrients",
+    "part": "quiz",
+    "order": 32,
+    "version": 1,
+    "text": "دلوقتي السؤال السابع. اسمعوا الجملة كويس. يحوّل الجسم الكربوهيدرات إلى سكريات بسيطة أهمها سكر نقط. كمّلوا الكلمة الناقصة. فكّروا بهدوء، وخدوا وقتكم من غير عجلة.",
+    "cues": [
+      {
+        "phrase": "يحوّل الجسم الكربوهيدرات إلى سكريات بسيطة أهمها سكر نقط",
+        "target": "quiz-question-q7",
+        "reveal": true
+      },
+      {
+        "phrase": "كمّلوا الكلمة الناقصة",
+        "target": "quiz-fill-q7",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "quiz.q8",
+    "page": "nutrients",
+    "part": "quiz",
+    "order": 33,
+    "version": 1,
+    "text": "دلوقتي السؤال التامن. اسمعوا الجملة كويس. مغذٍ يساعد على تنظيم درجة الحرارة ونقل المواد، ولا يزوّد الجسم بسعرات حرارية: نقط. كمّلوا الكلمة الناقصة. فكّروا بهدوء، وخدوا وقتكم.",
+    "cues": [
+      {
+        "phrase": "مغذٍ يساعد على تنظيم درجة الحرارة ونقل المواد، ولا يزوّد الجسم بسعرات حرارية: نقط",
+        "target": "quiz-question-q8",
+        "reveal": true
+      },
+      {
+        "phrase": "كمّلوا الكلمة الناقصة",
+        "target": "quiz-fill-q8",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "quiz.q9",
+    "page": "nutrients",
+    "part": "quiz",
+    "order": 34,
+    "version": 1,
+    "text": "دلوقتي السؤال التاسع. اسمعوا الجملة كويس. تشمل المغذّيات الصغرى نقط والأملاح المعدنية. كمّلوا الكلمة الناقصة. فكّروا بهدوء، وخدوا وقتكم من غير أي عجلة.",
+    "cues": [
+      {
+        "phrase": "تشمل المغذّيات الصغرى نقط والأملاح المعدنية",
+        "target": "quiz-question-q9",
+        "reveal": true
+      },
+      {
+        "phrase": "كمّلوا الكلمة الناقصة",
+        "target": "quiz-fill-q9",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "quiz.q10",
+    "page": "nutrients",
+    "part": "quiz",
+    "order": 35,
+    "version": 1,
+    "text": "دلوقتي السؤال العاشر. اسمعوا الجملة كويس. من الأملاح المعدنية التي تدخل في بناء العظام والأسنان: نقط. كمّلوا الكلمة الناقصة. فكّروا بهدوء، وخدوا وقتكم.",
+    "cues": [
+      {
+        "phrase": "من الأملاح المعدنية التي تدخل في بناء العظام والأسنان: نقط",
+        "target": "quiz-question-q10",
+        "reveal": true
+      },
+      {
+        "phrase": "كمّلوا الكلمة الناقصة",
+        "target": "quiz-fill-q10",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "result.intro",
+    "page": "nutrients",
+    "part": "result",
+    "order": 36,
+    "version": 1,
+    "text": "تعالوا نشوف النتيجة.",
+    "cues": [
+      {
+        "phrase": "النتيجة",
+        "target": "result-score",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "result.score.0",
+    "page": "nutrients",
+    "part": "result",
+    "order": 37,
+    "version": 1,
+    "text": "النتيجة صفر من عشرة.",
+    "cues": [
+      {
+        "phrase": "صفر من عشرة",
+        "target": "result-score",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "result.score.1",
+    "page": "nutrients",
+    "part": "result",
+    "order": 38,
+    "version": 1,
+    "text": "جبتوا واحد من عشرة.",
+    "cues": [
+      {
+        "phrase": "واحد من عشرة",
+        "target": "result-score",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "result.score.2",
+    "page": "nutrients",
+    "part": "result",
+    "order": 39,
+    "version": 1,
+    "text": "جبتوا اتنين من عشرة.",
+    "cues": [
+      {
+        "phrase": "اتنين من عشرة",
+        "target": "result-score",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "result.score.3",
+    "page": "nutrients",
+    "part": "result",
+    "order": 40,
+    "version": 1,
+    "text": "جبتوا تلاتة من عشرة.",
+    "cues": [
+      {
+        "phrase": "تلاتة من عشرة",
+        "target": "result-score",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "result.score.4",
+    "page": "nutrients",
+    "part": "result",
+    "order": 41,
+    "version": 1,
+    "text": "جبتوا أربعة من عشرة.",
+    "cues": [
+      {
+        "phrase": "أربعة من عشرة",
+        "target": "result-score",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "result.score.5",
+    "page": "nutrients",
+    "part": "result",
+    "order": 42,
+    "version": 1,
+    "text": "جبتوا خمسة من عشرة.",
+    "cues": [
+      {
+        "phrase": "خمسة من عشرة",
+        "target": "result-score",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "result.score.6",
+    "page": "nutrients",
+    "part": "result",
+    "order": 43,
+    "version": 1,
+    "text": "جبتوا ستة من عشرة.",
+    "cues": [
+      {
+        "phrase": "ستة من عشرة",
+        "target": "result-score",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "result.score.7",
+    "page": "nutrients",
+    "part": "result",
+    "order": 44,
+    "version": 1,
+    "text": "جبتوا سبعة من عشرة.",
+    "cues": [
+      {
+        "phrase": "سبعة من عشرة",
+        "target": "result-score",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "result.score.8",
+    "page": "nutrients",
+    "part": "result",
+    "order": 45,
+    "version": 1,
+    "text": "جبتوا تمانية من عشرة.",
+    "cues": [
+      {
+        "phrase": "تمانية من عشرة",
+        "target": "result-score",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "result.score.9",
+    "page": "nutrients",
+    "part": "result",
+    "order": 46,
+    "version": 1,
+    "text": "جبتوا تسعة من عشرة.",
+    "cues": [
+      {
+        "phrase": "تسعة من عشرة",
+        "target": "result-score",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "result.score.10",
+    "page": "nutrients",
+    "part": "result",
+    "order": 47,
+    "version": 1,
+    "text": "جبتوا عشرة من عشرة.",
+    "cues": [
+      {
+        "phrase": "عشرة من عشرة",
+        "target": "result-score",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "result.correct",
+    "page": "nutrients",
+    "part": "result",
+    "order": 48,
+    "version": 1,
+    "text": "إجابة صحيحة.",
+    "cues": [
+      {
+        "phrase": "إجابة صحيحة",
+        "target": "result-score",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "result.answer-is",
+    "page": "nutrients",
+    "part": "result",
+    "order": 49,
+    "version": 1,
+    "text": "الإجابة الصحيحة هي.",
+    "cues": [
+      {
+        "phrase": "الإجابة الصحيحة هي",
+        "target": "result-score",
+        "reveal": true
+      }
+    ]
+  },
+  {
+    "id": "result.answer.q1",
+    "page": "nutrients",
+    "part": "result",
+    "order": 50,
+    "version": 1,
+    "text": "المغذّيات الكبرى.",
+    "cues": [
+      {
+        "phrase": "المغذّيات الكبرى",
+        "target": "result-detail-q1",
+        "reveal": true
+      }
+    ],
+    "protected": "answer"
+  },
+  {
+    "id": "result.answer.q2",
+    "page": "nutrients",
+    "part": "result",
+    "order": 51,
+    "version": 1,
+    "text": "البروتينات.",
+    "cues": [
+      {
+        "phrase": "البروتينات",
+        "target": "result-detail-q2",
+        "reveal": true
+      }
+    ],
+    "protected": "answer"
+  },
+  {
+    "id": "result.answer.q3",
+    "page": "nutrients",
+    "part": "result",
+    "order": 52,
+    "version": 1,
+    "text": "الدهون.",
+    "cues": [
+      {
+        "phrase": "الدهون",
+        "target": "result-detail-q3",
+        "reveal": true
+      }
+    ],
+    "protected": "answer"
+  },
+  {
+    "id": "result.answer.q4",
+    "page": "nutrients",
+    "part": "result",
+    "order": 53,
+    "version": 1,
+    "text": "فيتامين دي.",
+    "cues": [
+      {
+        "phrase": "فيتامين دي",
+        "target": "result-detail-q4",
+        "reveal": true
+      }
+    ],
+    "protected": "answer"
+  },
+  {
+    "id": "result.answer.q5",
+    "page": "nutrients",
+    "part": "result",
+    "order": 54,
+    "version": 1,
+    "text": "المساعدة في نقل الأكسجين في الدم.",
+    "cues": [
+      {
+        "phrase": "المساعدة في نقل الأكسجين في الدم",
+        "target": "result-detail-q5",
+        "reveal": true
+      }
+    ],
+    "protected": "answer"
+  },
+  {
+    "id": "result.answer.q6",
+    "page": "nutrients",
+    "part": "result",
+    "order": 55,
+    "version": 1,
+    "text": "لتسهيل حركة الأمعاء والوقاية من الإمساك.",
+    "cues": [
+      {
+        "phrase": "لتسهيل حركة الأمعاء والوقاية من الإمساك",
+        "target": "result-detail-q6",
+        "reveal": true
+      }
+    ],
+    "protected": "answer"
+  },
+  {
+    "id": "result.answer.q7",
+    "page": "nutrients",
+    "part": "result",
+    "order": 56,
+    "version": 1,
+    "text": "الجلوكوز.",
+    "cues": [
+      {
+        "phrase": "الجلوكوز",
+        "target": "result-detail-q7",
+        "reveal": true
+      }
+    ],
+    "protected": "answer"
+  },
+  {
+    "id": "result.answer.q8",
+    "page": "nutrients",
+    "part": "result",
+    "order": 57,
+    "version": 1,
+    "text": "الماء.",
+    "cues": [
+      {
+        "phrase": "الماء",
+        "target": "result-detail-q8",
+        "reveal": true
+      }
+    ],
+    "protected": "answer"
+  },
+  {
+    "id": "result.answer.q9",
+    "page": "nutrients",
+    "part": "result",
+    "order": 58,
+    "version": 1,
+    "text": "الفيتامينات.",
+    "cues": [
+      {
+        "phrase": "الفيتامينات",
+        "target": "result-detail-q9",
+        "reveal": true
+      }
+    ],
+    "protected": "answer"
+  },
+  {
+    "id": "result.answer.q10",
+    "page": "nutrients",
+    "part": "result",
+    "order": 59,
+    "version": 1,
+    "text": "الكالسيوم.",
+    "cues": [
+      {
+        "phrase": "الكالسيوم",
+        "target": "result-detail-q10",
+        "reveal": true
+      }
+    ],
+    "protected": "answer"
+  },
+  {
+    "id": "result.explanation.q1",
+    "page": "nutrients",
+    "part": "result",
+    "order": 60,
+    "version": 1,
+    "text": "جسمنا محتاج الماء بكميات كبيرة، مع إن الماء لا يمدّ الجسم بالسعرات الحرارية.",
+    "cues": [
+      {
+        "phrase": "بكميات كبيرة",
+        "target": "result-detail-q1",
+        "reveal": true
+      }
+    ],
+    "protected": "answer"
+  },
+  {
+    "id": "result.explanation.q2",
+    "page": "nutrients",
+    "part": "result",
+    "order": 61,
+    "version": 1,
+    "text": "البروتينات تدخل في بناء العضلات وإصلاح الأنسجة والتئام الجروح.",
+    "cues": [
+      {
+        "phrase": "بناء العضلات",
+        "target": "result-detail-q2",
+        "reveal": true
+      }
+    ],
+    "protected": "answer"
+  },
+  {
+    "id": "result.explanation.q3",
+    "page": "nutrients",
+    "part": "result",
+    "order": 62,
+    "version": 1,
+    "text": "الفيتامينات إيه، ودي، وإي، وكيه بتدوب في الدهون، فالدهون بتساعد على امتصاصها.",
+    "cues": [
+      {
+        "phrase": "بتدوب في الدهون",
+        "target": "result-detail-q3",
+        "reveal": true
+      }
+    ],
+    "protected": "answer"
+  },
+  {
+    "id": "result.explanation.q4",
+    "page": "nutrients",
+    "part": "result",
+    "order": 63,
+    "version": 1,
+    "text": "يساعد فيتامين دي على امتصاص الكالسيوم وتقوية العظام والأسنان.",
+    "cues": [
+      {
+        "phrase": "امتصاص الكالسيوم",
+        "target": "result-detail-q4",
+        "reveal": true
+      }
+    ],
+    "protected": "answer"
+  },
+  {
+    "id": "result.explanation.q5",
+    "page": "nutrients",
+    "part": "result",
+    "order": 64,
+    "version": 1,
+    "text": "الحديد ضروري لنقل الأكسجين في الدم؛ وهو من الأملاح المعدنية.",
+    "cues": [
+      {
+        "phrase": "نقل الأكسجين في الدم",
+        "target": "result-detail-q5",
+        "reveal": true
+      }
+    ],
+    "protected": "answer"
+  },
+  {
+    "id": "result.explanation.q6",
+    "page": "nutrients",
+    "part": "result",
+    "order": 65,
+    "version": 1,
+    "text": "الألياف تدعم صحة الجهاز الهضمي وتساعد على حركة الأمعاء.",
+    "cues": [
+      {
+        "phrase": "صحة الجهاز الهضمي",
+        "target": "result-detail-q6",
+        "reveal": true
+      }
+    ],
+    "protected": "answer"
+  },
+  {
+    "id": "result.explanation.q7",
+    "page": "nutrients",
+    "part": "result",
+    "order": 66,
+    "version": 1,
+    "text": "الجلوكوز مصدر رئيسي للطاقة التي تستخدمها الخلايا.",
+    "cues": [
+      {
+        "phrase": "مصدر رئيسي للطاقة",
+        "target": "result-detail-q7",
+        "reveal": true
+      }
+    ],
+    "protected": "answer"
+  },
+  {
+    "id": "result.explanation.q8",
+    "page": "nutrients",
+    "part": "result",
+    "order": 67,
+    "version": 1,
+    "text": "الماء ضروري للوظائف الحيوية، وليس مصدرًا للسعرات الحرارية.",
+    "cues": [
+      {
+        "phrase": "مصدرًا للسعرات الحرارية",
+        "target": "result-detail-q8",
+        "reveal": true
+      }
+    ],
+    "protected": "answer"
+  },
+  {
+    "id": "result.explanation.q9",
+    "page": "nutrients",
+    "part": "result",
+    "order": 68,
+    "version": 1,
+    "text": "يحتاج الجسم إلى الفيتامينات والأملاح المعدنية بكميات قليلة.",
+    "cues": [
+      {
+        "phrase": "بكميات قليلة",
+        "target": "result-detail-q9",
+        "reveal": true
+      }
+    ],
+    "protected": "answer"
+  },
+  {
+    "id": "result.explanation.q10",
+    "page": "nutrients",
+    "part": "result",
+    "order": 69,
+    "version": 1,
+    "text": "الكالسيوم من الأملاح المعدنية المهمة لبناء العظام والأسنان.",
+    "cues": [
+      {
+        "phrase": "بناء العظام والأسنان",
+        "target": "result-detail-q10",
+        "reveal": true
+      }
+    ],
+    "protected": "answer"
+  },
+  {
+    "id": "result.review.q1",
+    "page": "nutrients",
+    "part": "result",
+    "order": 70,
+    "version": 1,
+    "text": "تعالوا نراجع التصنيف. كبرى وصغرى بيوصفوا الكمية اللي جسمنا محتاجها، مش الأهمية.",
+    "cues": [
+      {
+        "phrase": "التصنيف",
+        "target": "result-review",
+        "reveal": true
+      }
+    ],
+    "protected": "answer"
+  },
+  {
+    "id": "result.review.q2",
+    "page": "nutrients",
+    "part": "result",
+    "order": 71,
+    "version": 1,
+    "text": "تعالوا نراجع البروتينات: بناء العضلات وإصلاح الأنسجة.",
+    "cues": [
+      {
+        "phrase": "البروتينات",
+        "target": "result-review",
+        "reveal": true
+      }
+    ],
+    "protected": "answer"
+  },
+  {
+    "id": "result.review.q3",
+    "page": "nutrients",
+    "part": "result",
+    "order": 72,
+    "version": 1,
+    "text": "تعالوا نراجع الدهون: طاقة مركّزة، وتساعد على امتصاص بعض الفيتامينات.",
+    "cues": [
+      {
+        "phrase": "الدهون",
+        "target": "result-review",
+        "reveal": true
+      }
+    ],
+    "protected": "answer"
+  },
+  {
+    "id": "result.review.q4",
+    "page": "nutrients",
+    "part": "result",
+    "order": 73,
+    "version": 1,
+    "text": "تعالوا نراجع الفيتامينات: كمية قليلة، وأهمية كبيرة.",
+    "cues": [
+      {
+        "phrase": "الفيتامينات",
+        "target": "result-review",
+        "reveal": true
+      }
+    ],
+    "protected": "answer"
+  },
+  {
+    "id": "result.review.q5",
+    "page": "nutrients",
+    "part": "result",
+    "order": 74,
+    "version": 1,
+    "text": "تعالوا نراجع الأملاح المعدنية: الكالسيوم للعظام، والحديد لنقل الأكسجين.",
+    "cues": [
+      {
+        "phrase": "الأملاح المعدنية",
+        "target": "result-review",
+        "reveal": true
+      }
+    ],
+    "protected": "answer"
+  },
+  {
+    "id": "result.review.q6",
+    "page": "nutrients",
+    "part": "result",
+    "order": 75,
+    "version": 1,
+    "text": "تعالوا نراجع الألياف: تساعد حركة الأمعاء وصحة الجهاز الهضمي.",
+    "cues": [
+      {
+        "phrase": "الألياف",
+        "target": "result-review",
+        "reveal": true
+      }
+    ],
+    "protected": "answer"
+  },
+  {
+    "id": "result.review.q7",
+    "page": "nutrients",
+    "part": "result",
+    "order": 76,
+    "version": 1,
+    "text": "تعالوا نراجع الكربوهيدرات: بتتحول لجلوكوز، طاقة للخلايا.",
+    "cues": [
+      {
+        "phrase": "الكربوهيدرات",
+        "target": "result-review",
+        "reveal": true
+      }
+    ],
+    "protected": "answer"
+  },
+  {
+    "id": "result.review.q8",
+    "page": "nutrients",
+    "part": "result",
+    "order": 77,
+    "version": 1,
+    "text": "تعالوا نراجع الماء: تنظيم ونقل، ومن غير سعرات حرارية.",
+    "cues": [
+      {
+        "phrase": "الماء",
+        "target": "result-review",
+        "reveal": true
+      }
+    ],
+    "protected": "answer"
+  }
+]
