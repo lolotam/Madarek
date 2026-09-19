@@ -16,6 +16,7 @@ import {
   KeyRound,
 } from "lucide-react";
 import { api, useSession, User } from "./providers";
+import { VideoCarousel } from "./video-carousel";
 import { Result, ResultDetails } from "./quiz";
 import { lessonPath } from "@/content/curriculum";
 type ChildData = {
@@ -231,6 +232,7 @@ export function Dashboard({ initial }: { initial: Snapshot }) {
           {children.map((c) => (
             <ChildPanel key={c.user.id} child={c} />
           ))}
+          <VideoCarousel lessonId="platform" title="دليل استخدام مدارك" />
         </>
       )}
       {user.role === "student" && (
@@ -282,6 +284,7 @@ export function Dashboard({ initial }: { initial: Snapshot }) {
             </Link>
           </div>
           <History attempts={student.attempts} />
+          <VideoCarousel lessonId="platform" title="كيف تستخدمين مدارك؟" />
         </>
       )}
       {user.role === "admin" && (

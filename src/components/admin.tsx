@@ -7,6 +7,7 @@ import {
   AlertCircle,
   BookOpen,
   CheckCircle2,
+  Clapperboard,
   ChevronLeft,
   ChevronRight,
   KeyRound,
@@ -22,6 +23,7 @@ import {
   Volume2,
 } from "lucide-react";
 import { api } from "./providers";
+import { VideosTab, type VideoList } from "./admin-videos";
 import { ModalDialog } from "./ui/modal-dialog";
 import { sciencePath } from "@/content/curriculum";
 
@@ -96,6 +98,8 @@ const ACTION_LABEL: Record<string, string> = {
   "settings.update": "تحديث إعدادات الخدمات",
   "content.publish": "تحديث نشر الدرس",
   "audio.review": "مراجعة مقطع صوتي",
+  "videos.save": "حفظ فيديو",
+  "videos.delete": "حذف فيديو",
 };
 const REVIEW_DECISION_LABEL: Record<string, string> = {
   approve: "اعتماد",
@@ -156,12 +160,14 @@ export function AdminDashboard({
   initialSettings,
   initialAudit,
   initialSnapshot,
+  initialVideos,
 }: {
   selfId: string;
   initialUsers: UserList;
   initialSettings: SettingsView;
   initialAudit: AuditView;
   initialSnapshot: Snapshot;
+  initialVideos: VideoList;
 }) {
   const reduceMotion = useReducedMotion();
   const [tab, setTab] = useState("users");
@@ -210,6 +216,15 @@ export function AdminDashboard({
             ) : null}
             <BookOpen size={18} /> المحتوى
           </Tabs.Trigger>
+          <Tabs.Trigger value="videos">
+            {tab === "videos" ? (
+              <motion.span
+                className="admin-tab-ink"
+                layoutId={reduceMotion ? undefined : "admin-tab-ink"}
+              />
+            ) : null}
+            <Clapperboard size={18} /> الفيديوهات
+          </Tabs.Trigger>
           <Tabs.Trigger value="audit">
             {tab === "audit" ? (
               <motion.span
@@ -231,6 +246,10 @@ export function AdminDashboard({
         <Tabs.Content value="content">
           <h2 className="sr-only">المحتوى</h2>
           <ContentTab initial={initialSnapshot} />
+        </Tabs.Content>
+        <Tabs.Content value="videos">
+          <h2 className="sr-only">الفيديوهات</h2>
+          <VideosTab initial={initialVideos} />
         </Tabs.Content>
         <Tabs.Content value="audit">
           <h2 className="sr-only">السجل</h2>

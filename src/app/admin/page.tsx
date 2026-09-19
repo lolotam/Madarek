@@ -18,6 +18,7 @@ export default async function Page() {
   const settings = store.getAdminSettings(user.id);
   const audit = store.listAdminAudit(user.id);
   const snapshot = store.snapshot(user.id);
+  const videos = store.listLessonVideos(user.id);
   type Props = ComponentProps<typeof AdminDashboard>;
   return (
     <AdminDashboard
@@ -26,6 +27,7 @@ export default async function Page() {
       initialSettings={settings as Props["initialSettings"]}
       initialAudit={audit as Props["initialAudit"]}
       initialSnapshot={snapshot as Props["initialSnapshot"]}
+      initialVideos={videos as Props["initialVideos"]}
     />
   );
 }

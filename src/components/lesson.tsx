@@ -25,7 +25,8 @@ import {
 import { Quiz } from "./quiz";
 import { PlateArt } from "./illustrations";
 import { api, useSession } from "./providers";
-import { AudioProvider } from "./audio/audio-provider";
+import { AudioProvider, useAudio } from "./audio/audio-provider";
+import { VideoCarousel } from "./video-carousel";
 import { PlayerBar } from "./audio/player-bar";
 import { PartPlayButton } from "./audio/part-button";
 import { sciencePath } from "@/content/curriculum";
@@ -351,6 +352,7 @@ export function Lesson() {
             }
           />
         </section>
+        <LessonVideos />
         <div className="lesson-navigation">
           <div>
             <span className="eyebrow">هذه بداية الرحلة</span>
@@ -396,5 +398,17 @@ function SectionHeading({
       </div>
       <PartPlayButton part={part} partName={label} />
     </div>
+  );
+}
+function LessonVideos() {
+  // Rendered inside <AudioProvider>, so opening a video can stop narration.
+  const { pause } = useAudio();
+  return (
+    <VideoCarousel
+      lessonId="nutrients"
+      title="فيديوهات تساعدك تفهمين أكثر"
+      intro="بعد الاختبار، اختاري فيديو لتثبيت ما تعلّمتِه. يتوقف الشرح الصوتي تلقائيًا عند فتح الفيديو."
+      onOpen={pause}
+    />
   );
 }

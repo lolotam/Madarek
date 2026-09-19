@@ -10,12 +10,14 @@ export function ModalDialog({
   title,
   description,
   children,
+  className,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   title: string;
   description?: string;
   children: ReactNode;
+  className?: string;
 }) {
   const reduceMotion = useReducedMotion();
   const y = reduceMotion ? 0 : 8;
@@ -35,7 +37,7 @@ export function ModalDialog({
             </DialogPrimitive.Overlay>
             <DialogPrimitive.Content asChild>
               <motion.div
-                className="admin-dialog"
+                className={"admin-dialog" + (className ? " " + className : "")}
                 initial={{ opacity: 0, y }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y }}
