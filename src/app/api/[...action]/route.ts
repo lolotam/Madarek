@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { store } from "@/server/db";
 import { publicQuestions, grade, modelReason } from "@/server/questions.mjs";
+import { signAudioGrant } from "@/server/audio/grant.mjs";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 const cookieName = "hana_session";
@@ -94,8 +95,12 @@ export async function POST(
         return response({ error: "الإجابات غير صحيحة." }, 400);
       return response(
         user?.role === "student"
-          ? store.submit(user.id, body)
-          : { ...grade(body.answers), preview: true },
+          ? { ...store.submit(user.id, body), audioGrant: signAudioGrant() }
+          : {
+              ...grade(body.answers),
+              preview: true,
+              audioGrant: signAudioGrant(),
+            },
       );
     }
     if (action === "practice") {

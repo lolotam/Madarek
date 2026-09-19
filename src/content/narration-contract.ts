@@ -63,7 +63,15 @@ export type ClipMetadata = {
   characters: number;
   createdAt: string; // ISO
   protected?: "answer";
-  review: { status: ClipReviewStatus; reviewedAt?: string; reason?: string };
+  review: ClipReview;
+  /** Earlier reviews of this hash, kept when a rejected clip is regenerated. */
+  previousReviews?: ClipReview[];
+};
+
+export type ClipReview = {
+  status: ClipReviewStatus;
+  reviewedAt?: string;
+  reason?: string;
 };
 
 export type ClipAlignment = {
