@@ -1,6 +1,6 @@
 # Deploying Madarek on Dokploy
 
-Target: `https://madarek.wlidmohamed.co`, built from `https://github.com/lolotam/Madarek` (branch `main`) with the repository `Dockerfile`.
+Target: `https://madarek.walidmohamed.com`, built from `https://github.com/lolotam/Madarek` (branch `main`) with the repository `Dockerfile`.
 
 ## What the image is
 
@@ -12,7 +12,7 @@ Target: `https://madarek.wlidmohamed.co`, built from `https://github.com/lolotam
 
 ## 1. DNS
 
-Create an **A record** `madarek` → your Dokploy server's public IP in the `wlidmohamed.co` DNS zone. If the zone is on Cloudflare, either use "DNS only" (grey cloud) so Let's Encrypt can issue the certificate, or keep it proxied with SSL mode **Full (strict)** after the certificate exists.
+Create an **A record** `madarek` → your Dokploy server's public IP in the `walidmohamed.com` DNS zone. If the zone is on Cloudflare, either use "DNS only" (grey cloud) so Let's Encrypt can issue the certificate, or keep it proxied with SSL mode **Full (strict)** after the certificate exists.
 
 ## 2. Create the application
 
@@ -28,7 +28,7 @@ In Dokploy: **Projects → Create Project** (e.g. `madarek`) → **Create Servic
 **Environment** tab:
 
 ```env
-APP_ORIGIN=https://madarek.wlidmohamed.co
+APP_ORIGIN=https://madarek.walidmohamed.com
 SETTINGS_ENCRYPTION_KEY=<paste a new random value>
 ```
 
@@ -63,7 +63,7 @@ Use a named volume, not a bind mount to a host folder. On first use a named volu
 
 **Domains → Add Domain**:
 
-- Host: `madarek.wlidmohamed.co`
+- Host: `madarek.walidmohamed.com`
 - Path: `/`
 - Container port: **3000**
 - HTTPS: on, certificate: **Let's Encrypt**
@@ -72,14 +72,14 @@ Use a named volume, not a bind mount to a host folder. On first use a named volu
 
 Press **Deploy** and follow the build log. The build runs `npm ci` and `next build` inside Docker; nothing needs to be built locally. When it's running:
 
-- `https://madarek.wlidmohamed.co` shows the home page.
-- `https://madarek.wlidmohamed.co/api/session` returns `{"user":null}`.
+- `https://madarek.walidmohamed.com` shows the home page.
+- `https://madarek.walidmohamed.com/api/session` returns `{"user":null}`.
 
 ## 7. First admin account (production)
 
 The production database starts empty; local accounts are **not** copied.
 
-1. Open `https://madarek.wlidmohamed.co/login?mode=register`, register the admin email, and **remove the child row** before submitting.
+1. Open `https://madarek.walidmohamed.com/login?mode=register`, register the admin email, and **remove the child row** before submitting.
 2. In Dokploy open the application's **Terminal** (Docker container shell) and run:
 
    ```sh
