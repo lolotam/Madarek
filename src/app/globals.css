@@ -254,6 +254,10 @@ summary::-webkit-details-marker {
   background: #f0ecf4;
   color: var(--muted);
 }
+.pill.pink {
+  background: var(--pink-soft);
+  color: var(--pink-ink);
+}
 .status-dot {
   width: 6px;
   height: 6px;
