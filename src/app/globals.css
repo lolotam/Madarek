@@ -1994,7 +1994,8 @@ summary::-webkit-details-marker {
   font-weight: 550;
 }
 .field input,
-.field textarea {
+.field textarea,
+.field select {
   background: var(--white);
   border: 1px solid #ac9ebc;
   min-height: 48px;
@@ -2006,7 +2007,8 @@ summary::-webkit-details-marker {
   line-height: 1.8;
 }
 .field input:focus,
-.field textarea:focus {
+.field textarea:focus,
+.field select:focus {
   outline: 2px solid var(--violet);
   outline-offset: 2px;
 }
@@ -2109,6 +2111,68 @@ summary::-webkit-details-marker {
 }
 .auth-card form {
   margin-top: 25px;
+}
+.children-set,
+.child-row,
+.gender-set {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px;
+  margin: 0 0 19px;
+}
+.children-set {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: var(--paper);
+}
+.children-set > legend,
+.child-row > legend,
+.gender-set > legend {
+  padding-inline: 8px;
+  font-size: 13px;
+  font-weight: 650;
+}
+.child-row {
+  background: var(--white);
+  margin-bottom: 0;
+}
+.child-row .field:last-of-type {
+  margin-bottom: 10px;
+}
+.child-remove {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
+.gender-set {
+  border: 0;
+  padding: 0;
+  margin: 0 0 19px;
+}
+.radio-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.radio-row label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--white);
+  font-size: 14px;
+  font-weight: 550;
+}
+.radio-row input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--violet);
 }
 .auth-switch {
   display: flex;

@@ -23,8 +23,51 @@ const safeUser = (u) =>
         role: u.role,
         username: u.username,
         parentId: u.parent_id,
+        grade: u.grade ?? null,
+        gender: u.gender ?? null,
       }
     : null;
+const CHILD_INDEX = ["١", "٢", "٣", "٤", "٥", "٦"];
+function childFail(index, message, status = 400) {
+  fail(`الطالب ${CHILD_INDEX[index]}: ${message}`, status);
+}
+function parseGrade(value) {
+  const n =
+    typeof value === "number" && Number.isInteger(value)
+      ? value
+      : typeof value === "string" && /^(2|5|8)$/.test(value.trim())
+        ? Number(value.trim())
+        : NaN;
+  if (n !== 2 && n !== 5 && n !== 8)
+    fail("اختيار الصف مطلوب: الثاني أو الخامس أو الثامن.");
+  return n;
+}
+function parseGender(value) {
+  if (value !== "male" && value !== "female") fail("اختيار الجنس مطلوب.");
+  return value;
+}
+function readChild(input, index) {
+  const run = () => {
+    if (!input || typeof input !== "object" || Array.isArray(input))
+      fail("تحقّقي من الحقول المطلوبة وطولها.");
+    const name = field(input.name, 60),
+      username = field(input.username, 32).toLowerCase(),
+      pin = field(input.pin, 12),
+      grade = parseGrade(input.grade),
+      gender = parseGender(input.gender);
+    if (!/^[\p{L}\p{N}_-]{3,32}$/u.test(username))
+      fail("اسم المستخدم 3–32 حرفًا دون مسافات.");
+    if (!/^\d{6,12}$/.test(pin)) fail("رمز الدخول من 6 إلى 12 رقمًا.");
+    return { name, grade, gender, username, pin };
+  };
+  if (index == null) return run();
+  try {
+    return run();
+  } catch (e) {
+    if (e.status) childFail(index, e.message, e.status);
+    throw e;
+  }
+}
 const digest = (s) => createHash("sha256").update(s).digest("hex");
 function hash(secret) {
   const salt = randomBytes(16).toString("hex");
@@ -46,7 +89,7 @@ export function createStore(filename) {
   // the write lock instead of failing immediately with SQLITE_BUSY.
   const db = new DatabaseSync(filename, { timeout: 5000 });
   db.exec(`PRAGMA foreign_keys=ON; PRAGMA journal_mode=WAL;
-    CREATE TABLE IF NOT EXISTS users(id TEXT PRIMARY KEY,name TEXT NOT NULL,role TEXT NOT NULL CHECK(role IN ('parent','student','admin')),email TEXT UNIQUE,username TEXT UNIQUE,secret TEXT NOT NULL,parent_id TEXT REFERENCES users(id),created_at INTEGER NOT NULL);
+    CREATE TABLE IF NOT EXISTS users(id TEXT PRIMARY KEY,name TEXT NOT NULL,role TEXT NOT NULL CHECK(role IN ('parent','student','admin')),email TEXT UNIQUE,username TEXT UNIQUE,secret TEXT NOT NULL,parent_id TEXT REFERENCES users(id),created_at INTEGER NOT NULL,grade INTEGER CHECK(grade IN (2,5,8)),gender TEXT CHECK(gender IN ('male','female')));
     CREATE TABLE IF NOT EXISTS sessions(token TEXT PRIMARY KEY,user_id TEXT REFERENCES users(id) ON DELETE CASCADE,expires INTEGER NOT NULL);
     CREATE TABLE IF NOT EXISTS progress(user_id TEXT PRIMARY KEY REFERENCES users(id),sections TEXT NOT NULL DEFAULT '[]',updated_at INTEGER NOT NULL);
     CREATE TABLE IF NOT EXISTS attempts(id TEXT PRIMARY KEY,user_id TEXT NOT NULL REFERENCES users(id),result TEXT NOT NULL,created_at INTEGER NOT NULL);
@@ -54,6 +97,20 @@ export function createStore(filename) {
     CREATE TABLE IF NOT EXISTS settings(key TEXT PRIMARY KEY,value TEXT NOT NULL);
     CREATE TABLE IF NOT EXISTS limits(key TEXT PRIMARY KEY,count INTEGER NOT NULL,expires INTEGER NOT NULL);
     INSERT OR IGNORE INTO settings(key,value) VALUES('published','true');`);
+  const userColumns = new Set(
+    db
+      .prepare("PRAGMA table_info(users)")
+      .all()
+      .map((c) => c.name),
+  );
+  if (!userColumns.has("grade"))
+    db.exec(
+      "ALTER TABLE users ADD COLUMN grade INTEGER CHECK(grade IN (2,5,8))",
+    );
+  if (!userColumns.has("gender"))
+    db.exec(
+      "ALTER TABLE users ADD COLUMN gender TEXT CHECK(gender IN ('male','female'))",
+    );
   const raw = (id) => db.prepare("SELECT * FROM users WHERE id=?").get(id);
   function requireRole(id, roles) {
     const user = raw(id);
@@ -90,24 +147,82 @@ export function createStore(filename) {
       db.close();
     },
     publicUser: safeUser,
-    registerParent(input) {
+    registerFamily(input) {
       const name = field(input.name, 60),
         email = field(input.email, 200).toLowerCase();
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
         fail("أدخلي بريدًا إلكترونيًا صحيحًا.");
       const password = field(input.password, 128);
       if (password.length < 10) fail("كلمة المرور لا تقل عن 10 أحرف.");
+      const rawChildren = input.children;
+      if (rawChildren != null && !Array.isArray(rawChildren))
+        fail("بيانات الأبناء غير صحيحة.");
+      const list = rawChildren ?? [];
+      if (list.length > 6) fail("يمكن إضافة ستة أبناء كحد أقصى.");
+      const children = list.map((row, index) => readChild(row, index));
+      const seen = new Set();
+      for (let i = 0; i < children.length; i++) {
+        const username = children[i].username;
+        if (
+          seen.has(username) ||
+          db.prepare("SELECT id FROM users WHERE username=?").get(username)
+        )
+          childFail(i, "اسم المستخدم غير متاح. اختاري اسمًا آخر.");
+        seen.add(username);
+      }
       const id = randomUUID();
+      db.exec("BEGIN");
       try {
-        db.prepare(
-          "INSERT INTO users(id,name,role,email,secret,created_at) VALUES(?,?,?,?,?,?)",
-        ).run(id, name, "parent", email, hash(password), Date.now());
+        try {
+          db.prepare(
+            "INSERT INTO users(id,name,role,email,secret,created_at) VALUES(?,?,?,?,?,?)",
+          ).run(id, name, "parent", email, hash(password), Date.now());
+        } catch (e) {
+          if (String(e).includes("UNIQUE"))
+            fail("تعذّر التسجيل بهذه البيانات. جرّبي تسجيل الدخول.");
+          throw e;
+        }
+        const insertChild = db.prepare(
+          "INSERT INTO users(id,name,role,username,secret,parent_id,created_at,grade,gender) VALUES(?,?,?,?,?,?,?,?,?)",
+        );
+        for (let i = 0; i < children.length; i++) {
+          const c = children[i];
+          try {
+            insertChild.run(
+              randomUUID(),
+              c.name,
+              "student",
+              c.username,
+              hash(c.pin),
+              id,
+              Date.now(),
+              c.grade,
+              c.gender,
+            );
+          } catch (e) {
+            if (String(e).includes("UNIQUE"))
+              childFail(i, "اسم المستخدم غير متاح. اختاري اسمًا آخر.");
+            throw e;
+          }
+        }
+        db.exec("COMMIT");
       } catch (e) {
-        if (String(e).includes("UNIQUE"))
-          fail("تعذّر التسجيل بهذه البيانات. جرّبي تسجيل الدخول.");
+        try {
+          db.exec("ROLLBACK");
+        } catch {
+          /* transaction already closed */
+        }
         throw e;
       }
       return safeUser(raw(id));
+    },
+    registerParent(input) {
+      return api.registerFamily({
+        name: input.name,
+        email: input.email,
+        password: input.password,
+        children: [],
+      });
     },
     loginParent(email, password) {
       const user = db
@@ -121,17 +236,22 @@ export function createStore(filename) {
     },
     createChild(parentId, input) {
       requireRole(parentId, ["parent"]);
-      const name = field(input.name, 60),
-        username = field(input.username, 32).toLowerCase(),
-        pin = field(input.pin, 12);
-      if (!/^[\p{L}\p{N}_-]{3,32}$/u.test(username))
-        fail("اسم المستخدم 3–32 حرفًا دون مسافات.");
-      if (!/^\d{6,12}$/.test(pin)) fail("رمز الدخول من 6 إلى 12 رقمًا.");
+      const child = readChild(input);
       const id = randomUUID();
       try {
         db.prepare(
-          "INSERT INTO users(id,name,role,username,secret,parent_id,created_at) VALUES(?,?,?,?,?,?,?)",
-        ).run(id, name, "student", username, hash(pin), parentId, Date.now());
+          "INSERT INTO users(id,name,role,username,secret,parent_id,created_at,grade,gender) VALUES(?,?,?,?,?,?,?,?,?)",
+        ).run(
+          id,
+          child.name,
+          "student",
+          child.username,
+          hash(child.pin),
+          parentId,
+          Date.now(),
+          child.grade,
+          child.gender,
+        );
       } catch (e) {
         if (String(e).includes("UNIQUE"))
           fail("اسم المستخدم غير متاح. اختاري اسمًا آخر.");

@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
 
 test("public pages, verified curriculum and interactive lesson work at four sizes", async ({
   page,
@@ -17,6 +18,7 @@ test("public pages, verified curriculum and interactive lesson work at four size
       "/grade/8/science",
       "/grade/8/science/nutrients",
       "/login",
+      "/login?mode=register",
     ]) {
       await page.goto(path);
       await expect(page.locator("h1")).toBeVisible();
@@ -66,19 +68,43 @@ test("parent adds child, child completes quiz, parent reviews persisted answers"
   await page
     .getByLabel("كلمة المرور", { exact: true })
     .fill("Test-password-9876");
+  await page
+    .getByRole("group", { name: "الطالب ١" })
+    .getByLabel("اسم الطالب")
+    .fill("هنا التجريبية");
+  await page
+    .getByRole("group", { name: "الطالب ١" })
+    .getByLabel("الصف")
+    .selectOption("8");
+  await page.getByRole("radio", { name: "بنت", exact: true }).check();
+  await page
+    .getByRole("group", { name: "الطالب ١" })
+    .getByLabel("اسم المستخدم")
+    .fill(username);
+  await page
+    .getByRole("group", { name: "الطالب ١" })
+    .getByLabel("رمز الدخول")
+    .fill("73918264");
   await page.getByRole("button", { name: "إنشاء الحساب", exact: true }).click();
   await expect(page).toHaveURL("/dashboard");
+  await expect(
+    page.getByRole("heading", { name: "هنا التجريبية", exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "إضافة طالب", exact: true }).click();
+  await page.getByLabel("اسم الطالب", { exact: true }).fill("أخ الاختبار");
   await page
-    .getByRole("button", { name: "إضافة أول طالب", exact: true })
-    .click();
-  await page.getByLabel("اسم الطالب", { exact: true }).fill("هنا التجريبية");
-  await page.getByLabel("اسم المستخدم للدخول", { exact: true }).fill(username);
-  await page.getByLabel("رمز الدخول", { exact: true }).fill("73918264");
+    .getByRole("combobox", { name: "الصف", exact: true })
+    .selectOption("5");
+  await page.getByRole("radio", { name: "ولد", exact: true }).check();
+  await page
+    .getByLabel("اسم المستخدم للدخول", { exact: true })
+    .fill(`${username}-b`);
+  await page.getByLabel("رمز الدخول", { exact: true }).fill("24681357");
   await page
     .getByRole("button", { name: "حفظ ملف الطالب", exact: true })
     .click();
   await expect(
-    page.getByRole("heading", { name: "هنا التجريبية", exact: true }),
+    page.getByRole("heading", { name: "أخ الاختبار", exact: true }),
   ).toBeVisible();
   const parentCookie = (await page.context().cookies()).find(
     (c) => c.name === "hana_session",
@@ -158,17 +184,20 @@ test("parent adds child, child completes quiz, parent reviews persisted answers"
     .getByRole("button", { name: "دخول إلى مساحتي", exact: true })
     .click();
   await expect(page).toHaveURL("/dashboard");
-  await expect(page.locator(".child-panel")).toContainText("٤");
-  await page.locator(".attempt>summary").click();
-  await expect(page.locator(".result-details details")).toHaveCount(10);
-  await page
+  const firstChild = page
+    .locator(".child-panel")
+    .filter({ hasText: "هنا التجريبية" });
+  await expect(firstChild).toContainText("٤");
+  await firstChild.locator(".attempt>summary").click();
+  await expect(firstChild.locator(".result-details details")).toHaveCount(10);
+  await firstChild
     .locator(".result-details details")
     .first()
     .locator("summary")
     .click();
-  await expect(page.locator(".result-details details").first()).toContainText(
-    "إجابتك: المغذّيات الكبرى",
-  );
+  await expect(
+    firstChild.locator(".result-details details").first(),
+  ).toContainText("إجابتك: المغذّيات الكبرى");
   const denied = await page.request.post("/api/admin/publish", {
     data: { published: false },
   });
@@ -178,4 +207,56 @@ test("parent adds child, child completes quiz, parent reviews persisted answers"
     data: {},
   });
   expect(csrf.status()).toBe(403);
+});
+
+test("register child rows keep typed values after removal and stay within 360px", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 360, height: 800 });
+  await page.goto("/login?mode=register");
+  await page
+    .getByRole("button", { name: "إضافة ابن/ابنة", exact: true })
+    .click();
+  await expect(
+    page.getByRole("group", { name: "الطالب ٢" }).getByLabel("اسم الطالب"),
+  ).toBeFocused();
+  const second = page.getByRole("group", { name: "الطالب ٢" });
+  await second.getByLabel("اسم الطالب").fill("صفية المحفوظة");
+  await second.getByLabel("اسم المستخدم").fill("safiya-keep");
+  await page
+    .getByRole("button", { name: "إزالة الطالب ١", exact: true })
+    .click();
+  await expect(page.getByRole("group", { name: /^الطالب / })).toHaveCount(1);
+  const kept = page.getByRole("group", { name: "الطالب ١" });
+  await expect(kept.getByLabel("اسم الطالب")).toHaveValue("صفية المحفوظة");
+  await expect(kept.getByLabel("اسم المستخدم")).toHaveValue("safiya-keep");
+  await expect(
+    page.getByRole("button", { name: "إضافة ابن/ابنة", exact: true }),
+  ).toBeFocused();
+  await page
+    .getByRole("button", { name: "إضافة ابن/ابنة", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "إضافة ابن/ابنة", exact: true })
+    .click();
+  await expect(page.getByRole("group", { name: "الطالب ٣" })).toBeVisible();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await page.evaluate(() => document.fonts.ready);
+  const results = await new AxeBuilder({ page })
+    .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+    .analyze();
+  expect(
+    results.violations.map((v) => ({
+      id: v.id,
+      impact: v.impact,
+      nodes: v.nodes.map((n) => ({
+        target: n.target,
+        summary: n.failureSummary,
+      })),
+    })),
+  ).toEqual([]);
 });

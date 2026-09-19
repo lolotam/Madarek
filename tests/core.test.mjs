@@ -50,6 +50,8 @@ test("family ownership protects child data and role boundaries", () => {
       name: "هنا",
       username: "hana-test",
       pin: "12345678",
+      grade: 8,
+      gender: "female",
     });
     assert.equal(child.role, "student");
     assert.throws(() => store.getChild(other.id, child.id));
@@ -89,6 +91,8 @@ test("attempts preserve history, server score and idempotency", () => {
       name: "هنا",
       username: "hana-attempts",
       pin: "12345678",
+      grade: 8,
+      gender: "female",
     });
     store.saveProgress(c.id, { section: "map" });
     store.savePractice(
