@@ -8,7 +8,20 @@ import {
 } from "node:crypto";
 import { mkdirSync } from "node:fs";
 import { dirname } from "node:path";
-import { grade, modelReason } from "./questions.mjs";
+import { grade, modelReason, LESSON_ID, quizConcepts } from "./questions.mjs";
+import {
+  kuwaitDay,
+  daysBetween,
+  nextStreak,
+  dailyReward,
+  STREAK_MILESTONES,
+  SECTION_REWARD,
+  PRACTICE_REWARD,
+  QUIZ_EFFORT,
+  quizImprovement,
+  levelFor,
+} from "./rewards.mjs";
+import { conceptMastery } from "./mastery.mjs";
 import {
   decryptSecret,
   encryptSecret,
@@ -89,7 +102,7 @@ function field(value, max = 100) {
     fail("تحقّقي من الحقول المطلوبة وطولها.");
   return value.trim();
 }
-export function createStore(filename) {
+export function createStore(filename, { now = Date.now } = {}) {
   if (filename !== ":memory:")
     mkdirSync(dirname(filename), { recursive: true });
   // Build workers and the dev server open this file concurrently; wait for
@@ -105,6 +118,9 @@ export function createStore(filename) {
     CREATE TABLE IF NOT EXISTS limits(key TEXT PRIMARY KEY,count INTEGER NOT NULL,expires INTEGER NOT NULL);
     CREATE TABLE IF NOT EXISTS admin_audit(id TEXT PRIMARY KEY,admin_id TEXT NOT NULL,action TEXT NOT NULL,target_user_id TEXT,detail TEXT,created_at INTEGER NOT NULL);
     CREATE TABLE IF NOT EXISTS lesson_videos(id TEXT PRIMARY KEY,lesson_id TEXT NOT NULL,youtube_id TEXT NOT NULL,title TEXT NOT NULL,goal TEXT NOT NULL,kind TEXT NOT NULL CHECK(kind IN ('explain','experiment','review','guide')),duration_seconds INTEGER,position INTEGER NOT NULL DEFAULT 0,published INTEGER NOT NULL DEFAULT 0,created_at INTEGER NOT NULL,updated_at INTEGER NOT NULL);
+    CREATE TABLE IF NOT EXISTS reward_ledger(id TEXT PRIMARY KEY,user_id TEXT NOT NULL REFERENCES users(id),source TEXT NOT NULL,source_key TEXT NOT NULL,xp INTEGER NOT NULL,coins INTEGER NOT NULL,created_at INTEGER NOT NULL,UNIQUE(user_id,source,source_key));
+    CREATE TABLE IF NOT EXISTS activity_days(user_id TEXT NOT NULL REFERENCES users(id),day TEXT NOT NULL,PRIMARY KEY(user_id,day));
+    CREATE TABLE IF NOT EXISTS streaks(user_id TEXT PRIMARY KEY REFERENCES users(id),current INTEGER NOT NULL,best INTEGER NOT NULL,last_day TEXT,freezes INTEGER NOT NULL);
     INSERT OR IGNORE INTO settings(key,value) VALUES('published','true');`);
   const userColumns = new Set(
     db
@@ -122,6 +138,19 @@ export function createStore(filename) {
     );
   if (!userColumns.has("disabled_at"))
     db.exec("ALTER TABLE users ADD COLUMN disabled_at INTEGER");
+  const attemptColumns = new Set(
+    db
+      .prepare("PRAGMA table_info(attempts)")
+      .all()
+      .map((c) => c.name),
+  );
+  if (!attemptColumns.has("lesson_id")) {
+    db.exec("ALTER TABLE attempts ADD COLUMN lesson_id TEXT");
+    // Every attempt before this column existed was the nutrients quiz.
+    db.prepare("UPDATE attempts SET lesson_id=? WHERE lesson_id IS NULL").run(
+      LESSON_ID,
+    );
+  }
   const raw = (id) => db.prepare("SELECT * FROM users WHERE id=?").get(id);
   function requireRole(id, roles) {
     const user = raw(id);
@@ -228,28 +257,115 @@ export function createStore(filename) {
     }
     return { configured: false, source: "none", last4: null };
   }
+  /** Append a reward once; returns it, or null when it was already granted. */
+  function grant(userId, source, key, reward) {
+    const info = db
+      .prepare(
+        "INSERT OR IGNORE INTO reward_ledger(id,user_id,source,source_key,xp,coins,created_at) VALUES(?,?,?,?,?,?,?)",
+      )
+      .run(randomUUID(), userId, source, key, reward.xp, reward.coins, now());
+    return info.changes
+      ? { source, xp: reward.xp, coins: reward.coins }
+      : null;
+  }
+  /** Mark today as a study day and pay the daily and milestone rewards. */
+  function recordActivity(userId) {
+    const day = kuwaitDay(now());
+    db.prepare(
+      "INSERT OR IGNORE INTO activity_days(user_id,day) VALUES(?,?)",
+    ).run(userId, day);
+    const row = db.prepare("SELECT * FROM streaks WHERE user_id=?").get(userId);
+    const next = nextStreak(
+      row
+        ? {
+            current: row.current,
+            best: row.best,
+            lastDay: row.last_day,
+            freezes: row.freezes,
+          }
+        : null,
+      day,
+    );
+    if (!next.isNewDay) return [];
+    db.prepare(
+      "INSERT INTO streaks(user_id,current,best,last_day,freezes) VALUES(?,?,?,?,?) ON CONFLICT(user_id) DO UPDATE SET current=excluded.current,best=excluded.best,last_day=excluded.last_day,freezes=excluded.freezes",
+    ).run(userId, next.current, next.best, next.lastDay, next.freezes);
+    const granted = [grant(userId, "daily", day, dailyReward(next.current))];
+    const milestone = STREAK_MILESTONES[next.current];
+    if (milestone)
+      granted.push(
+        grant(userId, "streak_bonus", `${next.current}:${day}`, milestone),
+      );
+    return granted.filter(Boolean);
+  }
+  function rewardSummary(user) {
+    const totals = db
+      .prepare(
+        "SELECT COALESCE(SUM(xp),0) AS xp,COALESCE(SUM(coins),0) AS coins FROM reward_ledger WHERE user_id=?",
+      )
+      .get(user.id);
+    const streak = db
+      .prepare("SELECT * FROM streaks WHERE user_id=?")
+      .get(user.id);
+    const today = kuwaitDay(now());
+    const gap = streak?.last_day ? daysBetween(streak.last_day, today) : null;
+    const alive =
+      gap !== null && (gap <= 1 || (gap === 2 && streak.freezes > 0));
+    return {
+      xp: totals.xp,
+      coins: totals.coins,
+      ...levelFor(totals.xp, user.gender),
+      streak: {
+        current: alive ? streak.current : 0,
+        best: streak?.best ?? 0,
+        freezes: streak?.freezes ?? 0,
+        todayDone: streak?.last_day === today,
+      },
+      today,
+      activeDays: db
+        .prepare(
+          "SELECT day FROM activity_days WHERE user_id=? ORDER BY day DESC LIMIT 14",
+        )
+        .all(user.id)
+        .map((r) => r.day),
+      recent: db
+        .prepare(
+          "SELECT source,source_key AS sourceKey,xp,coins,created_at AS createdAt FROM reward_ledger WHERE user_id=? ORDER BY created_at DESC,rowid DESC LIMIT 20",
+        )
+        .all(user.id)
+        .map((r) => ({ ...r })),
+    };
+  }
   const childAttempts = (id) =>
     db
       .prepare(
-        "SELECT result,created_at FROM attempts WHERE user_id=? ORDER BY created_at DESC",
+        "SELECT result,lesson_id,created_at FROM attempts WHERE user_id=? ORDER BY created_at DESC",
       )
       .all(id)
-      .map((r) => ({ ...JSON.parse(r.result), createdAt: r.created_at }));
+      .map((r) => ({
+        ...JSON.parse(r.result),
+        lessonId: r.lesson_id,
+        createdAt: r.created_at,
+      }));
   function childSnapshot(id) {
+    const user = raw(id);
     const row = db.prepare("SELECT * FROM progress WHERE user_id=?").get(id);
+    const attempts = childAttempts(id);
     return {
-      user: safeUser(raw(id)),
+      user: safeUser(user),
       progress: {
         sections: row ? JSON.parse(row.sections) : [],
         updatedAt: row?.updated_at ?? null,
       },
-      attempts: childAttempts(id),
+      attempts,
       practice: db
         .prepare(
           "SELECT answer,feedback,created_at AS createdAt FROM practice WHERE user_id=? ORDER BY created_at DESC LIMIT 30",
         )
         .all(id)
         .map((row) => ({ ...row })),
+      rewards: rewardSummary(user),
+      mastery: conceptMastery(quizConcepts(), attempts),
     };
   }
   const LESSON_KEY = /^[a-z][a-z0-9-]{1,59}$/;
@@ -466,7 +582,11 @@ export function createStore(filename) {
       db.prepare(
         "INSERT INTO progress VALUES(?,?,?) ON CONFLICT(user_id) DO UPDATE SET sections=excluded.sections,updated_at=excluded.updated_at",
       ).run(userId, JSON.stringify([...sections]), Date.now());
-      return { sections: [...sections] };
+      const rewards = [
+        ...recordActivity(userId),
+        grant(userId, "lesson_section", `${LESSON_ID}:${section}`, SECTION_REWARD),
+      ].filter(Boolean);
+      return { sections: [...sections], rewards };
     },
     submit(userId, { id, answers }) {
       requireRole(userId, ["student"]);
@@ -480,14 +600,26 @@ export function createStore(filename) {
       if (!answers || typeof answers !== "object" || Array.isArray(answers))
         fail("الإجابات غير صحيحة.");
       const result = { ...grade(answers), id };
-      db.prepare("INSERT INTO attempts VALUES(?,?,?,?)").run(
-        id,
-        userId,
-        JSON.stringify(result),
-        Date.now(),
-      );
-      api.saveProgress(userId, { section: "quiz" });
-      return result;
+      const previousBest = db
+        .prepare("SELECT result FROM attempts WHERE user_id=? AND lesson_id=?")
+        .all(userId, LESSON_ID)
+        .reduce((best, r) => Math.max(best, JSON.parse(r.result).score), 0);
+      db.prepare(
+        "INSERT INTO attempts(id,user_id,result,created_at,lesson_id) VALUES(?,?,?,?,?)",
+      ).run(id, userId, JSON.stringify(result), Date.now(), LESSON_ID);
+      const rewards = [...api.saveProgress(userId, { section: "quiz" }).rewards];
+      if (result.details.every((d) => d.submitted))
+        rewards.push(
+          grant(
+            userId,
+            "quiz_effort",
+            `${LESSON_ID}:${kuwaitDay(now())}`,
+            QUIZ_EFFORT,
+          ),
+        );
+      const gain = quizImprovement(previousBest, result.score);
+      if (gain) rewards.push(grant(userId, "quiz", `${LESSON_ID}:${id}`, gain));
+      return { ...result, rewards: rewards.filter(Boolean) };
     },
     savePractice(userId, answer) {
       requireRole(userId, ["student"]);
@@ -499,7 +631,16 @@ export function createStore(filename) {
         modelReason,
         Date.now(),
       );
-      return { mode: "model_answer", feedback: modelReason };
+      const rewards = [
+        ...recordActivity(userId),
+        grant(
+          userId,
+          "practice",
+          `${LESSON_ID}:${kuwaitDay(now())}`,
+          PRACTICE_REWARD,
+        ),
+      ].filter(Boolean);
+      return { mode: "model_answer", feedback: modelReason, rewards };
     },
     snapshot(userId) {
       const user = raw(userId);
@@ -769,6 +910,10 @@ export function createStore(filename) {
         db.prepare(
           `DELETE FROM practice WHERE user_id IN (${placeholders})`,
         ).run(...ids);
+        for (const table of ["reward_ledger", "activity_days", "streaks"])
+          db.prepare(
+            `DELETE FROM ${table} WHERE user_id IN (${placeholders})`,
+          ).run(...ids);
         db.prepare("DELETE FROM users WHERE parent_id=?").run(parent.id);
         db.prepare("DELETE FROM users WHERE id=?").run(parent.id);
         writeAudit(adminId, "families.delete", parent.id, {
