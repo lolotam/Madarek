@@ -1350,6 +1350,19 @@ audio[data-audio-engine] {
   font-size: 13px;
   color: var(--ink);
 }
+.audio-player-unavailable {
+  gap: 4px;
+  box-shadow: none;
+  background: var(--paper);
+}
+.audio-player-unavailable .audio-player-status {
+  font-weight: 650;
+}
+.audio-unavailable-note {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+}
 .audio-player-main,
 .audio-player-tools {
   display: flex;
@@ -1616,8 +1629,18 @@ audio[data-audio-engine] {
 }
 .complete-row {
   display: flex;
-  justify-content: end;
+  flex-direction: column;
+  align-items: end;
   margin-top: 20px;
+}
+.complete-status {
+  align-self: stretch;
+}
+.complete-feedback {
+  margin-block: 12px 0;
+}
+.complete-feedback p {
+  margin: 0;
 }
 .activity-title {
   margin: 26px 0 9px;

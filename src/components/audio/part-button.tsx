@@ -14,6 +14,8 @@ export function PartPlayButton({
 }) {
   const reduce = useReducedMotion();
   const { playPart, canPlayPart, status } = useAudio();
+  // Hidden while no narration is available, rather than a dead button.
+  if (status === "not_ready") return null;
   const disabled =
     !canPlayPart(part) || status === "loading" || status === "starting";
   return (

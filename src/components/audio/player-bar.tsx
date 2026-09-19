@@ -61,6 +61,29 @@ export function PlayerBar() {
   else if (status === "starting") message = "جارٍ التشغيل…";
   else if (playing) message = "التشغيل جارٍ";
 
+  // With no approved clips every control would be disabled, which reads as a
+  // broken player. Show one clear notice instead; the lesson works without it.
+  if (status === "not_ready")
+    return (
+      <motion.div
+        className="audio-player audio-player-unavailable"
+        role="region"
+        aria-label="المشغّل الصوتي"
+        data-audio-player-status={status}
+        initial={{ opacity: 0, y: reduce ? 0 : 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.25 }}
+      >
+        <div className="audio-player-status" role="status">
+          الشرح الصوتي غير جاهز بعد
+        </div>
+        <p className="audio-unavailable-note">
+          نجهّز الشرح المسموع لهذا الدرس. يمكنك الآن متابعة الدرس كاملًا
+          بالقراءة والتجربة.
+        </p>
+      </motion.div>
+    );
+
   return (
     <motion.div
       className="audio-player"

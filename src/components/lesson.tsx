@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   ArrowLeft,
   BookOpen,
@@ -13,6 +14,7 @@ import {
   PencilLine,
   Trophy,
   ArrowRight,
+  Info,
 } from "lucide-react";
 import {
   ConceptTree,
@@ -47,7 +49,15 @@ export function Lesson() {
   const { user } = useSession();
   const [sections, setSections] = useState<string[]>([]),
     [message, setMessage] = useState(""),
-    [saving, setSaving] = useState(false);
+    [saving, setSaving] = useState<string | null>(null),
+    // Feedback is shown next to the button that was pressed; the page-level
+    // message sits at the top of the lesson, screens away from these buttons.
+    [feedback, setFeedback] = useState<{
+      section: string;
+      tone: "success" | "info" | "error";
+      text: string;
+    } | null>(null);
+  const reduce = useReducedMotion();
   useEffect(() => {
     setSections([]);
     if (user?.role === "student")
@@ -61,40 +71,85 @@ export function Lesson() {
   }, [user]);
   async function complete(section: string) {
     if (user?.role !== "student") {
-      setMessage(
-        "لحفظ تقدّمك، سجّلي الدخول بحساب الطالب. يمكنك متابعة الشرح الآن.",
-      );
+      setFeedback({
+        section,
+        tone: "info",
+        text: "يُحفظ الإنجاز لحساب الطالب فقط. يمكنك متابعة الشرح الآن.",
+      });
       return;
     }
-    setSaving(true);
+    setSaving(section);
+    setFeedback(null);
     try {
       const data = await api("progress", { section });
       setSections(data.sections);
-      setMessage("حُفظ تقدّمك. خطوة رائعة!");
+      setFeedback({
+        section,
+        tone: "success",
+        text: "حُفظ تقدّمك. خطوة رائعة!",
+      });
     } catch (e) {
-      setMessage((e as Error).message);
+      setFeedback({ section, tone: "error", text: (e as Error).message });
     } finally {
-      setSaving(false);
+      setSaving(null);
     }
   }
-  const completeButton = (id: string) => (
-    <div className="complete-row">
-      <button
-        disabled={saving}
-        onClick={() => complete(id)}
-        className={
-          "button small " + (sections.includes(id) ? "soft" : "outline")
-        }
-      >
-        <CheckCircle2 size={18} />
-        {sections.includes(id)
-          ? "أنجزتِ هذا المقطع"
-          : saving
-            ? "جارٍ الحفظ…"
-            : "فهمت، أنجزت هذا المقطع"}
-      </button>
-    </div>
-  );
+  const completeButton = (id: string) => {
+    const note = feedback?.section === id ? feedback : null;
+    return (
+      <div className="complete-row">
+        <motion.button
+          disabled={saving !== null}
+          onClick={() => complete(id)}
+          whileTap={reduce ? undefined : { scale: 0.97 }}
+          className={
+            "button small " + (sections.includes(id) ? "soft" : "outline")
+          }
+        >
+          <CheckCircle2 size={18} />
+          {sections.includes(id)
+            ? "أنجزتِ هذا المقطع"
+            : saving === id
+              ? "جارٍ الحفظ…"
+              : "فهمت، أنجزت هذا المقطع"}
+        </motion.button>
+        <div role="status" aria-live="polite" className="complete-status">
+          <AnimatePresence initial={false}>
+            {note && (
+              <motion.div
+                key={note.tone + note.text}
+                className={
+                  "feedback complete-feedback " +
+                  (note.tone === "success" ? "success" : "retry")
+                }
+                initial={{ opacity: 0, y: reduce ? 0 : -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.22 }}
+              >
+                {note.tone === "success" ? (
+                  <CheckCircle2 size={20} />
+                ) : (
+                  <Info size={20} />
+                )}
+                <p>
+                  {note.text}
+                  {note.tone === "info" && (
+                    <>
+                      {" "}
+                      <Link className="text-link" href="/login?mode=student">
+                        دخول الطالب
+                      </Link>
+                    </>
+                  )}
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+    );
+  };
   return (
     <AudioProvider page="nutrients">
       <section className="lesson-hero" data-audio-target={lessonHeroTarget.id}>
