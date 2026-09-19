@@ -1,0 +1,12 @@
+node_modules/
+.next/
+.data/
+.env*
+!.env.example
+*.tsbuildinfo
+test-results/
+playwright-report/
+.codex-remote-attachments/
+GRADE-*/
+tmp/
+.playwright-mcp/

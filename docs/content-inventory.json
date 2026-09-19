@@ -1,0 +1,1286 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-09-19T12:44:07.1434743+03:00",
+  "status": "copy_in_progress",
+  "verification": "filesystem_metadata_only",
+  "projectRoot": "E:/HANA-WALEED",
+  "launchTerm": "first",
+  "academicYear": "2026-2027",
+  "observedGradeFolders": [
+    "GRADE-2",
+    "GRADE-8"
+  ],
+  "fileCount": 254,
+  "files": [
+    {
+      "path": "GRADE-8/FIRST-TERM/ARABIC/اللغة العربية الدراسي الاول.pdf",
+      "extension": ".pdf",
+      "bytes": 6648846
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/ARABIC/حل كتاب اللغه العربيه صفحه ل 46 - الصف الثامن.pdf",
+      "extension": ".pdf",
+      "bytes": 17322836
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/ARABIC/كتاب ثامن عربي قسم أول ٢٠٢٧.pdf",
+      "extension": ".pdf",
+      "bytes": 7008304
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/ECONMIC/الاقنصاد المنزلي.pdf",
+      "extension": ".pdf",
+      "bytes": 2214409
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/ENGLISH/ENGLISH PEARL OF KUWAIT STUDENT BOOK -سخمعفهخى.pdf",
+      "extension": ".pdf",
+      "bytes": 66169194
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/ENGLISH/ENGLISH PEARL OF KUWAIT STUDENT BOOK .pdf",
+      "extension": ".pdf",
+      "bytes": 51972884
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/ENGLISH/كتاب ثامن إنجليزي ستيودنتس ٢٠٢٧.pdf",
+      "extension": ".pdf",
+      "bytes": 4836673
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/ENGLISH/كتاب ثامن إنجليزي وورك ٢٠٢٧.pdf",
+      "extension": ".pdf",
+      "bytes": 10262851
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/ISLAMIC/حل_كتاب_التربية_الإسلامية_2025_2026_الجزء_الاول_القسم_الاول.pdf",
+      "extension": ".pdf",
+      "bytes": 5000701
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/ISLAMIC/كتاب ثامن إسلامية ٢٠٢٧.pdf",
+      "extension": ".pdf",
+      "bytes": 13628531
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/ISLAMIC/كتاب ثامن قرآن ٢٠٢٧.pdf",
+      "extension": ".pdf",
+      "bytes": 13418404
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/MATH/MATH SOLUTIONS.pdf",
+      "extension": ".pdf",
+      "bytes": 49029926
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/MATH/MATH STUDENT BOOK.pdf",
+      "extension": ".pdf",
+      "bytes": 42405368
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/lesson-1/علوم ثامن الدرس الأول أحمد حضاره-0.jpg",
+      "extension": ".jpg",
+      "bytes": 148738
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/lesson-1/علوم ثامن الدرس الأول أحمد حضاره-1.jpg",
+      "extension": ".jpg",
+      "bytes": 140285
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/lesson-1/علوم ثامن الدرس الأول أحمد حضاره-2.jpg",
+      "extension": ".jpg",
+      "bytes": 162818
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/lesson-1/علوم ثامن الدرس الأول أحمد حضاره-3.jpg",
+      "extension": ".jpg",
+      "bytes": 225348
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/lesson-1/علوم ثامن الدرس الأول أحمد حضاره-4.jpg",
+      "extension": ".jpg",
+      "bytes": 207671
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/lesson-1/علوم ثامن الدرس الأول أحمد حضاره-5.jpg",
+      "extension": ".jpg",
+      "bytes": 174229
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم ثامن الدرس الأول أحمد حضاره.pdf",
+      "extension": ".pdf",
+      "bytes": 1456910
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم.pdf",
+      "extension": ".pdf",
+      "bytes": 91576235
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-0.jpg",
+      "extension": ".jpg",
+      "bytes": 147670
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-1.jpg",
+      "extension": ".jpg",
+      "bytes": 71668
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-10.jpg",
+      "extension": ".jpg",
+      "bytes": 126867
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-100.jpg",
+      "extension": ".jpg",
+      "bytes": 165282
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-101.jpg",
+      "extension": ".jpg",
+      "bytes": 99259
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-102.jpg",
+      "extension": ".jpg",
+      "bytes": 75033
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-103.jpg",
+      "extension": ".jpg",
+      "bytes": 143282
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-104.jpg",
+      "extension": ".jpg",
+      "bytes": 170103
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-105.jpg",
+      "extension": ".jpg",
+      "bytes": 109631
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-106.jpg",
+      "extension": ".jpg",
+      "bytes": 186495
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-107.jpg",
+      "extension": ".jpg",
+      "bytes": 67416
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-108.jpg",
+      "extension": ".jpg",
+      "bytes": 209009
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-109.jpg",
+      "extension": ".jpg",
+      "bytes": 141211
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-11.jpg",
+      "extension": ".jpg",
+      "bytes": 101763
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-110.jpg",
+      "extension": ".jpg",
+      "bytes": 42224
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-111.jpg",
+      "extension": ".jpg",
+      "bytes": 40999
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-112.jpg",
+      "extension": ".jpg",
+      "bytes": 88866
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-113.jpg",
+      "extension": ".jpg",
+      "bytes": 88923
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-114.jpg",
+      "extension": ".jpg",
+      "bytes": 89002
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-115.jpg",
+      "extension": ".jpg",
+      "bytes": 88965
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-116.jpg",
+      "extension": ".jpg",
+      "bytes": 151395
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-117.jpg",
+      "extension": ".jpg",
+      "bytes": 291400
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-118.jpg",
+      "extension": ".jpg",
+      "bytes": 71881
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-119.jpg",
+      "extension": ".jpg",
+      "bytes": 34977
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-12.jpg",
+      "extension": ".jpg",
+      "bytes": 127023
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-120.jpg",
+      "extension": ".jpg",
+      "bytes": 54313
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-121.jpg",
+      "extension": ".jpg",
+      "bytes": 11318
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-122.jpg",
+      "extension": ".jpg",
+      "bytes": 138130
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-123.jpg",
+      "extension": ".jpg",
+      "bytes": 11318
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-124.jpg",
+      "extension": ".jpg",
+      "bytes": 134804
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-125.jpg",
+      "extension": ".jpg",
+      "bytes": 11422
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-126.jpg",
+      "extension": ".jpg",
+      "bytes": 123745
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-127.jpg",
+      "extension": ".jpg",
+      "bytes": 11318
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-128.jpg",
+      "extension": ".jpg",
+      "bytes": 130365
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-129.jpg",
+      "extension": ".jpg",
+      "bytes": 126817
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-13.jpg",
+      "extension": ".jpg",
+      "bytes": 153316
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-130.jpg",
+      "extension": ".jpg",
+      "bytes": 145095
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-131.jpg",
+      "extension": ".jpg",
+      "bytes": 197978
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-132.jpg",
+      "extension": ".jpg",
+      "bytes": 153325
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-133.jpg",
+      "extension": ".jpg",
+      "bytes": 144424
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-134.jpg",
+      "extension": ".jpg",
+      "bytes": 95693
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-135.jpg",
+      "extension": ".jpg",
+      "bytes": 104795
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-136.jpg",
+      "extension": ".jpg",
+      "bytes": 149808
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-137.jpg",
+      "extension": ".jpg",
+      "bytes": 284851
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-138.jpg",
+      "extension": ".jpg",
+      "bytes": 191039
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-139.jpg",
+      "extension": ".jpg",
+      "bytes": 151923
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-14.jpg",
+      "extension": ".jpg",
+      "bytes": 197939
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-140.jpg",
+      "extension": ".jpg",
+      "bytes": 115003
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-141.jpg",
+      "extension": ".jpg",
+      "bytes": 207219
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-142.jpg",
+      "extension": ".jpg",
+      "bytes": 131414
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-143.jpg",
+      "extension": ".jpg",
+      "bytes": 125380
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-144.jpg",
+      "extension": ".jpg",
+      "bytes": 89975
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-145.jpg",
+      "extension": ".jpg",
+      "bytes": 166001
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-146.jpg",
+      "extension": ".jpg",
+      "bytes": 121958
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-147.jpg",
+      "extension": ".jpg",
+      "bytes": 184569
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-148.jpg",
+      "extension": ".jpg",
+      "bytes": 142250
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-149.jpg",
+      "extension": ".jpg",
+      "bytes": 174639
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-15.jpg",
+      "extension": ".jpg",
+      "bytes": 161535
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-150.jpg",
+      "extension": ".jpg",
+      "bytes": 130836
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-151.jpg",
+      "extension": ".jpg",
+      "bytes": 155767
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-152.jpg",
+      "extension": ".jpg",
+      "bytes": 113043
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-153.jpg",
+      "extension": ".jpg",
+      "bytes": 147118
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-154.jpg",
+      "extension": ".jpg",
+      "bytes": 108403
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-155.jpg",
+      "extension": ".jpg",
+      "bytes": 68978
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-156.jpg",
+      "extension": ".jpg",
+      "bytes": 251616
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-157.jpg",
+      "extension": ".jpg",
+      "bytes": 162386
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-158.jpg",
+      "extension": ".jpg",
+      "bytes": 128771
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-159.jpg",
+      "extension": ".jpg",
+      "bytes": 81111
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-16.jpg",
+      "extension": ".jpg",
+      "bytes": 126948
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-160.jpg",
+      "extension": ".jpg",
+      "bytes": 160297
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-161.jpg",
+      "extension": ".jpg",
+      "bytes": 141919
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-162.jpg",
+      "extension": ".jpg",
+      "bytes": 100410
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-163.jpg",
+      "extension": ".jpg",
+      "bytes": 130975
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-164.jpg",
+      "extension": ".jpg",
+      "bytes": 128960
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-165.jpg",
+      "extension": ".jpg",
+      "bytes": 168010
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-166.jpg",
+      "extension": ".jpg",
+      "bytes": 213495
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-167.jpg",
+      "extension": ".jpg",
+      "bytes": 90708
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-168.jpg",
+      "extension": ".jpg",
+      "bytes": 159889
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-169.jpg",
+      "extension": ".jpg",
+      "bytes": 118795
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-17.jpg",
+      "extension": ".jpg",
+      "bytes": 109249
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-170.jpg",
+      "extension": ".jpg",
+      "bytes": 115568
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-171.jpg",
+      "extension": ".jpg",
+      "bytes": 106823
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-172.jpg",
+      "extension": ".jpg",
+      "bytes": 126583
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-173.jpg",
+      "extension": ".jpg",
+      "bytes": 142254
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-174.jpg",
+      "extension": ".jpg",
+      "bytes": 154477
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-175.jpg",
+      "extension": ".jpg",
+      "bytes": 159517
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-176.jpg",
+      "extension": ".jpg",
+      "bytes": 109659
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-177.jpg",
+      "extension": ".jpg",
+      "bytes": 175822
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-178.jpg",
+      "extension": ".jpg",
+      "bytes": 149188
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-179.jpg",
+      "extension": ".jpg",
+      "bytes": 199323
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-18.jpg",
+      "extension": ".jpg",
+      "bytes": 108941
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-180.jpg",
+      "extension": ".jpg",
+      "bytes": 169431
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-181.jpg",
+      "extension": ".jpg",
+      "bytes": 121252
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-182.jpg",
+      "extension": ".jpg",
+      "bytes": 154324
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-183.jpg",
+      "extension": ".jpg",
+      "bytes": 151947
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-184.jpg",
+      "extension": ".jpg",
+      "bytes": 94400
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-185.jpg",
+      "extension": ".jpg",
+      "bytes": 117802
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-186.jpg",
+      "extension": ".jpg",
+      "bytes": 170525
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-187.jpg",
+      "extension": ".jpg",
+      "bytes": 218316
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-188.jpg",
+      "extension": ".jpg",
+      "bytes": 197018
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-189.jpg",
+      "extension": ".jpg",
+      "bytes": 113228
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-19.jpg",
+      "extension": ".jpg",
+      "bytes": 149382
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-190.jpg",
+      "extension": ".jpg",
+      "bytes": 113811
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-191.jpg",
+      "extension": ".jpg",
+      "bytes": 161939
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-192.jpg",
+      "extension": ".jpg",
+      "bytes": 151927
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-193.jpg",
+      "extension": ".jpg",
+      "bytes": 119702
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-194.jpg",
+      "extension": ".jpg",
+      "bytes": 85074
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-195.jpg",
+      "extension": ".jpg",
+      "bytes": 125599
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-196.jpg",
+      "extension": ".jpg",
+      "bytes": 69682
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-197.jpg",
+      "extension": ".jpg",
+      "bytes": 145774
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-198.jpg",
+      "extension": ".jpg",
+      "bytes": 130173
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-199.jpg",
+      "extension": ".jpg",
+      "bytes": 251991
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-2.jpg",
+      "extension": ".jpg",
+      "bytes": 34555
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-20.jpg",
+      "extension": ".jpg",
+      "bytes": 200141
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-200.jpg",
+      "extension": ".jpg",
+      "bytes": 213305
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-201.jpg",
+      "extension": ".jpg",
+      "bytes": 166150
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-202.jpg",
+      "extension": ".jpg",
+      "bytes": 133411
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-203.jpg",
+      "extension": ".jpg",
+      "bytes": 117915
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-204.jpg",
+      "extension": ".jpg",
+      "bytes": 172426
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-205.jpg",
+      "extension": ".jpg",
+      "bytes": 279636
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-206.jpg",
+      "extension": ".jpg",
+      "bytes": 241695
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-207.jpg",
+      "extension": ".jpg",
+      "bytes": 93672
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-208.jpg",
+      "extension": ".jpg",
+      "bytes": 209821
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-209.jpg",
+      "extension": ".jpg",
+      "bytes": 145360
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-21.jpg",
+      "extension": ".jpg",
+      "bytes": 76234
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-210.jpg",
+      "extension": ".jpg",
+      "bytes": 123601
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-211.jpg",
+      "extension": ".jpg",
+      "bytes": 113846
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-212.jpg",
+      "extension": ".jpg",
+      "bytes": 197243
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-213.jpg",
+      "extension": ".jpg",
+      "bytes": 96068
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-214.jpg",
+      "extension": ".jpg",
+      "bytes": 226998
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-215.jpg",
+      "extension": ".jpg",
+      "bytes": 175250
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-216.jpg",
+      "extension": ".jpg",
+      "bytes": 101355
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-217.jpg",
+      "extension": ".jpg",
+      "bytes": 80327
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-218.jpg",
+      "extension": ".jpg",
+      "bytes": 109760
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-219.jpg",
+      "extension": ".jpg",
+      "bytes": 152943
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-22.jpg",
+      "extension": ".jpg",
+      "bytes": 159001
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-220.jpg",
+      "extension": ".jpg",
+      "bytes": 140404
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-221.jpg",
+      "extension": ".jpg",
+      "bytes": 185344
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-222.jpg",
+      "extension": ".jpg",
+      "bytes": 98946
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-223.jpg",
+      "extension": ".jpg",
+      "bytes": 236155
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-224.jpg",
+      "extension": ".jpg",
+      "bytes": 127880
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-225.jpg",
+      "extension": ".jpg",
+      "bytes": 187557
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-226.jpg",
+      "extension": ".jpg",
+      "bytes": 117875
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-227.jpg",
+      "extension": ".jpg",
+      "bytes": 184738
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-228.jpg",
+      "extension": ".jpg",
+      "bytes": 167530
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-229.jpg",
+      "extension": ".jpg",
+      "bytes": 101088
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-23.jpg",
+      "extension": ".jpg",
+      "bytes": 181533
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-230.jpg",
+      "extension": ".jpg",
+      "bytes": 59781
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-231.jpg",
+      "extension": ".jpg",
+      "bytes": 209016
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-232.jpg",
+      "extension": ".jpg",
+      "bytes": 141178
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-237.jpg",
+      "extension": ".jpg",
+      "bytes": 156507
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-238.jpg",
+      "extension": ".jpg",
+      "bytes": 162623
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-24.jpg",
+      "extension": ".jpg",
+      "bytes": 224033
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-25.jpg",
+      "extension": ".jpg",
+      "bytes": 131655
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-26.jpg",
+      "extension": ".jpg",
+      "bytes": 231832
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-27.jpg",
+      "extension": ".jpg",
+      "bytes": 228559
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-28.jpg",
+      "extension": ".jpg",
+      "bytes": 126702
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-29.jpg",
+      "extension": ".jpg",
+      "bytes": 232842
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-3.jpg",
+      "extension": ".jpg",
+      "bytes": 54313
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-30.jpg",
+      "extension": ".jpg",
+      "bytes": 125539
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-31.jpg",
+      "extension": ".jpg",
+      "bytes": 192940
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-32.jpg",
+      "extension": ".jpg",
+      "bytes": 177305
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-33.jpg",
+      "extension": ".jpg",
+      "bytes": 116062
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-34.jpg",
+      "extension": ".jpg",
+      "bytes": 161188
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-35.jpg",
+      "extension": ".jpg",
+      "bytes": 166605
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-36.jpg",
+      "extension": ".jpg",
+      "bytes": 108095
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-37.jpg",
+      "extension": ".jpg",
+      "bytes": 161124
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-38.jpg",
+      "extension": ".jpg",
+      "bytes": 207232
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-39.jpg",
+      "extension": ".jpg",
+      "bytes": 141895
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-40.jpg",
+      "extension": ".jpg",
+      "bytes": 149677
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-41.jpg",
+      "extension": ".jpg",
+      "bytes": 192965
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-42.jpg",
+      "extension": ".jpg",
+      "bytes": 90922
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-43.jpg",
+      "extension": ".jpg",
+      "bytes": 189065
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-44.jpg",
+      "extension": ".jpg",
+      "bytes": 132805
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-45.jpg",
+      "extension": ".jpg",
+      "bytes": 166715
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-46.jpg",
+      "extension": ".jpg",
+      "bytes": 145604
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-47.jpg",
+      "extension": ".jpg",
+      "bytes": 107763
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-48.jpg",
+      "extension": ".jpg",
+      "bytes": 189396
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-49.jpg",
+      "extension": ".jpg",
+      "bytes": 149701
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-5.jpg",
+      "extension": ".jpg",
+      "bytes": 138130
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-50.jpg",
+      "extension": ".jpg",
+      "bytes": 143658
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-51.jpg",
+      "extension": ".jpg",
+      "bytes": 129015
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-52.jpg",
+      "extension": ".jpg",
+      "bytes": 167295
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-53.jpg",
+      "extension": ".jpg",
+      "bytes": 92411
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-54.jpg",
+      "extension": ".jpg",
+      "bytes": 178440
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-55.jpg",
+      "extension": ".jpg",
+      "bytes": 140356
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-56.jpg",
+      "extension": ".jpg",
+      "bytes": 201197
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-57.jpg",
+      "extension": ".jpg",
+      "bytes": 182761
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-58.jpg",
+      "extension": ".jpg",
+      "bytes": 141357
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-59.jpg",
+      "extension": ".jpg",
+      "bytes": 126165
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-60.jpg",
+      "extension": ".jpg",
+      "bytes": 235449
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-61.jpg",
+      "extension": ".jpg",
+      "bytes": 105226
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-62.jpg",
+      "extension": ".jpg",
+      "bytes": 143441
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-63.jpg",
+      "extension": ".jpg",
+      "bytes": 159313
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-64.jpg",
+      "extension": ".jpg",
+      "bytes": 218443
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-65.jpg",
+      "extension": ".jpg",
+      "bytes": 169783
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-66.jpg",
+      "extension": ".jpg",
+      "bytes": 198425
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-67.jpg",
+      "extension": ".jpg",
+      "bytes": 131385
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-68.jpg",
+      "extension": ".jpg",
+      "bytes": 80491
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-69.jpg",
+      "extension": ".jpg",
+      "bytes": 150401
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-7.jpg",
+      "extension": ".jpg",
+      "bytes": 134804
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-70.jpg",
+      "extension": ".jpg",
+      "bytes": 120408
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-71.jpg",
+      "extension": ".jpg",
+      "bytes": 205786
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-72.jpg",
+      "extension": ".jpg",
+      "bytes": 162747
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-73.jpg",
+      "extension": ".jpg",
+      "bytes": 120889
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-74.jpg",
+      "extension": ".jpg",
+      "bytes": 209935
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-75.jpg",
+      "extension": ".jpg",
+      "bytes": 116258
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-76.jpg",
+      "extension": ".jpg",
+      "bytes": 172845
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-77.jpg",
+      "extension": ".jpg",
+      "bytes": 187872
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-78.jpg",
+      "extension": ".jpg",
+      "bytes": 97294
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-79.jpg",
+      "extension": ".jpg",
+      "bytes": 253927
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-80.jpg",
+      "extension": ".jpg",
+      "bytes": 184906
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-81.jpg",
+      "extension": ".jpg",
+      "bytes": 112967
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-82.jpg",
+      "extension": ".jpg",
+      "bytes": 91116
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-83.jpg",
+      "extension": ".jpg",
+      "bytes": 11900
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-84.jpg",
+      "extension": ".jpg",
+      "bytes": 305543
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-85.jpg",
+      "extension": ".jpg",
+      "bytes": 157607
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-86.jpg",
+      "extension": ".jpg",
+      "bytes": 155106
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-87.jpg",
+      "extension": ".jpg",
+      "bytes": 263005
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-88.jpg",
+      "extension": ".jpg",
+      "bytes": 271884
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-89.jpg",
+      "extension": ".jpg",
+      "bytes": 140017
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-9.jpg",
+      "extension": ".jpg",
+      "bytes": 105491
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-90.jpg",
+      "extension": ".jpg",
+      "bytes": 199130
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-91.jpg",
+      "extension": ".jpg",
+      "bytes": 132330
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-92.jpg",
+      "extension": ".jpg",
+      "bytes": 200862
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-93.jpg",
+      "extension": ".jpg",
+      "bytes": 181682
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-94.jpg",
+      "extension": ".jpg",
+      "bytes": 208310
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-95.jpg",
+      "extension": ".jpg",
+      "bytes": 102430
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-96.jpg",
+      "extension": ".jpg",
+      "bytes": 264557
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-97.jpg",
+      "extension": ".jpg",
+      "bytes": 139618
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-98.jpg",
+      "extension": ".jpg",
+      "bytes": 221717
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SCIENCE/علوم/علوم-99.jpg",
+      "extension": ".jpg",
+      "bytes": 237977
+    },
+    {
+      "path": "GRADE-8/FIRST-TERM/SOCIAL STUDIES/ثامن_اجتماعيات_حل_الكتاب_للفصل_الأول_2025.pdf",
+      "extension": ".pdf",
+      "bytes": 68702786
+    }
+  ]
+}
