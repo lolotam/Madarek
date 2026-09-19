@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { api, useSession, User } from "./providers";
 import { Result, ResultDetails } from "./quiz";
-import { lessonPath, sciencePath } from "@/content/curriculum";
+import { lessonPath } from "@/content/curriculum";
 type ChildData = {
   user: User;
   progress: { sections: string[] };
@@ -66,19 +66,6 @@ export function Dashboard({ initial }: { initial: Snapshot }) {
       setAdding(false);
       setNotice("أُضيف ملف الطالب. احفظي اسم المستخدم والرمز للدخول.");
       await reload();
-    } catch (e) {
-      setError((e as Error).message);
-    } finally {
-      setBusy(false);
-    }
-  }
-  async function publish() {
-    setBusy(true);
-    try {
-      await api("admin/publish", { published: !data.published });
-      await reload();
-      setNotice("تم تحديث حالة نشر الدرس.");
-      router.refresh();
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -298,59 +285,14 @@ export function Dashboard({ initial }: { initial: Snapshot }) {
         </>
       )}
       {user.role === "admin" && (
-        <>
-          <div className="dashboard-stats">
-            <Stat
-              icon={Users}
-              value={data.stats?.parents || 0}
-              label="أولياء الأمور"
-            />
-            <Stat
-              icon={BookOpen}
-              value={data.stats?.students || 0}
-              label="الطلاب"
-            />
-            <Stat
-              icon={Trophy}
-              value={data.stats?.attempts || 0}
-              label="محاولات الاختبار"
-            />
-          </div>
-          <div className="panel admin-panel">
-            <Settings2 size={30} />
-            <h2>علوم الصف الثامن</h2>
-            <p>١٩ درسًا مفهرسًا · ٤ وحدات · الفصل الأول ٢٠٢٦–٢٠٢٧</p>
-            <div className="publication-row">
-              <div>
-                <h3>المغذّيات</h3>
-                <span
-                  className={"pill " + (data.published ? "green" : "yellow")}
-                >
-                  {data.published ? "منشور" : "قيد المراجعة"}
-                </span>
-              </div>
-              <button
-                className="button outline"
-                onClick={publish}
-                disabled={busy}
-              >
-                {busy
-                  ? "جارٍ التحديث…"
-                  : data.published
-                    ? "إلغاء نشر الدرس"
-                    : "نشر الدرس"}
-              </button>
-            </div>
-            <Link href={sciencePath} className="text-link">
-              معاينة فهرس المادة <ArrowLeft size={17} />
-            </Link>
-            <p className="admin-note">
-              مرجع المحتوى: الكتاب المرفوع، ص ٢٤–٢٨. هذه لوحة الإدارة الأولية؛
-              محرّر المحتوى ورفع PDF والتوليد بالذكاء الاصطناعي ضمن مرحلة الربط
-              التالية.
-            </p>
-          </div>
-        </>
+        <div className="panel admin-panel">
+          <Settings2 size={30} />
+          <h2>إدارة المنصة</h2>
+          <p>المستخدمون، إعدادات الخدمات، نشر المحتوى، وسجل التغييرات.</p>
+          <Link href="/admin" className="button primary">
+            فتح لوحة الإدارة <ArrowLeft size={18} />
+          </Link>
+        </div>
       )}
     </section>
   );

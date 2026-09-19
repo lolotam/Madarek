@@ -16,18 +16,36 @@ export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ action: string[] }> },
 ) {
-  const action = (await params).action.join("/");
-  const user = store.sessionUser(req.cookies.get(cookieName)?.value);
-  if (action === "session") return response({ user });
-  if (action === "quiz")
-    return store.isPublished()
-      ? response({ questions: publicQuestions() })
-      : response({ error: "الدرس غير متاح حاليًا." }, 404);
-  if (action === "dashboard") {
-    if (!user) return response({ error: "يلزم تسجيل الدخول." }, 401);
-    return response(store.snapshot(user.id));
+  try {
+    const action = (await params).action.join("/");
+    const user = store.sessionUser(req.cookies.get(cookieName)?.value);
+    if (action === "session") return response({ user });
+    if (action === "quiz")
+      return store.isPublished()
+        ? response({ questions: publicQuestions() })
+        : response({ error: "الدرس غير متاح حاليًا." }, 404);
+    if (action === "dashboard") {
+      if (!user) return response({ error: "يلزم تسجيل الدخول." }, 401);
+      return response(store.snapshot(user.id));
+    }
+    if (action.startsWith("admin/")) {
+      if (!user) return response({ error: "يلزم تسجيل الدخول." }, 401);
+      const q = req.nextUrl.searchParams.get("q") || "";
+      const page = req.nextUrl.searchParams.get("page") || "1";
+      if (action === "admin/users")
+        return response(store.listAdminUsers(user.id, { q, page }));
+      if (action === "admin/settings")
+        return response(store.getAdminSettings(user.id));
+      if (action === "admin/audit")
+        return response(store.listAdminAudit(user.id));
+    }
+    return response({ error: "غير موجود." }, 404);
+  } catch (error: unknown) {
+    const e = error as Error & { status?: number };
+    if (e.status) return response({ error: e.message }, e.status);
+    console.error("API operation failed", e.name);
+    return response({ error: "تعذّر إتمام الطلب. حاولي مجددًا." }, 500);
   }
-  return response({ error: "غير موجود." }, 404);
 }
 export async function POST(
   req: NextRequest,
@@ -108,6 +126,18 @@ export async function POST(
       return response(store.saveProgress(user.id, body));
     if (action === "admin/publish")
       return response(store.publish(user.id, body.published));
+    if (action === "admin/users/update")
+      return response(store.updateAdminUser(user.id, body));
+    if (action === "admin/users/reset-secret")
+      return response(store.resetAdminSecret(user.id, body));
+    if (action === "admin/users/disable")
+      return response(store.setUserDisabled(user.id, body));
+    if (action === "admin/users/delete")
+      return response(store.deleteFamily(user.id, body));
+    if (action === "admin/families")
+      return response(store.createAdminFamily(user.id, body));
+    if (action === "admin/settings")
+      return response(store.saveAdminSettings(user.id, body));
     return response({ error: "غير موجود." }, 404);
   } catch (error: unknown) {
     const e = error as Error & { status?: number };

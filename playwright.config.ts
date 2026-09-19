@@ -23,6 +23,7 @@ export default defineConfig({
       DATABASE_PATH: resolve(".data/browser-qa.sqlite"),
       AUDIO_LIBRARY_PATH: resolve(".data/audio-e2e"),
       NARRATION_DIR: resolve("tests/fixtures/narration"),
+      SETTINGS_ENCRYPTION_KEY: Buffer.alloc(32, 11).toString("base64"),
     },
   },
   reporter: [["list"], ["html", { open: "never" }]],
