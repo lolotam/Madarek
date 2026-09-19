@@ -15,6 +15,7 @@ import {
   encryptionStatus,
   secretLast4,
 } from "./settings.mjs";
+import { parseYouTubeId, parseDuration, VIDEO_KINDS } from "./videos.mjs";
 
 export function fail(message, status = 400) {
   const error = new Error(message);
@@ -103,6 +104,7 @@ export function createStore(filename) {
     CREATE TABLE IF NOT EXISTS settings(key TEXT PRIMARY KEY,value TEXT NOT NULL);
     CREATE TABLE IF NOT EXISTS limits(key TEXT PRIMARY KEY,count INTEGER NOT NULL,expires INTEGER NOT NULL);
     CREATE TABLE IF NOT EXISTS admin_audit(id TEXT PRIMARY KEY,admin_id TEXT NOT NULL,action TEXT NOT NULL,target_user_id TEXT,detail TEXT,created_at INTEGER NOT NULL);
+    CREATE TABLE IF NOT EXISTS lesson_videos(id TEXT PRIMARY KEY,lesson_id TEXT NOT NULL,youtube_id TEXT NOT NULL,title TEXT NOT NULL,goal TEXT NOT NULL,kind TEXT NOT NULL CHECK(kind IN ('explain','experiment','review','guide')),duration_seconds INTEGER,position INTEGER NOT NULL DEFAULT 0,published INTEGER NOT NULL DEFAULT 0,created_at INTEGER NOT NULL,updated_at INTEGER NOT NULL);
     INSERT OR IGNORE INTO settings(key,value) VALUES('published','true');`);
   const userColumns = new Set(
     db
@@ -250,6 +252,23 @@ export function createStore(filename) {
         .map((row) => ({ ...row })),
     };
   }
+  const LESSON_KEY = /^[a-z][a-z0-9-]{1,59}$/;
+  const videoRow = (r) => ({
+    id: r.id,
+    lessonId: r.lesson_id,
+    youtubeId: r.youtube_id,
+    title: r.title,
+    goal: r.goal,
+    kind: r.kind,
+    durationSeconds: r.duration_seconds ?? null,
+    position: r.position,
+    published: Boolean(r.published),
+    updatedAt: r.updated_at,
+  });
+  const videoById = (id) =>
+    typeof id === "string"
+      ? db.prepare("SELECT * FROM lesson_videos WHERE id=?").get(id)
+      : undefined;
   const api = {
     close() {
       db.close();
@@ -872,6 +891,94 @@ export function createStore(filename) {
         hash,
         decision: input.decision,
       });
+      return { ok: true };
+    },
+    listLessonVideos(adminId) {
+      requireRole(adminId, ["admin"]);
+      return {
+        videos: db
+          .prepare(
+            "SELECT * FROM lesson_videos ORDER BY lesson_id,position,created_at",
+          )
+          .all()
+          .map(videoRow),
+      };
+    },
+    publishedVideos(lessonId) {
+      if (typeof lessonId !== "string" || !LESSON_KEY.test(lessonId))
+        fail("درس غير معروف.");
+      return db
+        .prepare(
+          "SELECT * FROM lesson_videos WHERE lesson_id=? AND published=1 ORDER BY position,created_at",
+        )
+        .all(lessonId)
+        .map(videoRow);
+    },
+    saveLessonVideo(adminId, input) {
+      requireRole(adminId, ["admin"]);
+      if (!input || typeof input !== "object") fail("بيانات غير صحيحة.");
+      if (typeof input.lessonId !== "string" || !LESSON_KEY.test(input.lessonId))
+        fail("اختاري الدرس المرتبط بالفيديو.");
+      const youtubeId = parseYouTubeId(input.url);
+      if (!youtubeId) fail("أدخلي رابط يوتيوب صحيحًا.");
+      const title = field(input.title, 120),
+        goal = field(input.goal, 240);
+      if (!VIDEO_KINDS.includes(input.kind)) fail("اختاري نوع الفيديو.");
+      const duration = parseDuration(input.duration);
+      if (Number.isNaN(duration)) fail("اكتبي المدة بصيغة دقائق:ثوانٍ مثل 4:05.");
+      const position = Number(input.position ?? 0);
+      if (!Number.isInteger(position) || position < 0 || position > 999)
+        fail("الترتيب رقم من 0 إلى 999.");
+      const published = input.published === true ? 1 : 0;
+      const stamp = Date.now();
+      let id = input.id;
+      if (id != null) {
+        if (!videoById(id)) fail("الفيديو غير موجود.", 404);
+        db.prepare(
+          "UPDATE lesson_videos SET lesson_id=?,youtube_id=?,title=?,goal=?,kind=?,duration_seconds=?,position=?,published=?,updated_at=? WHERE id=?",
+        ).run(
+          input.lessonId,
+          youtubeId,
+          title,
+          goal,
+          input.kind,
+          duration,
+          position,
+          published,
+          stamp,
+          id,
+        );
+      } else {
+        id = randomUUID();
+        db.prepare(
+          "INSERT INTO lesson_videos(id,lesson_id,youtube_id,title,goal,kind,duration_seconds,position,published,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?)",
+        ).run(
+          id,
+          input.lessonId,
+          youtubeId,
+          title,
+          goal,
+          input.kind,
+          duration,
+          position,
+          published,
+          stamp,
+          stamp,
+        );
+      }
+      writeAudit(adminId, "videos.save", null, {
+        id,
+        lessonId: input.lessonId,
+        published: Boolean(published),
+      });
+      return videoRow(videoById(id));
+    },
+    deleteLessonVideo(adminId, input) {
+      requireRole(adminId, ["admin"]);
+      const id = input && typeof input === "object" ? input.id : null;
+      if (!videoById(id)) fail("الفيديو غير موجود.", 404);
+      db.prepare("DELETE FROM lesson_videos WHERE id=?").run(id);
+      writeAudit(adminId, "videos.delete", null, { id });
       return { ok: true };
     },
     listAdminAudit(adminId) {
