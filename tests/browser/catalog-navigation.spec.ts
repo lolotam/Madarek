@@ -187,3 +187,142 @@ test("publication changes grade and subject availability together on the fixture
   await page.goto("/grade/8");
   await expect(page.locator(".subject-grid").getByRole("link", { name: /العلوم/ })).toBeVisible();
 });
+
+async function assertNoHorizontalOverflow(page: import("@playwright/test").Page, label: string) {
+  const sizes = await page.evaluate(() => ({
+    scrollWidth: document.documentElement.scrollWidth,
+    innerWidth: window.innerWidth,
+  }));
+  expect(sizes.scrollWidth, label).toBeLessThanOrEqual(sizes.innerWidth);
+}
+
+async function assertUnclipped(
+  locator: import("@playwright/test").Locator,
+  label: string,
+) {
+  const box = await locator.evaluate((el) => {
+    const rect = el.getBoundingClientRect();
+    return {
+      left: rect.left,
+      right: rect.right,
+      width: rect.width,
+      height: rect.height,
+      text: (el.textContent ?? "").trim(),
+    };
+  });
+  const innerWidth = await locator.page().evaluate(() => window.innerWidth);
+  expect(box.width, `${label} width`).toBeGreaterThan(8);
+  expect(box.height, `${label} height`).toBeGreaterThan(8);
+  expect(box.left, `${label} left`).toBeGreaterThanOrEqual(-1);
+  expect(box.right, `${label} right`).toBeLessThanOrEqual(innerWidth + 1);
+  expect(box.text.length, `${label} text`).toBeGreaterThan(0);
+}
+
+test("catalog intro stays readable at 390px and headings are not clipped", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/grade/8");
+  const intro = page.locator(".catalog-heading p");
+  await expect(intro).toBeVisible();
+  await expect(intro).toContainText("العلوم متاحة الآن");
+  const display = await intro.evaluate((el) => getComputedStyle(el).display);
+  expect(display).not.toBe("none");
+  await assertUnclipped(intro, "grade intro");
+  await assertUnclipped(page.getByRole("heading", { name: "مواد الصف الثامن" }), "grade h1");
+  await assertUnclipped(page.locator(".catalog-page .breadcrumbs"), "grade breadcrumbs");
+  await assertNoHorizontalOverflow(page, "/grade/8 390");
+
+  await page.goto("/stage/intermediate");
+  const stageIntro = page.locator(".catalog-heading p");
+  await expect(stageIntro).toBeVisible();
+  await expect(stageIntro).toContainText("نفهم عالمنا");
+  await assertUnclipped(stageIntro, "stage intro");
+  await assertUnclipped(
+    page.getByRole("heading", { name: "المرحلة المتوسطة", exact: true }),
+    "stage h1",
+  );
+  await assertNoHorizontalOverflow(page, "/stage/intermediate 390");
+});
+
+test("science catalog uses pending image slots, 19 lessons, and a left header visual", async ({
+  page,
+}) => {
+  await page.goto("/grade/8");
+  await expect(page.locator(".subject-card")).toHaveCount(8);
+  await expect(page.locator(".subject-card-media img")).toHaveCount(1);
+  await expect(page.locator('.subject-card-media img')).toHaveAttribute(
+    "alt",
+    "مجهر وقارورة ماء ملوّن ونبتة صغيرة ودفتر على طاولة علوم",
+  );
+  await expect(page.locator(".subject-card .image-slot-placeholder")).toHaveCount(7);
+  await expect(page.locator('.subject-card img[src*="/images/subjects/"]')).toHaveCount(0);
+
+  await page.goto("/grade/8/science");
+  await expect(page.locator(".lesson-card")).toHaveCount(19);
+  await expect(page.locator("a.lesson-card.available")).toHaveCount(1);
+  await expect(page.locator("a.lesson-card.available")).toHaveAttribute(
+    "data-lesson",
+    "nutrients",
+  );
+  for (const id of [
+    "nutrients",
+    "balanced-diet",
+    "digestive-structure",
+    "digestive-accessories",
+    "digestion",
+    "life-header",
+  ]) {
+    const slot = page.locator(`[data-slot="${id}"]`);
+    await expect(slot).toHaveCount(1);
+    await expect(slot).toHaveAttribute("data-ready", "false");
+    await expect(slot.locator("img")).toHaveCount(0);
+  }
+  await expect(page.locator(".lesson-card .image-slot-placeholder")).toHaveCount(5);
+  await expect(page.locator(".lesson-card-visual")).toHaveCount(19);
+
+  const headerCopy = page.locator("#life .life-unit-copy");
+  const headerVisual = page.locator("#life .life-unit-visual");
+  await expect(headerCopy.getByRole("heading", { name: "علوم الحياة" })).toBeVisible();
+  await expect(headerCopy).toContainText("نفهم أجسامنا");
+  await expect(headerVisual.locator('[data-slot="life-header"]')).toBeVisible();
+
+  await page.setViewportSize({ width: 1440, height: 980 });
+  await page.goto("/grade/8/science");
+  const copyBox = await page.locator("#life .life-unit-copy").boundingBox();
+  const visualBox = await page.locator("#life .life-unit-visual").boundingBox();
+  expect(copyBox).toBeTruthy();
+  expect(visualBox).toBeTruthy();
+  expect(visualBox!.x).toBeLessThan(copyBox!.x);
+  await assertUnclipped(page.locator("#life .life-unit-copy h2"), "life heading desktop");
+  await assertNoHorizontalOverflow(page, "science 1440");
+});
+
+test("catalog pages do not scroll horizontally at 360 390 768 1440", async ({
+  page,
+}) => {
+  const paths = [
+    "/stage/primary",
+    "/stage/intermediate",
+    "/stage/secondary",
+    "/grade/8",
+    "/grade/8/science",
+  ];
+  for (const size of [
+    { width: 360, height: 800 },
+    { width: 390, height: 844 },
+    { width: 768, height: 1024 },
+    { width: 1440, height: 980 },
+  ]) {
+    await page.setViewportSize(size);
+    for (const path of paths) {
+      await page.goto(path);
+      await assertNoHorizontalOverflow(page, `${path} ${size.width}`);
+      await assertUnclipped(page.locator("h1").first(), `${path} h1 ${size.width}`);
+      await assertUnclipped(
+        page.locator(".breadcrumbs").first(),
+        `${path} breadcrumbs ${size.width}`,
+      );
+    }
+  }
+});

@@ -18,6 +18,13 @@ Create a photorealistic editorial photograph for an Arabic middle-school science
 
 Create a photorealistic editorial photograph for an Arabic middle-school science learning website. Real physical textures, soft natural daylight, premium but approachable, crisp natural detail, no illustration, no 3D render, no text, labels, lettering, logos, watermark or people. Warm ivory setting, restrained props in amber gold #ffbe0b, orange #fb5607, pink #ff006e, violet #8338ec and azure #3a86ff; food and plants retain accurate natural colors. Square image, centered subject fully visible with 12% breathing room for responsive cropping. Scene: overhead food photograph of one large white ceramic plate containing distinct recognizable groups: brown rice, two hard-boiled egg halves with natural yellow yolks, cooked chickpeas, fresh lettuce, cucumber slices and cherry tomatoes. Around the plate a small glass of milk and a small glass cruet of olive oil. All items edible, natural portion sizes and accurate food textures, no suggestion of exact nutritional proportions, no labels or diagram. Ivory linen surface with a folded azure blue napkin at the edge, entire plate fully visible.
 
+## Task C (2026-09-19) — not generated here
+
+The earlier entries in this file remain the 2026-09-19 photographic set. They were not regenerated, replaced, or re-attributed in Task C.
+
+Task C curriculum and subject-card images are **pending**. They are registered as `ready: false` slots in `src/content/image-slots.ts`, listed in `docs/delegation/2026-09-19-image-requests.md`. Placeholders render until each PNG is dropped at its path and `ready` is set to true. Do not treat icons or the files above as those textbook-derived assets.
+
+
 ## food-oats
 
 - Project file: `public/images/food-oats.png`

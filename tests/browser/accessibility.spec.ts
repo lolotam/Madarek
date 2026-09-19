@@ -41,6 +41,10 @@ test("main learning pages have no automated WCAG A/AA violations", async ({
   );
   for (const path of [
     "/",
+    "/stage/primary",
+    "/stage/intermediate",
+    "/stage/secondary",
+    "/grade/8",
     "/grade/8/science",
     "/grade/8/science/nutrients",
     "/login?mode=register",

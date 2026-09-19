@@ -1,21 +1,59 @@
 "use client";
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import Link from "next/link";
 import {
+  Apple,
   ArrowLeft,
-  BookOpen,
-  FlaskConical,
-  Leaf,
-  Globe2,
-  Waves,
   Atom,
-  Search,
-  Clock3,
+  BookOpen,
   ChevronLeft,
+  Clock3,
+  Droplets,
+  Flame,
+  FlaskConical,
+  Globe2,
+  HeartPulse,
+  Hexagon,
+  Leaf,
+  Link2,
+  Mountain,
+  Salad,
+  Search,
+  Sparkles,
+  Stethoscope,
+  Sun,
+  Utensils,
+  Volume2,
+  Waves,
+  Wind,
   X,
+  type LucideIcon,
 } from "lucide-react";
 import { units, lessonCount, lessonPath, Lesson } from "@/content/curriculum";
+import { ImageSlot } from "@/components/ui/image-slot";
+import { lessonVisual, lifeHeaderVisual } from "@/content/curriculum-visuals";
 const icons = [Leaf, Globe2, Waves, Atom];
+const LESSON_ICONS: Record<string, LucideIcon> = {
+  nutrients: Apple,
+  "balanced-diet": Salad,
+  "digestive-structure": Stethoscope,
+  "digestive-accessories": Droplets,
+  digestion: Utensils,
+  respiration: Wind,
+  energy: Flame,
+  "respiratory-health": HeartPulse,
+  "earth-processes": Mountain,
+  geology: Globe2,
+  "wave-types": Waves,
+  "wave-properties": Sparkles,
+  hearing: Volume2,
+  "sound-properties": Volume2,
+  spectrum: Sun,
+  "noble-gases": Sparkles,
+  metals: Hexagon,
+  ionic: Atom,
+  covalent: Link2,
+};
 // Search spelling differs from textbook spelling: ignore tashkeel and tatweel,
 // and accept the common variants of alif and ya without altering displayed text.
 function searchText(value: string) {
@@ -159,17 +197,44 @@ export function Curriculum({ published }: { published: boolean }) {
           if (!chapters.length) return null;
           return (
             <section id={u.id} key={u.id} className={"unit-block " + u.color}>
-              <header className="unit-header">
-                <span className="unit-icon">
-                  <Icon size={28} />
-                </span>
-                <div>
-                  <span className="eyebrow">
-                    الوحدة {["الأولى", "الثانية", "الثالثة", "الرابعة"][i]}
-                  </span>
-                  <h2>{u.title}</h2>
-                  <p>{u.description}</p>
-                </div>
+              <header
+                className={
+                  "unit-header" + (u.id === "life" ? " life-unit-header" : "")
+                }
+              >
+                {u.id === "life" ? (
+                  <>
+                    <div className="life-unit-copy">
+                      <div>
+                        <span className="eyebrow">
+                          الوحدة {["الأولى", "الثانية", "الثالثة", "الرابعة"][i]}
+                        </span>
+                        <h2>{u.title}</h2>
+                        <p>{u.description}</p>
+                      </div>
+                    </div>
+                    <div className="life-unit-visual">
+                      <ImageSlot
+                        slot={lifeHeaderVisual()}
+                        icon={Leaf}
+                        sizes="(max-width: 767px) 100vw, 55vw"
+                      />
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <span className="unit-icon">
+                      <Icon size={28} />
+                    </span>
+                    <div>
+                      <span className="eyebrow">
+                        الوحدة {["الأولى", "الثانية", "الثالثة", "الرابعة"][i]}
+                      </span>
+                      <h2>{u.title}</h2>
+                      <p>{u.description}</p>
+                    </div>
+                  </>
+                )}
               </header>
               {chapters.map((c) => (
                 <div className="chapter" key={c.title}>
@@ -178,9 +243,11 @@ export function Curriculum({ published }: { published: boolean }) {
                     {c.title}
                   </h3>
                   <div className="lesson-grid">
-                    {c.lessons.map((l) => {
+                    {c.lessons.map((l, lessonIndex) => {
                       const available =
                         "available" in l && l.available && published;
+                      const visual = lessonVisual(l.id);
+                      const LessonIcon = LESSON_ICONS[l.id] ?? BookOpen;
                       const content = (
                         <>
                           <div className="lesson-card-top">
@@ -204,7 +271,22 @@ export function Curriculum({ published }: { published: boolean }) {
                               {available ? "جاهز للاكتشاف" : "قريبًا"}
                             </span>
                           </div>
-                          <h4>{l.title}</h4>
+                          <div className="lesson-card-main">
+                            <div className="lesson-card-visual">
+                              {visual ? (
+                                <ImageSlot
+                                  slot={visual}
+                                  icon={LessonIcon}
+                                  sizes="72px"
+                                />
+                              ) : (
+                                <span className="lesson-card-icon" aria-hidden="true">
+                                  <LessonIcon size={28} strokeWidth={1.4} />
+                                </span>
+                              )}
+                            </div>
+                            <h4>{l.title}</h4>
+                          </div>
                           <div className="lesson-card-bottom">
                             <span>
                               <BookOpen size={15} /> صفحة{" "}
@@ -222,15 +304,19 @@ export function Curriculum({ published }: { published: boolean }) {
                         <Link
                           href={lessonPath}
                           key={l.id}
+                          data-lesson={l.id}
                           className="lesson-card available"
+                          style={{ "--card-index": lessonIndex } as CSSProperties}
                         >
                           {content}
                         </Link>
                       ) : (
                         <article
                           key={l.id}
+                          data-lesson={l.id}
                           className="lesson-card upcoming"
                           aria-label={l.title + " — قريبًا"}
+                          style={{ "--card-index": lessonIndex } as CSSProperties}
                         >
                           {content}
                         </article>

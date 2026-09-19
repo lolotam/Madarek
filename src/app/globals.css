@@ -652,9 +652,18 @@ summary::-webkit-details-marker {
 .catalog-page {
   padding-block: 48px 82px;
 }
+.catalog-heading {
+  align-items: start;
+}
 .catalog-heading h1 {
   margin-top: 7px;
   font-size: clamp(32px, 5vw, 46px);
+}
+.catalog-heading > p {
+  max-width: 42ch;
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--muted);
 }
 .catalog-subheading {
   font-size: 18px;
@@ -779,8 +788,30 @@ a.subject-card-available:focus-visible {
 .subject-card-media img {
   object-fit: cover;
 }
+.image-slot-placeholder {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  color: var(--violet-ink);
+  background:
+    radial-gradient(circle at 28% 22%, var(--amber-soft), transparent 52%),
+    linear-gradient(155deg, var(--azure-soft), var(--violet-soft));
+}
+.image-slot {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.image-slot-photo {
+  display: block;
+}
+.subject-card-media .image-slot-placeholder {
+  aspect-ratio: auto;
+}
 .subject-card-copy h2 {
   font-size: 20px;
+  overflow-wrap: break-word;
 }
 .subject-card-copy p {
   font-size: 13px;
@@ -1201,6 +1232,53 @@ a.subject-card-available:focus-visible {
   gap: 20px;
   align-items: center;
 }
+.life-unit-header {
+  display: grid;
+  grid-template-columns: minmax(12rem, 0.45fr) minmax(0, 0.55fr);
+  align-items: stretch;
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+  min-height: 180px;
+  height: clamp(180px, 22vw, 280px);
+  background: #fffdf8;
+  border: 1px solid #e4d2fc;
+}
+.life-unit-copy {
+  padding: 24px 28px;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  background: #fffdf8;
+}
+.life-unit-copy h2 {
+  font-size: clamp(22px, 2.4vw, 28px);
+}
+.life-unit-copy p {
+  font-size: 13px;
+  margin-top: 6px;
+  max-width: 36ch;
+}
+.life-unit-visual {
+  min-width: 0;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+.life-unit-visual .image-slot,
+.life-unit-visual .image-slot-placeholder,
+.life-unit-visual .image-slot-photo {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  object-fit: cover;
+  object-position: left center;
+}
+.lesson-card-visual .image-slot,
+.subject-card-media .image-slot {
+  width: 100%;
+  height: 100%;
+}
 .unit-block.yellow .unit-header {
   background: var(--amber-soft);
 }
@@ -1256,6 +1334,7 @@ a.subject-card-available:focus-visible {
   min-height: 186px;
   display: flex;
   flex-direction: column;
+  min-width: 0;
   transition:
     border-color 0.2s,
     transform 0.2s;
@@ -1264,7 +1343,8 @@ a.subject-card-available:focus-visible {
   border-color: var(--violet);
   box-shadow: 0 4px 0 #e4d2fc;
 }
-.lesson-card.available:hover {
+.lesson-card.available:hover,
+.lesson-card.available:focus-visible {
   transform: translateY(-3px);
   border-color: var(--violet);
 }
@@ -1276,10 +1356,44 @@ a.subject-card-available:focus-visible {
   font-size: 11px;
   color: var(--muted);
 }
+.lesson-card-main {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  flex: 1;
+  margin: 14px 0;
+  min-width: 0;
+}
+.lesson-card-visual {
+  width: 72px;
+  height: 72px;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+  background: var(--white);
+}
+.lesson-card-visual .image-slot-placeholder,
+.lesson-card-visual .image-slot-photo,
+.lesson-card-icon {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  display: grid;
+  place-items: center;
+}
+.lesson-card-icon {
+  color: var(--violet-ink);
+  background:
+    radial-gradient(circle at 30% 20%, var(--amber-soft), transparent 55%),
+    var(--violet-soft);
+}
 .lesson-card h4 {
   font-size: 19px;
-  margin: 20px 0;
-  flex: 1;
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 .lesson-card-bottom {
   display: flex;
@@ -3074,6 +3188,14 @@ html[data-audio-dock] .lesson-section-heading {
     font-size: 12px;
     max-width: 150px;
   }
+  .catalog-heading {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .catalog-heading > p {
+    max-width: none;
+    font-size: 14px;
+  }
   .section-heading h2 {
     font-size: 26px;
   }
@@ -3282,6 +3404,28 @@ html[data-audio-dock] .lesson-section-heading {
   }
   .unit-header p {
     font-size: 11px;
+  }
+  .life-unit-header {
+    grid-template-columns: 1fr;
+    height: auto;
+    min-height: 0;
+  }
+  .life-unit-copy {
+    padding: 18px;
+  }
+  .life-unit-copy h2 {
+    font-size: 22px;
+  }
+  .life-unit-visual {
+    height: 148px;
+  }
+  .lesson-card-visual {
+    width: 64px;
+    height: 64px;
+  }
+  .lesson-card-main {
+    grid-template-columns: 64px minmax(0, 1fr);
+    gap: 10px;
   }
   .lesson-grid {
     grid-template-columns: 1fr 1fr;
@@ -3732,6 +3876,12 @@ html[data-audio-dock] .lesson-section-heading {
   .section-heading > p {
     display: none;
   }
+  .catalog-heading > p {
+    display: block;
+    max-width: none;
+    font-size: 14px;
+    line-height: 1.8;
+  }
   .lesson-grid {
     grid-template-columns: 1fr;
   }
@@ -3867,7 +4017,35 @@ html[data-audio-dock] .lesson-section-heading {
   a.grade-active:focus-visible,
   a.subject-card-available:hover,
   a.subject-card-available:focus-visible,
-  .lesson-card.available:hover {
+  .lesson-card.available:hover,
+  .lesson-card.available:focus-visible {
+    transform: none;
+  }
+  .lesson-card,
+  .life-unit-header,
+  .subject-card {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .lesson-card {
+    animation: catalog-enter 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(var(--card-index, 0) * 40ms);
+  }
+  .life-unit-header,
+  .subject-card {
+    animation: catalog-enter 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+}
+
+@keyframes catalog-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
     transform: none;
   }
 }

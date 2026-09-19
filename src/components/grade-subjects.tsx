@@ -12,6 +12,8 @@ import {
   MoonStar,
   type LucideIcon,
 } from "lucide-react";
+import { ImageSlot } from "@/components/ui/image-slot";
+import { subjectVisual } from "@/content/curriculum-visuals";
 import {
   UPCOMING_STATUS,
   gradeSubjectsIntro,
@@ -68,6 +70,7 @@ export function GradeSubjects({
         {subjects.map((subject) => {
           const href = subjectIndexHref(lessons, grade, subject.id);
           const Icon = SUBJECT_ICONS[subject.id] ?? BookOpen;
+          const slot = subjectVisual(subject.id);
           const media = (
             <div className="subject-card-media">
               {subject.image ? (
@@ -78,6 +81,8 @@ export function GradeSubjects({
                   sizes="96px"
                   style={{ objectFit: "cover" }}
                 />
+              ) : slot ? (
+                <ImageSlot slot={slot} icon={Icon} sizes="96px" />
               ) : (
                 <Icon size={36} strokeWidth={1.4} aria-hidden="true" />
               )}
