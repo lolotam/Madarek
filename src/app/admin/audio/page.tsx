@@ -8,7 +8,10 @@ import {
 } from "@/components/audio-review";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "مراجعة الصوت" };
+export const metadata = {
+  title: "مراجعة الصوت",
+  robots: { index: false, follow: false },
+};
 
 export default async function Page() {
   const user = store.sessionUser((await cookies()).get("hana_session")?.value);

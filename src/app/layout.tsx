@@ -3,10 +3,12 @@ import "@fontsource-variable/noto-sans-arabic";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { Header, Footer } from "@/components/shell";
+import { siteUrl, siteDescription } from "@/content/site";
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
+  applicationName: "مدارك",
   title: { default: "مدارك | مساحة للاكتشاف", template: "%s | مدارك" },
-  description:
-    "تجربة عربية تفاعلية لعلوم الصف الثامن، الفصل الأول من المنهج الكويتي ٢٠٢٦–٢٠٢٧.",
+  description: siteDescription,
 };
 export default function RootLayout({
   children,

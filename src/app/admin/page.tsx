@@ -5,7 +5,10 @@ import { store } from "@/server/db";
 import { AdminDashboard } from "@/components/admin";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "لوحة الإدارة" };
+export const metadata = {
+  title: "لوحة الإدارة",
+  robots: { index: false, follow: false },
+};
 
 export default async function Page() {
   const user = store.sessionUser((await cookies()).get("hana_session")?.value);

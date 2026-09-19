@@ -12,12 +12,39 @@ import {
   Search,
   Clock3,
   ChevronLeft,
+  X,
 } from "lucide-react";
 import { units, lessonCount, lessonPath, Lesson } from "@/content/curriculum";
 const icons = [Leaf, Globe2, Waves, Atom];
+// Search spelling differs from textbook spelling: ignore tashkeel and tatweel,
+// and accept the common variants of alif and ya without altering displayed text.
+function searchText(value: string) {
+  return value
+    .normalize("NFKC")
+    .replace(/[\u064B-\u065F\u0670\u06D6-\u06ED\u0640]/g, "")
+    .replace(/[أإآٱ]/g, "ا")
+    .replace(/ى/g, "ي")
+    .replace(/ة/g, "ه")
+    .replace(/\s+/g, " ")
+    .trim();
+}
 export function Curriculum({ published }: { published: boolean }) {
   const [query, setQuery] = useState("");
-  const matches = (lesson: Lesson) => lesson.title.includes(query.trim());
+  const words = searchText(query).split(" ").filter(Boolean);
+  const matches = (lesson: Lesson) =>
+    words.every((word) => searchText(lesson.title).includes(word));
+  const matchingUnits = units.map((unit) =>
+    unit.chapters.some((chapter) => chapter.lessons.some(matches)),
+  );
+  const matchCount = units.reduce(
+    (total, unit) =>
+      total +
+      unit.chapters.reduce(
+        (count, chapter) => count + chapter.lessons.filter(matches).length,
+        0,
+      ),
+    0,
+  );
   return (
     <>
       <section className="subject-hero">
@@ -74,15 +101,38 @@ export function Curriculum({ published }: { published: boolean }) {
           <label className="search-field">
             <Search size={19} />
             <input
+              type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="ابحثي عن درس…"
               aria-label="ابحثي عن درس"
+              aria-describedby="lesson-search-status"
             />
+            {query && (
+              <button
+                type="button"
+                className="search-clear"
+                aria-label="مسح البحث"
+                onClick={() => setQuery("")}
+              >
+                <X size={18} />
+              </button>
+            )}
           </label>
         </div>
+        <p
+          id="lesson-search-status"
+          className="search-status"
+          role="status"
+          aria-live="polite"
+        >
+          {query.trim()
+            ? `${matchCount.toLocaleString("ar-KW")} من ${lessonCount.toLocaleString("ar-KW")} درسًا يطابق بحثك`
+            : "ابحثي باسم الدرس، بالتشكيل أو بدونه."}
+        </p>
         <nav className="unit-nav" aria-label="وحدات المادة">
           {units.map((u, i) => {
+            if (!matchingUnits[i]) return null;
             const Icon = icons[i];
             return (
               <a key={u.id} href={"#" + u.id}>
@@ -126,7 +176,7 @@ export function Curriculum({ published }: { published: boolean }) {
                     {c.title}
                   </h3>
                   <div className="lesson-grid">
-                    {c.lessons.map((l, j) => {
+                    {c.lessons.map((l) => {
                       const available =
                         "available" in l && l.available && published;
                       const content = (
@@ -134,11 +184,15 @@ export function Curriculum({ published }: { published: boolean }) {
                           <div className="lesson-card-top">
                             <span>
                               الدرس{" "}
-                              {units[i].chapters
-                                .find((original) => original.title === c.title)!
-                                .lessons.findIndex(
-                                  (original) => original.id === l.id,
-                                ) + 1}
+                              {(
+                                units[i].chapters
+                                  .find(
+                                    (original) => original.title === c.title,
+                                  )!
+                                  .lessons.findIndex(
+                                    (original) => original.id === l.id,
+                                  ) + 1
+                              ).toLocaleString("ar-KW")}
                             </span>
                             <span
                               className={

@@ -1,5 +1,8 @@
 import { Auth } from "@/components/auth";
-export const metadata = { title: "دخول إلى مساحتك" };
+export const metadata = {
+  title: "دخول إلى مساحتك",
+  robots: { index: false, follow: false },
+};
 export default async function Page({
   searchParams,
 }: {

@@ -457,8 +457,8 @@ export function Auth({ initialMode = "login" }: { initialMode?: string }) {
           </p>
         )}
         <div className="auth-local-note">
-          نسخة محلية أولى. الحسابات تُحفظ على هذا الخادم. خدمة التحقق واستعادة
-          بريد ولي الأمر لم تُربط بعد.
+          يُحفظ تقدّم الأبناء في حساب الأسرة. استعادة كلمة مرور ولي الأمر
+          بالبريد غير متاحة حاليًا؛ احتفظ ببيانات الدخول في مكان آمن.
         </div>
         <Link href="/grade/8/science" className="text-link">
           أستكشف الدروس أولًا <ArrowLeft size={16} />

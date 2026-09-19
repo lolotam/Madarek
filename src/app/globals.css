@@ -1038,6 +1038,25 @@ summary::-webkit-details-marker {
 .search-field:focus-within {
   outline: 2px solid var(--azure);
 }
+.search-clear {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  border-radius: 8px;
+}
+.search-clear:hover {
+  background: var(--violet-soft);
+  color: var(--violet-ink);
+}
+.search-field input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+.search-status {
+  font-size: 12px;
+  margin-top: 16px;
+}
 .unit-nav {
   display: flex;
   flex-wrap: wrap;
