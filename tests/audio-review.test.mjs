@@ -269,6 +269,67 @@ describe("audio review admin", { concurrency: 1 }, () => {
     await rm(libraryPath, { recursive: true, force: true });
   });
 
+  test("successful review notifies onReviewed without a reject reason", async () => {
+    const libraryPath = await mkdtemp(join(tmpdir(), "audio-rev-audit-"));
+    await withEnv(
+      {
+        NARRATION_DIR: fixtureDir,
+        AUDIO_LIBRARY_PATH: libraryPath,
+        ELEVENLABS_VOICE_ID: "voice-test",
+        ELEVENLABS_MODEL_ID: "eleven_multilingual_v2",
+        ELEVENLABS_OUTPUT_FORMAT: "mp3_44100_128",
+      },
+      async () => {
+        const segments = await loadPageSegments("nutrients");
+        const intro = segments.find((segment) => segment.id === "map.intro");
+        await seedCurrent(libraryPath, intro, "pending");
+        const seen = [];
+        const approved = await jsonOf(
+          await handleAudioReview(
+            reviewRequest({
+              segmentId: intro.id,
+              hash: intro.hash,
+              decision: "approve",
+            }),
+            {
+              user: admin,
+              libraryPath,
+              onReviewed: (entry) => {
+                seen.push(entry);
+              },
+            },
+          ),
+        );
+        assert.equal(approved.status, 200);
+        const rejected = await jsonOf(
+          await handleAudioReview(
+            reviewRequest({
+              segmentId: intro.id,
+              hash: intro.hash,
+              decision: "reject",
+              reason: "نطق المصطلح غير واضح",
+            }),
+            {
+              user: admin,
+              libraryPath,
+              onReviewed: (entry) => {
+                seen.push(entry);
+              },
+            },
+          ),
+        );
+        assert.equal(rejected.status, 200);
+        assert.deepEqual(seen, [
+          { segmentId: intro.id, hash: intro.hash, decision: "approve" },
+          { segmentId: intro.id, hash: intro.hash, decision: "reject" },
+        ]);
+        assert.equal(JSON.stringify(seen).includes("reason"), false);
+        assert.equal(JSON.stringify(seen).includes("نطق"), false);
+      },
+    );
+    await rm(libraryPath, { recursive: true, force: true });
+  });
+
   test("plan summary counts match the CLI plan on a temp library with the fixture narration", async () => {
     const libraryPath = await mkdtemp(join(tmpdir(), "audio-rev-plan-"));
     const env = {

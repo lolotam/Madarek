@@ -17,7 +17,10 @@ function badRequest(message) {
   return jsonResponse({ error: message }, 400);
 }
 
-export async function handleAudioReview(req, { user, libraryPath } = {}) {
+export async function handleAudioReview(
+  req,
+  { user, libraryPath, onReviewed } = {},
+) {
   const parsed = await readJsonBody(req);
   if (!parsed.ok) return jsonResponse({ error: parsed.error }, parsed.status);
   if (!user || user.role !== "admin") return forbidden();
@@ -58,7 +61,9 @@ export async function handleAudioReview(req, { user, libraryPath } = {}) {
     }
     throw error;
   }
-  console.info("audio review", { segmentId, hash, decision });
+  if (typeof onReviewed === "function") {
+    await onReviewed({ segmentId, hash, decision });
+  }
   return jsonResponse({
     ok: true,
     segmentId,

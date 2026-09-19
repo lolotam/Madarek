@@ -859,6 +859,21 @@ export function createStore(filename) {
       });
       return api.getAdminSettings(adminId);
     },
+    recordAudioReview(adminId, input) {
+      requireRole(adminId, ["admin"]);
+      if (!input || typeof input !== "object") fail("بيانات غير صحيحة.");
+      const segmentId = field(input.segmentId, 80);
+      const hash = field(input.hash, 16);
+      if (input.decision !== "approve" && input.decision !== "reject") {
+        fail("قرار غير صحيح.");
+      }
+      writeAudit(adminId, "audio.review", null, {
+        segmentId,
+        hash,
+        decision: input.decision,
+      });
+      return { ok: true };
+    },
     listAdminAudit(adminId) {
       requireRole(adminId, ["admin"]);
       const entries = db

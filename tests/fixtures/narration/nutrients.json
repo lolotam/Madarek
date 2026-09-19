@@ -5,8 +5,11 @@
     "part": "map",
     "order": 1,
     "version": 1,
-    "text": "تعالوا نشوف المغذّيات.",
-    "cues": [{ "phrase": "المغذّيات", "target": "nutrients.def" }]
+    "text": "تعالوا نشوف المغذّيات والفيتامينات والعدس.",
+    "cues": [
+      { "phrase": "الفيتامينات", "target": "concept-nutrient-vitamins" },
+      { "phrase": "العدس", "target": "food-lentils" }
+    ]
   },
   {
     "id": "explore.groups",

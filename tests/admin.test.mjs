@@ -469,3 +469,51 @@ test("publish still requires admin and is recorded in the audit log", () => {
     store.close();
   }
 });
+
+test("recordAudioReview requires admin and writes approve/reject without a reason", () => {
+  const store = createStore(":memory:");
+  try {
+    const parent = makeFamily(store);
+    assert.throws(
+      () =>
+        store.recordAudioReview(parent.id, {
+          segmentId: "map.intro",
+          hash: "aaaaaaaaaaaaaaaa",
+          decision: "approve",
+        }),
+      (e) => e.status === 403,
+    );
+    const admin = makeAdmin(store);
+    store.recordAudioReview(admin.id, {
+      segmentId: "map.intro",
+      hash: "aaaaaaaaaaaaaaaa",
+      decision: "approve",
+    });
+    store.recordAudioReview(admin.id, {
+      segmentId: "explore.groups",
+      hash: "bbbbbbbbbbbbbbbb",
+      decision: "reject",
+      reason: "نطق المصطلح غير واضح ويجب ألا يُحفظ",
+    });
+    const { entries } = store.listAdminAudit(admin.id);
+    const reviews = entries.filter((row) => row.action === "audio.review");
+    assert.equal(reviews.length, 2);
+    const approve = reviews.find((row) => row.detail.decision === "approve");
+    const reject = reviews.find((row) => row.detail.decision === "reject");
+    assert.deepEqual(approve.detail, {
+      segmentId: "map.intro",
+      hash: "aaaaaaaaaaaaaaaa",
+      decision: "approve",
+    });
+    assert.deepEqual(reject.detail, {
+      segmentId: "explore.groups",
+      hash: "bbbbbbbbbbbbbbbb",
+      decision: "reject",
+    });
+    const blob = JSON.stringify(entries);
+    assert.equal(blob.includes("نطق المصطلح غير واضح"), false);
+    assert.equal(blob.includes("reason"), false);
+  } finally {
+    store.close();
+  }
+});

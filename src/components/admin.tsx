@@ -95,7 +95,30 @@ const ACTION_LABEL: Record<string, string> = {
   "families.delete": "حذف أسرة",
   "settings.update": "تحديث إعدادات الخدمات",
   "content.publish": "تحديث نشر الدرس",
+  "audio.review": "مراجعة مقطع صوتي",
 };
+const REVIEW_DECISION_LABEL: Record<string, string> = {
+  approve: "اعتماد",
+  reject: "رفض",
+};
+
+function formatAuditDetail(action: string, detail: unknown) {
+  if (
+    action === "audio.review" &&
+    detail &&
+    typeof detail === "object" &&
+    !Array.isArray(detail)
+  ) {
+    const row = detail as { segmentId?: unknown; decision?: unknown };
+    const segmentId = typeof row.segmentId === "string" ? row.segmentId : "";
+    const decision =
+      typeof row.decision === "string"
+        ? (REVIEW_DECISION_LABEL[row.decision] ?? row.decision)
+        : "";
+    return [segmentId, decision].filter(Boolean).join(" · ");
+  }
+  return typeof detail === "string" ? detail : JSON.stringify(detail);
+}
 
 function formatDate(value: number) {
   return new Date(value).toLocaleString("ar-KW", {
@@ -1325,9 +1348,7 @@ function AuditTab({ initial }: { initial: AuditView }) {
               </p>
               {row.detail ? (
                 <p className="micro-copy">
-                  {typeof row.detail === "string"
-                    ? row.detail
-                    : JSON.stringify(row.detail)}
+                  {formatAuditDetail(row.action, row.detail)}
                 </p>
               ) : null}
             </li>
