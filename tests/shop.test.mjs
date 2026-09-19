@@ -9,6 +9,7 @@ import {
   isOwned,
   validateAvatar,
 } from "../src/server/shop.mjs";
+import { AVATAR_SLOTS, avatarSlot } from "../src/content/avatar-slots.ts";
 
 const fresh = { level: 1, bestStreak: 0, masteredLessons: [] };
 const strong = { level: 3, bestStreak: 7, masteredLessons: ["nutrients"] };
@@ -61,4 +62,19 @@ test("an avatar is valid only when every layer is an owned item of that layer", 
     validateAvatar({ ...DEFAULT_AVATAR, accessory: "acc-goggles" }, none, strong).accessory,
     "acc-goggles",
   );
+});
+
+test("every drawable item has a pending 512px layer slot; frames and 'no accessory' have none", () => {
+  const drawable = SHOP_ITEMS.filter((i) => i.layer !== "frame" && i.id !== "acc-none")
+    .map((i) => i.id)
+    .sort();
+  assert.deepEqual(AVATAR_SLOTS.map((s) => s.id).sort(), drawable);
+  for (const slot of AVATAR_SLOTS) {
+    assert.equal(slot.ready, false, slot.id);
+    assert.equal(slot.path, `/images/avatar/${slot.id}.png`);
+    assert.deepEqual([slot.width, slot.height], [512, 512]);
+    assert.ok(slot.alt.length > 3 && slot.prompt.length > 80, slot.id);
+  }
+  assert.equal(avatarSlot("frame-violet"), undefined);
+  assert.equal(avatarSlot("outfit-lab-coat").id, "outfit-lab-coat");
 });

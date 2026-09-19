@@ -15,6 +15,8 @@ export type RewardEntry = {
 export type RewardSummary = {
   xp: number;
   coins: number;
+  coinsEarned: number;
+  coinsSpent: number;
   level: number;
   title: string;
   floorXp: number;

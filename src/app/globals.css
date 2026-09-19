@@ -4636,3 +4636,181 @@ html[data-audio-dock] .lesson-section-heading {
 .audit-list .micro-copy {
   overflow-wrap: anywhere;
 }
+
+/* Avatar */
+.avatar-figure {
+  --frame: var(--violet);
+  display: inline-grid;
+  flex: none;
+  padding: 4px;
+  border-radius: 50%;
+  background: var(--frame);
+  aspect-ratio: 1;
+}
+.avatar-sm { width: 52px; }
+.avatar-md { width: 104px; }
+.avatar-lg { width: min(220px, 60vw); }
+.avatar-inner {
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--violet-soft);
+}
+.avatar-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.avatar-initial {
+  font-weight: 800;
+  color: var(--violet-ink);
+  font-size: 1.1em;
+}
+.avatar-sm .avatar-initial { font-size: 20px; }
+.avatar-md .avatar-initial { font-size: 40px; }
+.avatar-lg .avatar-initial { font-size: 80px; }
+.avatar-frame-violet { --frame: var(--violet); }
+.avatar-frame-azure { --frame: var(--azure); }
+.avatar-frame-amber { --frame: var(--amber); }
+.avatar-frame-rainbow {
+  --frame: conic-gradient(var(--amber), var(--orange), var(--pink), var(--violet), var(--azure), var(--amber));
+}
+.avatar-frame-streak {
+  --frame: linear-gradient(135deg, var(--amber), var(--orange), var(--pink));
+}
+
+/* Shop */
+.shop-heading {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: end;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.coin-balance {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--amber-soft);
+  color: var(--amber-ink);
+  font-weight: 800;
+}
+.shop-layout {
+  display: grid;
+  grid-template-columns: minmax(240px, 300px) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+.shop-preview {
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  text-align: center;
+  position: sticky;
+  top: 96px;
+}
+.shop-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.shop-tabs button {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--white);
+  font: inherit;
+  cursor: pointer;
+}
+.shop-tabs button[data-state="active"] {
+  background: var(--violet);
+  border-color: var(--violet);
+  color: var(--white);
+}
+.shop-tabs button:focus-visible {
+  outline: 3px solid var(--violet);
+  outline-offset: 2px;
+}
+.shop-grid {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 14px;
+  padding: 0;
+  margin: 0;
+}
+.shop-item {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--white);
+}
+.shop-item.worn {
+  border: 2px solid var(--violet);
+}
+.shop-item.locked {
+  background: var(--paper);
+}
+.shop-item .image-slot-placeholder,
+.shop-item .image-slot {
+  border-radius: 12px;
+}
+.frame-swatch {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  padding: 10px;
+  background: var(--frame, var(--line));
+  color: var(--muted);
+}
+.frame-swatch::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--violet-soft);
+}
+.frame-swatch.none::after {
+  display: none;
+}
+.shop-lock {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 13px;
+  color: var(--muted);
+}
+@media (max-width: 760px) {
+  .shop-layout {
+    grid-template-columns: 1fr;
+  }
+  .shop-preview {
+    position: static;
+  }
+  .shop-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Avatar on the rewards hero — stacks above the title on phones */
+.rewards-hero {
+  grid-template-columns: auto 1.4fr 1fr;
+}
+@media (max-width: 640px) {
+  .rewards-hero {
+    grid-template-columns: 1fr;
+  }
+}

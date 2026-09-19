@@ -72,3 +72,11 @@
 - XP sets level and title and never decreases; coins are kept for the Phase 2 shop; mastery per concept is separate from points.
 - All grants go through `reward_ledger` with `UNIQUE(user_id, source, source_key)`, so every reward is paid at most once and is computed on the server.
 - Numbers live in `src/server/rewards.mjs` and are provisional until real usage data exists.
+
+## Shop and avatars (Phase 2)
+
+- Coin balance = earned − spent. Purchases go into `purchases`, never `reward_ledger`, so XP and titles never drop.
+- Students buy paid items once and wear any owned layer; earned items unlock from Nutrients mastery (`outfit-nutrition`), level 3 (`acc-goggles`), or a 7-day best streak (`frame-streak`) and cannot be bought.
+- Default avatar: `base-2`, `hair-short`, `outfit-casual`, `acc-none`, `frame-violet`. Saving requires every layer to be an owned item of that layer.
+- `/shop` is student-only. Parents see the child's avatar read-only on the family dashboard.
+- Image slots are pending in `src/content/avatar-slots.ts` (`ready: false`). Frames are CSS. Request list: `docs/delegation/2026-09-19-avatar-image-requests.md`. Generate `base-2` first and use it as the alignment template.

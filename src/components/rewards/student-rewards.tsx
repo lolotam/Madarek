@@ -16,11 +16,21 @@ import {
   rewardSourceLabel,
   weekdayName,
 } from "@/content/rewards";
+import type { AvatarConfig } from "@/components/shop/types";
+import { Avatar } from "@/components/avatar/avatar";
 import type { Mastery, RewardEntry, RewardSummary } from "./types";
 
 const n = (value: number) => value.toLocaleString("ar-KW");
 
-export function RewardsHero({ rewards }: { rewards: RewardSummary }) {
+export function RewardsHero({
+  rewards,
+  avatar,
+  name,
+}: {
+  rewards: RewardSummary;
+  avatar: AvatarConfig;
+  name: string;
+}) {
   const reduce = useReducedMotion();
   const progress = rewards.nextXp
     ? Math.min(
@@ -30,6 +40,7 @@ export function RewardsHero({ rewards }: { rewards: RewardSummary }) {
     : 1;
   return (
     <section className="rewards-hero" aria-labelledby="rewards-title">
+      <Avatar config={avatar} name={name} size="md" />
       <div>
         <span className="rewards-level">المستوى {n(rewards.level)}</span>
         <h2 id="rewards-title">{rewards.title}</h2>
@@ -53,6 +64,9 @@ export function RewardsHero({ rewards }: { rewards: RewardSummary }) {
             ? `${n(rewards.nextXp - rewards.xp)} خبرة حتى لقب «${rewards.nextTitle}»`
             : "وصلتِ إلى أعلى لقب. أسطورة حقيقية!"}
         </p>
+        <Link href="/shop" className="text-link">
+          خصّصي شخصيتك من المتجر <ArrowLeft size={16} />
+        </Link>
       </div>
       <dl className="rewards-numbers">
         <div>

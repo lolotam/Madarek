@@ -26,6 +26,8 @@ import {
   RewardsHero,
 } from "./rewards/student-rewards";
 import { ChildInsights } from "./rewards/child-insights";
+import { Avatar } from "./avatar/avatar";
+import type { AvatarConfig } from "./shop/types";
 import type { Mastery, RewardSummary } from "./rewards/types";
 type ChildData = {
   user: User;
@@ -34,6 +36,7 @@ type ChildData = {
   practice: { answer: string; feedback: string; createdAt: number }[];
   rewards: RewardSummary;
   mastery: Mastery;
+  avatar: AvatarConfig;
 };
 type Snapshot = {
   user: User;
@@ -251,7 +254,11 @@ export function Dashboard({ initial }: { initial: Snapshot }) {
       )}
       {user.role === "student" && (
         <>
-          <RewardsHero rewards={student.rewards} />
+          <RewardsHero
+            rewards={student.rewards}
+            avatar={student.avatar}
+            name={student.user.name}
+          />
           <DailyMission rewards={student.rewards} nextSection={nextSection} />
           <div className="dashboard-stats">
             <Stat
@@ -356,7 +363,7 @@ function ChildPanel({ child }: { child: ChildData }) {
   return (
     <article className="child-panel panel">
       <header>
-        <span className="avatar">{child.user.name.slice(0, 1)}</span>
+        <Avatar config={child.avatar} name={child.user.name} size="sm" />
         <div>
           <h3>{child.user.name}</h3>
           <p>
