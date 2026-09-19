@@ -128,6 +128,10 @@ async function openLesson(page: Page) {
   await expect(page.locator("h1")).toBeVisible();
 }
 
+function mainPlayer(page: Page) {
+  return page.getByRole("region", { name: "المشغّل الصوتي" });
+}
+
 async function instrumentEnded(page: Page) {
   await page.locator("audio[data-audio-engine]").evaluate((audio) => {
     (window as Window & { __audioEnded?: number }).__audioEnded = 0;
@@ -246,17 +250,23 @@ test("pause, resume, and stop clear the highlight", async ({ page }) => {
   await expect(page.locator("[data-audio-active=true]")).toHaveCount(1);
   await expect(page.locator("[data-audio-highlight-ring]")).toBeVisible();
 
-  await page.getByRole("button", { name: "إيقاف مؤقت", exact: true }).click();
+  await mainPlayer(page)
+    .getByRole("button", { name: "إيقاف مؤقت", exact: true })
+    .click();
   await expect(
     page.locator('[data-audio-player-status="paused"]'),
   ).toBeVisible();
   await expect(page.locator("[data-audio-highlight-ring]")).toBeVisible();
-  await page.getByRole("button", { name: "تشغيل", exact: true }).click();
+  await mainPlayer(page)
+    .getByRole("button", { name: "إكمال", exact: true })
+    .click();
   await expect(
     page.locator('[data-audio-player-status="playing"]'),
   ).toBeVisible();
 
-  await page.getByRole("button", { name: "إيقاف", exact: true }).click();
+  await mainPlayer(page)
+    .getByRole("button", { name: "إيقاف", exact: true })
+    .click();
   await expect(page.locator("[data-audio-active=true]")).toHaveCount(0);
   await expect(page.locator("[data-audio-highlight-ring]")).not.toBeVisible();
   await expect(
@@ -290,7 +300,9 @@ test("repeat twice plays the queue twice and continuous stops immediately", asyn
     page.locator('[data-audio-player-status="playing"]'),
   ).toBeVisible();
   const beforeStop = await endedCount(page);
-  await page.getByRole("button", { name: "إيقاف", exact: true }).click();
+  await mainPlayer(page)
+    .getByRole("button", { name: "إيقاف", exact: true })
+    .click();
   await expect(
     page.locator('[data-audio-player-status="ready"]'),
   ).toBeVisible();
@@ -321,7 +333,7 @@ test("a not-ready manifest shows the message and the lesson still works", async 
   await mockManifest(page, notReadyManifest);
   await openLesson(page);
   await expect(
-    page.getByText("الشرح الصوتي غير جاهز بعد", { exact: true }),
+    mainPlayer(page).getByText("الشرح الصوتي غير جاهز بعد", { exact: true }),
   ).toBeVisible();
   await page.getByRole("tab", { name: /المغذّيات الصغرى/ }).click();
   await expect(
@@ -355,7 +367,7 @@ test("a manifest 500 shows an error with retry", async ({ page }) => {
   await expect(
     page.locator('[data-audio-player-status="error"]'),
   ).toBeVisible();
-  await page.getByRole("button", { name: "إعادة المحاولة" }).click();
+  await mainPlayer(page).getByRole("button", { name: "إعادة المحاولة" }).click();
   await expect(
     page.locator('[data-audio-player-status="ready"]'),
   ).toBeVisible();

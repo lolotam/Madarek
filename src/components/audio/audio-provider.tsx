@@ -39,6 +39,7 @@ export type PlayerStatus =
   | "paused";
 
 type QueueKind = "page" | "part" | "results";
+type TransportIntent = "playing" | "paused";
 
 type AudioApi = {
   status: PlayerStatus;
@@ -50,6 +51,10 @@ type AudioApi = {
   duration: number;
   activeTarget: string | null;
   hasReadySegments: boolean;
+  segmentIndex: number;
+  segmentCount: number;
+  canPrevious: boolean;
+  canNext: boolean;
   retry: () => void;
   setFollow: (value: boolean) => void;
   setSpeed: (rate: SpeedRate) => void;
@@ -61,6 +66,7 @@ type AudioApi = {
   resume: () => void;
   stop: () => void;
   restart: () => void;
+  replaySegment: () => void;
   previous: () => void;
   next: () => void;
   seek: (time: number) => void;
@@ -87,6 +93,14 @@ function cueAtTime(cues: ResolvedCue[], time: number): ResolvedCue | null {
 
 function hasReady(list: ManifestSegment[]) {
   return list.some((segment) => segment.status === "ready");
+}
+
+function captureIntent(
+  status: PlayerStatus,
+  desired: TransportIntent,
+): TransportIntent {
+  if (desired === "paused" || status === "paused") return "paused";
+  return "playing";
 }
 
 export function AudioProvider({
@@ -117,6 +131,9 @@ export function AudioProvider({
   const segmentsRef = useRef<ManifestSegment[]>([]);
   const switchingRef = useRef(false);
   const playTokenRef = useRef(0);
+  const desiredIntentRef = useRef<TransportIntent>("playing");
+  const queueActiveRef = useRef(false);
+  const metaListenerRef = useRef<(() => void) | null>(null);
 
   const [status, setStatus] = useState<PlayerStatus>("loading");
   const [error, setError] = useState<string | null>(null);
@@ -129,6 +146,8 @@ export function AudioProvider({
   const [segments, setSegments] = useState<ManifestSegment[]>([]);
   const [grant, setGrant] = useState<string | undefined>(undefined);
   const [loadTick, setLoadTick] = useState(0);
+  const [segmentIndex, setSegmentIndex] = useState(0);
+  const [segmentCount, setSegmentCount] = useState(0);
 
   const setStatusBoth = useCallback((next: PlayerStatus) => {
     statusRef.current = next;
@@ -158,6 +177,23 @@ export function AudioProvider({
   const stopRaf = useCallback(() => {
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
     rafRef.current = 0;
+  }, []);
+
+  const detachMeta = useCallback(() => {
+    const audio = audioRef.current;
+    const listener = metaListenerRef.current;
+    if (audio && listener) audio.removeEventListener("loadedmetadata", listener);
+    metaListenerRef.current = null;
+  }, []);
+
+  const publishQueue = useCallback(() => {
+    if (!queueActiveRef.current || !queueRef.current.length) {
+      setSegmentIndex(0);
+      setSegmentCount(0);
+      return;
+    }
+    setSegmentIndex(indexRef.current);
+    setSegmentCount(queueRef.current.length);
   }, []);
 
   const clearHighlight = useCallback(() => {
@@ -197,6 +233,7 @@ export function AudioProvider({
       stopRaf();
       const tick = () => {
         if (!isLive(token) || statusRef.current !== "playing") return;
+        if (desiredIntentRef.current === "paused") return;
         syncFromAudio();
         rafRef.current = requestAnimationFrame(tick);
       };
@@ -208,49 +245,80 @@ export function AudioProvider({
   const releaseAudio = useCallback(() => {
     const audio = audioRef.current;
     if (!audio) return;
+    detachMeta();
     audio.pause();
     audio.removeAttribute("src");
     audio.load();
-  }, []);
+  }, [detachMeta]);
 
   const idleAfterStop = useCallback(() => {
+    queueActiveRef.current = false;
+    publishQueue();
     if (statusRef.current === "loading" || statusRef.current === "not_ready") {
       return;
     }
     setStatusBoth(hasReady(segmentsRef.current) ? "ready" : "not_ready");
-  }, [setStatusBoth]);
+  }, [publishQueue, setStatusBoth]);
 
-  const playSegment = useCallback(
-    (token: number, offset = 0) => {
+  const loadSegment = useCallback(
+    (token: number, offset = 0, intent: TransportIntent) => {
       const audio = audioRef.current;
       const segment = queueRef.current[indexRef.current];
       if (!audio || !segment || !isLive(token)) return;
+      desiredIntentRef.current = intent;
       cueKeyRef.current = null;
+      applyCue(cueAtTime(segment.cues, offset));
+      setDuration(segment.duration);
+      setCurrentTime(offset);
+      detachMeta();
       switchingRef.current = true;
       audio.pause();
       audio.src = segment.url;
       audio.playbackRate = speedRef.current;
-      setDuration(segment.duration);
-      setCurrentTime(offset);
-      const start = () => {
+
+      const startOrHold = () => {
         if (!isLive(token)) return;
-        if (offset > 0) {
-          try {
-            audio.currentTime = offset;
-          } catch {
-            /* loadedmetadata may still be settling */
-          }
+        try {
+          audio.currentTime = offset;
+        } catch {
+          /* loadedmetadata may still be settling */
         }
+        const time = audio.currentTime || offset;
+        setCurrentTime(time);
+        applyCue(cueAtTime(segment.cues, time));
+        if (desiredIntentRef.current === "paused") {
+          audio.pause();
+          switchingRef.current = false;
+          setStatusBoth("paused");
+          syncFromAudio();
+          return;
+        }
+        setStatusBoth("starting");
         const attempt = audio.play();
         if (!attempt) {
           switchingRef.current = false;
           return;
         }
         attempt
+          .then(() => {
+            // A stale play() from an earlier segment must not pause the
+            // shared element after a newer loadSegment owns it.
+            if (!isLive(token)) return;
+            if (desiredIntentRef.current === "paused") {
+              audio.pause();
+              switchingRef.current = false;
+              setStatusBoth("paused");
+            }
+          })
           .catch((err: unknown) => {
             if (!isLive(token)) return;
             if (err instanceof DOMException && err.name === "AbortError")
               return;
+            if (desiredIntentRef.current === "paused") {
+              switchingRef.current = false;
+              setStatusBoth("paused");
+              return;
+            }
             setError("تعذّر تشغيل الصوت. حاولي مجددًا.");
             setStatusBoth("error");
             stopRaf();
@@ -259,16 +327,19 @@ export function AudioProvider({
             if (isLive(token)) switchingRef.current = false;
           });
       };
-      if (audio.readyState >= 1) start();
+
+      if (audio.readyState >= 1) startOrHold();
       else {
         const onMeta = () => {
           audio.removeEventListener("loadedmetadata", onMeta);
-          start();
+          if (metaListenerRef.current === onMeta) metaListenerRef.current = null;
+          startOrHold();
         };
+        metaListenerRef.current = onMeta;
         audio.addEventListener("loadedmetadata", onMeta);
       }
     },
-    [isLive, setStatusBoth, stopRaf],
+    [applyCue, detachMeta, isLive, setStatusBoth, stopRaf, syncFromAudio],
   );
 
   const buildQueue = useCallback((): ReadySegment[] => {
@@ -286,6 +357,7 @@ export function AudioProvider({
     bump(true);
     stopRaf();
     switchingRef.current = false;
+    desiredIntentRef.current = "paused";
     releaseAudio();
     clearHighlight();
     setCurrentTime(0);
@@ -300,12 +372,14 @@ export function AudioProvider({
       finishPlayback();
       return;
     }
+    desiredIntentRef.current = "playing";
     if (indexRef.current + 1 < queue.length) {
       indexRef.current += 1;
       const token = bump();
       playTokenRef.current = token;
+      publishQueue();
       setStatusBoth("starting");
-      playSegment(token);
+      loadSegment(token, 0, "playing");
       return;
     }
     passesRef.current += 1;
@@ -314,17 +388,19 @@ export function AudioProvider({
       indexRef.current = 0;
       const token = bump();
       playTokenRef.current = token;
+      publishQueue();
       setStatusBoth("starting");
-      playSegment(token);
+      loadSegment(token, 0, "playing");
       return;
     }
     finishPlayback();
-  }, [bump, finishPlayback, playSegment, setStatusBoth]);
+  }, [bump, finishPlayback, loadSegment, publishQueue, setStatusBoth]);
 
   const stop = useCallback(() => {
     bump(true);
     stopRaf();
     switchingRef.current = false;
+    desiredIntentRef.current = "paused";
     releaseAudio();
     clearHighlight();
     setCurrentTime(0);
@@ -347,6 +423,12 @@ export function AudioProvider({
     const onPlaying = () => {
       const token = playTokenRef.current;
       if (!isLiveRef.current(token)) return;
+      if (desiredIntentRef.current === "paused") {
+        audio.pause();
+        switchingRef.current = false;
+        setStatusBoth("paused");
+        return;
+      }
       switchingRef.current = false;
       setStatusBoth("playing");
       startRafRef.current(token);
@@ -354,6 +436,10 @@ export function AudioProvider({
     };
     const onPlay = () => {
       if (!isLiveRef.current(playTokenRef.current)) return;
+      if (desiredIntentRef.current === "paused") {
+        audio.pause();
+        return;
+      }
       syncRef.current();
     };
     const onPause = () => {
@@ -362,6 +448,10 @@ export function AudioProvider({
       syncRef.current();
       if (switchingRef.current) return;
       if (audio.ended) return;
+      if (desiredIntentRef.current === "paused") {
+        if (statusRef.current !== "paused") setStatusBoth("paused");
+        return;
+      }
       if (statusRef.current === "playing") setStatusBoth("paused");
     };
     const onSeeked = () => {
@@ -384,6 +474,7 @@ export function AudioProvider({
     const onEnded = () => {
       if (!isLiveRef.current(playTokenRef.current)) return;
       if (switchingRef.current) return;
+      if (desiredIntentRef.current === "paused") return;
       advanceRef.current();
     };
     const onError = () => {
@@ -467,6 +558,9 @@ export function AudioProvider({
       stopRaf();
       const audio = audioRef.current;
       if (audio) {
+        const listener = metaListenerRef.current;
+        if (listener) audio.removeEventListener("loadedmetadata", listener);
+        metaListenerRef.current = null;
         audio.pause();
         audio.removeAttribute("src");
         audio.load();
@@ -478,6 +572,7 @@ export function AudioProvider({
     (kind: QueueKind) => {
       const token = bump(true);
       playTokenRef.current = token;
+      desiredIntentRef.current = "playing";
       stopRaf();
       clearHighlight();
       kindRef.current = kind;
@@ -488,8 +583,10 @@ export function AudioProvider({
         idleAfterStop();
         return;
       }
+      queueActiveRef.current = true;
+      publishQueue();
       setStatusBoth("starting");
-      playSegment(token);
+      loadSegment(token, 0, "playing");
     },
     [
       bump,
@@ -497,8 +594,9 @@ export function AudioProvider({
       clearHighlight,
       buildQueue,
       idleAfterStop,
+      publishQueue,
       setStatusBoth,
-      playSegment,
+      loadSegment,
     ],
   );
 
@@ -530,20 +628,43 @@ export function AudioProvider({
   );
 
   const pause = useCallback(() => {
+    desiredIntentRef.current = "paused";
     audioRef.current?.pause();
-  }, []);
+    if (
+      statusRef.current === "playing" ||
+      statusRef.current === "starting"
+    ) {
+      stopRaf();
+      setStatusBoth("paused");
+    }
+  }, [setStatusBoth, stopRaf]);
 
   const resume = useCallback(() => {
     const audio = audioRef.current;
     const token = playTokenRef.current;
     if (!audio?.getAttribute("src") || !isLive(token)) return;
+    desiredIntentRef.current = "playing";
     setStatusBoth("starting");
-    audio.play()?.catch((err: unknown) => {
-      if (!isLive(token)) return;
-      if (err instanceof DOMException && err.name === "AbortError") return;
-      setError("تعذّر تشغيل الصوت. حاولي مجددًا.");
-      setStatusBoth("error");
-    });
+    const attempt = audio.play();
+    if (!attempt) return;
+    attempt
+      .then(() => {
+        if (!isLive(token)) return;
+        if (desiredIntentRef.current === "paused") {
+          audio.pause();
+          setStatusBoth("paused");
+        }
+      })
+      .catch((err: unknown) => {
+        if (!isLive(token)) return;
+        if (err instanceof DOMException && err.name === "AbortError") return;
+        if (desiredIntentRef.current === "paused") {
+          setStatusBoth("paused");
+          return;
+        }
+        setError("تعذّر تشغيل الصوت. حاولي مجددًا.");
+        setStatusBoth("error");
+      });
   }, [isLive, setStatusBoth]);
 
   const restart = useCallback(() => {
@@ -553,6 +674,7 @@ export function AudioProvider({
     }
     const token = bump(true);
     playTokenRef.current = token;
+    desiredIntentRef.current = "playing";
     stopRaf();
     clearHighlight();
     indexRef.current = 0;
@@ -562,8 +684,10 @@ export function AudioProvider({
       idleAfterStop();
       return;
     }
+    queueActiveRef.current = true;
+    publishQueue();
     setStatusBoth("starting");
-    playSegment(token);
+    loadSegment(token, 0, "playing");
   }, [
     playPage,
     bump,
@@ -571,29 +695,45 @@ export function AudioProvider({
     clearHighlight,
     buildQueue,
     idleAfterStop,
+    publishQueue,
     setStatusBoth,
-    playSegment,
+    loadSegment,
   ]);
 
+  const moveTo = useCallback(
+    (index: number, intent: TransportIntent) => {
+      const queue = queueRef.current;
+      if (!queueActiveRef.current || !queue.length) return;
+      if (index < 0 || index >= queue.length) return;
+      desiredIntentRef.current = intent;
+      indexRef.current = index;
+      const token = bump();
+      playTokenRef.current = token;
+      stopRaf();
+      publishQueue();
+      loadSegment(token, 0, intent);
+    },
+    [bump, loadSegment, publishQueue, stopRaf],
+  );
+
   const previous = useCallback(() => {
-    const audio = audioRef.current;
-    if (!audio || !queueRef.current.length) return;
-    if (audio.currentTime > 1.5 || indexRef.current === 0) {
-      audio.currentTime = 0;
-      syncFromAudio();
-      return;
-    }
-    indexRef.current -= 1;
-    const token = bump();
-    playTokenRef.current = token;
-    setStatusBoth("starting");
-    playSegment(token);
-  }, [bump, playSegment, setStatusBoth, syncFromAudio]);
+    if (!queueActiveRef.current || indexRef.current <= 0) return;
+    const intent = captureIntent(statusRef.current, desiredIntentRef.current);
+    moveTo(indexRef.current - 1, intent);
+  }, [moveTo]);
 
   const next = useCallback(() => {
-    if (!queueRef.current.length) return;
-    advance();
-  }, [advance]);
+    if (!queueActiveRef.current) return;
+    if (indexRef.current + 1 >= queueRef.current.length) return;
+    const intent = captureIntent(statusRef.current, desiredIntentRef.current);
+    moveTo(indexRef.current + 1, intent);
+  }, [moveTo]);
+
+  const replaySegment = useCallback(() => {
+    if (!queueActiveRef.current || !queueRef.current.length) return;
+    const intent = captureIntent(statusRef.current, desiredIntentRef.current);
+    moveTo(indexRef.current, intent);
+  }, [moveTo]);
 
   const seek = useCallback(
     (time: number) => {
@@ -653,6 +793,8 @@ export function AudioProvider({
   }, []);
 
   const hasReadySegments = useMemo(() => hasReady(segments), [segments]);
+  const canPrevious = segmentCount > 0 && segmentIndex > 0;
+  const canNext = segmentCount > 0 && segmentIndex < segmentCount - 1;
 
   const canPlayPart = useCallback(
     (part: NarrationPart) =>
@@ -674,6 +816,10 @@ export function AudioProvider({
       duration,
       activeTarget,
       hasReadySegments,
+      segmentIndex,
+      segmentCount,
+      canPrevious,
+      canNext,
       retry,
       setFollow,
       setSpeed,
@@ -685,6 +831,7 @@ export function AudioProvider({
       resume,
       stop,
       restart,
+      replaySegment,
       previous,
       next,
       seek,
@@ -703,6 +850,10 @@ export function AudioProvider({
       duration,
       activeTarget,
       hasReadySegments,
+      segmentIndex,
+      segmentCount,
+      canPrevious,
+      canNext,
       retry,
       setFollow,
       setSpeed,
@@ -714,6 +865,7 @@ export function AudioProvider({
       resume,
       stop,
       restart,
+      replaySegment,
       previous,
       next,
       seek,

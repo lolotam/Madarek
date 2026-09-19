@@ -27,6 +27,7 @@ import { PlateArt } from "./illustrations";
 import { api, useSession } from "./providers";
 import { AudioProvider } from "./audio/audio-provider";
 import { PlayerBar } from "./audio/player-bar";
+import { FloatingAudioDock } from "./audio/floating-audio-dock";
 import { PartPlayButton } from "./audio/part-button";
 import { sciencePath } from "@/content/curriculum";
 import {
@@ -377,6 +378,7 @@ export function Lesson() {
           ٢٠٢٦–٢٠٢٧، ص ٢٤–٢٨. الرسوم نماذج تعليمية مبسّطة.
         </p>
       </div>
+      <FloatingAudioDock />
     </AudioProvider>
   );
 }

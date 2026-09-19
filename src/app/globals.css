@@ -1569,6 +1569,144 @@ audio[data-audio-engine] {
 .audio-player-spinner {
   display: inline-flex;
 }
+.audio-dock {
+  --audio-dock-panel: 248px;
+  position: fixed;
+  z-index: 45;
+  inset-inline-start: 16px;
+  top: 108px;
+  display: grid;
+  gap: 10px;
+  width: var(--audio-dock-panel);
+  max-width: calc(100vw - 32px);
+  padding: 12px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  color: var(--ink);
+}
+.audio-dock-unavailable {
+  gap: 4px;
+  box-shadow: none;
+  background: var(--paper);
+  width: auto;
+  --audio-dock-panel: auto;
+}
+.audio-dock-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+.audio-dock-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--ink);
+  min-height: 44px;
+}
+.audio-dock-index {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--violet-ink);
+  font-variant-numeric: tabular-nums;
+}
+.audio-dock-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.audio-dock .button,
+.audio-dock .icon-button {
+  min-height: 44px;
+  min-width: 44px;
+  flex-shrink: 0;
+}
+.audio-dock-replay {
+  padding-inline: 12px;
+}
+.audio-dock-minimized {
+  width: auto;
+  max-width: none;
+  padding: 8px;
+  gap: 0;
+  --audio-dock-panel: 60px;
+}
+.audio-dock-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.audio-dock-restore,
+.audio-dock-minimize {
+  width: 44px;
+  height: 44px;
+}
+html[data-audio-dock="open"] {
+  --audio-dock-rail: calc(248px + 32px);
+}
+html[data-audio-dock="min"] {
+  --audio-dock-rail: calc(60px + 32px);
+}
+html[data-audio-dock] .quiz-actions,
+html[data-audio-dock] .quiz-choice,
+html[data-audio-dock] .quiz-pagination,
+html[data-audio-dock] .lesson-section-heading {
+  scroll-margin-bottom: var(--audio-dock-clearance, 96px);
+}
+@media (min-width: 1200px) {
+  html[data-audio-dock] .lesson-hero,
+  html[data-audio-dock] .lesson-nav {
+    margin-inline-start: var(--audio-dock-rail);
+  }
+  html[data-audio-dock] .lesson-body {
+    width: min(1024px, calc(100% - 32px - var(--audio-dock-rail)));
+    margin-inline-start: max(32px, var(--audio-dock-rail));
+    margin-inline-end: auto;
+  }
+}
+@media (max-width: 1199px) {
+  .audio-dock {
+    top: auto;
+    bottom: max(12px, env(safe-area-inset-bottom, 0px));
+    inset-inline-start: 12px;
+    width: min(320px, calc(100vw - 24px));
+  }
+  .audio-dock.audio-dock-minimized {
+    display: flex;
+    align-items: center;
+    width: auto;
+    max-width: 180px;
+    max-height: 64px;
+    padding: 6px 8px;
+    gap: 0;
+  }
+  .audio-dock.audio-dock-unavailable {
+    width: auto;
+    max-width: 180px;
+    max-height: 64px;
+    padding: 8px;
+  }
+  .audio-dock.audio-dock-unavailable .audio-dock-status {
+    min-height: 0;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+  html[data-audio-dock] .lesson-body {
+    padding-bottom: var(--audio-dock-clearance, 96px);
+  }
+}
+@media (min-width: 768px) and (max-width: 1199px) {
+  html[data-audio-dock="min"] .quiz-actions {
+    padding-inline-start: 132px;
+  }
+}
 .audio-highlight-layer {
   position: fixed;
   inset: 0;
@@ -3645,7 +3783,8 @@ audio[data-audio-engine] {
   .audio-select select {
     max-width: 108px;
   }
-  .audio-restart {
+  .audio-restart,
+  .audio-replay-segment {
     padding-inline: 10px;
   }
   .audio-time {

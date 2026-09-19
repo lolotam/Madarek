@@ -6,6 +6,7 @@ import {
   Pause,
   Play,
   RotateCcw,
+  RotateCw,
   SkipBack,
   SkipForward,
   Square,
@@ -35,6 +36,10 @@ export function PlayerBar() {
     currentTime,
     duration,
     hasReadySegments,
+    segmentIndex,
+    segmentCount,
+    canPrevious,
+    canNext,
     retry,
     setFollow,
     setSpeed,
@@ -44,6 +49,7 @@ export function PlayerBar() {
     resume,
     stop,
     restart,
+    replaySegment,
     previous,
     next,
     seek,
@@ -53,6 +59,8 @@ export function PlayerBar() {
   const canControl =
     hasReadySegments && status !== "loading" && status !== "not_ready";
   const playing = status === "playing";
+  const queueActive = segmentCount > 0;
+  const canReplay = canControl && queueActive;
 
   let message = "";
   if (status === "loading") message = "جارٍ تجهيز الشرح الصوتي…";
@@ -70,6 +78,8 @@ export function PlayerBar() {
         role="region"
         aria-label="المشغّل الصوتي"
         data-audio-player-status={status}
+        data-audio-segment-index={segmentIndex}
+        data-audio-segment-count={segmentCount}
         initial={{ opacity: 0, y: reduce ? 0 : 6 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.25 }}
@@ -91,6 +101,8 @@ export function PlayerBar() {
       role="region"
       aria-label="المشغّل الصوتي"
       data-audio-player-status={status}
+      data-audio-segment-index={segmentIndex}
+      data-audio-segment-count={segmentCount}
     >
       <AnimatePresence mode="wait">
         {message ? (
@@ -133,21 +145,21 @@ export function PlayerBar() {
           type="button"
           className="icon-button"
           onClick={() => {
-            if (playing) pause();
+            if (playing || status === "starting") pause();
             else if (status === "paused") resume();
             else playPage();
           }}
           disabled={!canControl}
           aria-label={
-            playing
+            playing || status === "starting"
               ? "إيقاف مؤقت"
-              : status === "starting"
-                ? "جارٍ التشغيل"
+              : status === "paused"
+                ? "إكمال"
                 : "تشغيل"
           }
           whileTap={press}
         >
-          {busy ? (
+          {status === "loading" ? (
             <motion.span
               className="audio-player-spinner"
               animate={reduce ? undefined : { rotate: 360 }}
@@ -159,7 +171,7 @@ export function PlayerBar() {
             >
               <LoaderCircle size={18} />
             </motion.span>
-          ) : playing ? (
+          ) : playing || status === "starting" ? (
             <Pause size={18} />
           ) : (
             <Play size={18} />
@@ -188,9 +200,20 @@ export function PlayerBar() {
         </motion.button>
         <motion.button
           type="button"
+          className="button small outline audio-replay-segment"
+          onClick={replaySegment}
+          disabled={!canReplay}
+          aria-label="إعادة المقطع"
+          whileTap={press}
+        >
+          <RotateCw size={16} />
+          إعادة المقطع
+        </motion.button>
+        <motion.button
+          type="button"
           className="icon-button"
           onClick={previous}
-          disabled={!canControl || (!playing && status !== "paused")}
+          disabled={!canPrevious}
           aria-label="المقطع السابق"
           whileTap={press}
         >
@@ -200,7 +223,7 @@ export function PlayerBar() {
           type="button"
           className="icon-button"
           onClick={next}
-          disabled={!canControl || (!playing && status !== "paused")}
+          disabled={!canNext}
           aria-label="المقطع التالي"
           whileTap={press}
         >
