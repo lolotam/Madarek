@@ -1,0 +1,42 @@
+[
+  {
+    "id": "map.intro",
+    "page": "nutrients",
+    "part": "map",
+    "order": 1,
+    "version": 1,
+    "text": "تعالوا نشوف المغذّيات.",
+    "cues": [{ "phrase": "المغذّيات", "target": "nutrients.def" }]
+  },
+  {
+    "id": "explore.groups",
+    "page": "nutrients",
+    "part": "explore",
+    "order": 2,
+    "version": 1,
+    "text": "عندنا مجموعتين: الكبرى والصغرى.",
+    "cues": [
+      { "phrase": "الكبرى", "target": "group.macro" },
+      { "phrase": "الصغرى", "target": "group.micro" }
+    ]
+  },
+  {
+    "id": "quiz.q1",
+    "page": "nutrients",
+    "part": "quiz",
+    "order": 3,
+    "version": 1,
+    "text": "اختاري مجموعة المغذّيات الكبرى.",
+    "cues": [{ "phrase": "المغذّيات الكبرى", "target": "quiz.q1" }]
+  },
+  {
+    "id": "result.explain.q1",
+    "page": "nutrients",
+    "part": "result",
+    "order": 4,
+    "version": 1,
+    "text": "الإجابة الصحيحة هي المغذّيات الكبرى.",
+    "protected": "answer",
+    "cues": [{ "phrase": "المغذّيات الكبرى", "target": "quiz.q1.answer" }]
+  }
+]

@@ -19,7 +19,11 @@ export default defineConfig({
     url: `http://127.0.0.1:${port}`,
     reuseExistingServer: false,
     timeout: 60000,
-    env: { DATABASE_PATH: resolve(".data/browser-qa.sqlite") },
+    env: {
+      DATABASE_PATH: resolve(".data/browser-qa.sqlite"),
+      AUDIO_LIBRARY_PATH: resolve(".data/audio-e2e"),
+      NARRATION_DIR: resolve("tests/fixtures/narration"),
+    },
   },
   reporter: [["list"], ["html", { open: "never" }]],
 });
