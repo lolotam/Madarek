@@ -101,7 +101,33 @@ Then listen and approve each clip in `/admin/audio`. Generated audio is stored o
 
 ## 9. Backups
 
-Back up the `madarek-data` volume: both the database and the approved audio. Losing the audio means paying to regenerate it and reviewing it again. Dokploy's volume backups, or a scheduled `docker run --rm -v madarek-data:/data -v $PWD:/backup busybox tar czf /backup/madarek-data.tgz -C /data .`, both work. Copy SQLite while the app is idle, or use `sqlite3 .backup`, for a consistent snapshot.
+Redeploys never delete the data. `madarek-data` is a named volume that outlives containers. It is lost only if deleted explicitly: by removing the app in Dokploy with volume deletion, or by `docker volume prune` while no container uses it. Two automatic backups protect it:
+
+| Backup                                     | When                           | Where                                                                                | Keeps     |
+| ------------------------------------------ | ------------------------------ | ------------------------------------------------------------------------------------ | --------- |
+| Local (server cron)                        | 00:30 UTC (03:30 Kuwait) daily | `/var/backups/madarek/madarek-data-<UTC time>.tgz` on the Dokploy server (root only) | 14 newest |
+| Dokploy volume backup "madarek-data daily" | 00:00 UTC (03:00 Kuwait) daily | MinIO destination `dockploy` (`s3.walidmohamed.com`), prefix `madarek`               | 14 newest |
+
+- **Local:** `/usr/local/sbin/madarek-backup.sh`, scheduled by `/etc/cron.d/madarek-backup`, logs to `/var/log/madarek-backup.log`.
+  - It snapshots the database with `VACUUM INTO` inside the running container, so the site keeps serving.
+  - Each archive holds that consistent `learning.sqlite`, `audio/` and logs.
+  - It covers accidental volume deletion, not loss of the whole server.
+- **Dokploy/MinIO:** off-server. It stops the app for a few seconds to take a consistent SQLite copy. **As of 2026-09-19 this destination returns Cloudflare 526 (invalid origin certificate), so these uploads fail until the MinIO server's certificate is fixed.**
+
+### Restore
+
+1. In Dokploy, **stop** the Madarek application.
+2. On the server, as root:
+
+   ```sh
+   V=/var/lib/docker/volumes/madarek-data/_data
+   A=/var/backups/madarek/madarek-data-YYYYMMDD-HHMMSS.tgz   # pick one
+   mkdir -p /root/madarek-before-restore && cp -a "$V"/. /root/madarek-before-restore/
+   find "$V" -mindepth 1 -delete
+   tar xzf "$A" -C "$V" && chown -R 1000:1000 "$V"
+   ```
+
+3. **Start** the application and check `/api/session` and `/api/audio/manifest?page=nutrients`.
 
 ## Updating
 
