@@ -156,11 +156,41 @@ export function Dashboard({ initial }: { initial: Snapshot }) {
           {adding && (
             <form className="child-form panel" onSubmit={add}>
               <h3>ملف جديد، بداية جديدة</h3>
+              <p className="micro-copy">جميع الحقول مطلوبة.</p>
               <div className="form-grid">
                 <label className="field">
                   <span>اسم الطالب</span>
                   <input required name="name" maxLength={60} />
                 </label>
+                <label className="field">
+                  <span>الصف</span>
+                  <select
+                    required
+                    name="grade"
+                    defaultValue=""
+                    aria-label="الصف"
+                  >
+                    <option value="" disabled>
+                      اختيار الصف
+                    </option>
+                    <option value="2">الصف الثاني</option>
+                    <option value="5">الصف الخامس</option>
+                    <option value="8">الصف الثامن</option>
+                  </select>
+                </label>
+                <fieldset className="gender-set">
+                  <legend>الجنس</legend>
+                  <div className="radio-row">
+                    <label>
+                      <input type="radio" name="gender" value="male" required />
+                      ولد
+                    </label>
+                    <label>
+                      <input type="radio" name="gender" value="female" />
+                      بنت
+                    </label>
+                  </div>
+                </fieldset>
                 <label className="field">
                   <span>اسم المستخدم للدخول</span>
                   <input
@@ -186,11 +216,12 @@ export function Dashboard({ initial }: { initial: Snapshot }) {
                     maxLength={12}
                     autoComplete="new-password"
                   />
-                  <small>٦–١٢ رقمًا. احتفظي به للطفل.</small>
+                  <small>٦–١٢ رقمًا. يُحفظ للطفل.</small>
                 </label>
               </div>
               <p className="micro-copy">
-                الصف الثامن · علوم · الفصل الأول. الصفوف الأخرى تُضاف لاحقًا.
+                لكل طالب صف وجنس محفوظان. المحتوى المتاح حاليًا: علوم الصف
+                الثامن.
               </p>
               <button className="button primary" disabled={busy}>
                 {busy ? "جارٍ الإضافة…" : "حفظ ملف الطالب"}
@@ -369,7 +400,24 @@ function ChildPanel({ child }: { child: ChildData }) {
         <div>
           <h3>{child.user.name}</h3>
           <p>
-            الصف الثامن · اسم الدخول: <bdi>{child.user.username}</bdi>
+            {[
+              child.user.grade === 2
+                ? "الصف الثاني"
+                : child.user.grade === 5
+                  ? "الصف الخامس"
+                  : child.user.grade === 8
+                    ? "الصف الثامن"
+                    : "",
+              child.user.gender === "male"
+                ? "ولد"
+                : child.user.gender === "female"
+                  ? "بنت"
+                  : "",
+            ]
+              .filter(Boolean)
+              .join(" · ")}
+            {child.user.grade || child.user.gender ? " · " : ""}
+            اسم الدخول: <bdi>{child.user.username}</bdi>
           </p>
         </div>
         <span className="pill green">

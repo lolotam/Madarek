@@ -5,14 +5,26 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { createStore } from "../src/server/store.mjs";
 
-test('local admin promotion enables publication control and revokes old sessions',()=>{
- const s=createStore(':memory:');try{
-  const p=s.registerParent({name:'Administrator',email:'admin@example.test',password:'valid-password-123'});
-  const token=s.createSession(p.id);s.promoteAdmin('admin@example.test');
-  assert.equal(s.sessionUser(token),null);
-  const admin=s.loginParent('admin@example.test','valid-password-123');
-  assert.equal(admin.role,'admin');s.publish(admin.id,false);assert.equal(s.isPublished(),false);s.publish(admin.id,true);assert.equal(s.snapshot(admin.id).published,true);
- }finally{s.close();}
+test("local admin promotion enables publication control and revokes old sessions", () => {
+  const s = createStore(":memory:");
+  try {
+    const p = s.registerParent({
+      name: "Administrator",
+      email: "admin@example.test",
+      password: "valid-password-123",
+    });
+    const token = s.createSession(p.id);
+    s.promoteAdmin("admin@example.test");
+    assert.equal(s.sessionUser(token), null);
+    const admin = s.loginParent("admin@example.test", "valid-password-123");
+    assert.equal(admin.role, "admin");
+    s.publish(admin.id, false);
+    assert.equal(s.isPublished(), false);
+    s.publish(admin.id, true);
+    assert.equal(s.snapshot(admin.id).published, true);
+  } finally {
+    s.close();
+  }
 });
 
 test("public signup cannot select admin role and parent cannot publish", () => {
@@ -48,6 +60,8 @@ test("resetting a child pin revokes sessions and forbids another family", () => 
       name: "Child",
       username: "child",
       pin: "12345678",
+      grade: 8,
+      gender: "female",
     });
     const token = s.createSession(c.id);
     assert.throws(() => s.resetChildPin(o.id, c.id, "87654321"));
@@ -86,6 +100,8 @@ test("database reopen preserves progress and attempt history", () => {
       name: "Child",
       username: "persist-child",
       pin: "12345678",
+      grade: 8,
+      gender: "female",
     });
     s.saveProgress(c.id, { section: "map" });
     s.submit(c.id, { id: "persist-attempt-01", answers: { q1: "macro" } });

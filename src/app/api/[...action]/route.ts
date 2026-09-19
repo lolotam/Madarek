@@ -62,7 +62,7 @@ export async function POST(
       );
       const signed =
         action === "register"
-          ? store.registerParent(body)
+          ? store.registerFamily(body)
           : action === "login"
             ? store.loginParent(body.email, body.password)
             : store.loginChild(body.username, body.pin);
