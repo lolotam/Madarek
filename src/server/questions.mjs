@@ -136,6 +136,11 @@ export function publicQuestions() {
     ({ accepted, answer, explanation, ...question }) => question,
   );
 }
+/** The lesson these questions assess; attempts and rewards are keyed by it. */
+export const LESSON_ID = "nutrients";
+export function quizConcepts() {
+  return [...new Set(questions.map((q) => q.concept))];
+}
 export function grade(answers = {}) {
   const details = questions.map((q) => ({
     id: q.id,
