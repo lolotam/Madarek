@@ -229,6 +229,22 @@ test("admin reviews clips in the browser", async ({ page }) => {
   await expect(introCard.getByRole("status")).toContainText("اعتُمد المقطع");
   await expect(introCard.getByText("معتمد", { exact: true })).toBeVisible();
 
+  await page.goto("/admin");
+  await page.getByRole("tab", { name: "السجل" }).click();
+  const auditEntry = page
+    .locator("li.panel")
+    .filter({ hasText: "مراجعة مقطع صوتي" })
+    .filter({ hasText: "map.intro" });
+  await expect(
+    auditEntry.getByRole("heading", { name: "مراجعة مقطع صوتي" }),
+  ).toBeVisible();
+  await expect(auditEntry.getByText("map.intro · اعتماد")).toBeVisible();
+
+  await page.goto("/admin/audio");
+  await expect(
+    page.getByRole("heading", { name: "مراجعة الصوت" }),
+  ).toBeVisible();
+
   const manifest = await page.request.get("/api/audio/manifest?page=nutrients");
   expect(manifest.ok()).toBeTruthy();
   const body = await manifest.json();

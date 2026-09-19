@@ -8,7 +8,21 @@ export const dynamic = "force-dynamic";
 export async function POST(req: NextRequest) {
   try {
     const user = store.sessionUser(req.cookies.get("hana_session")?.value);
-    return await handleAudioReview(req, { user });
+    return await handleAudioReview(req, {
+      user,
+      onReviewed: ({
+        segmentId,
+        hash,
+        decision,
+      }: {
+        segmentId: string;
+        hash: string;
+        decision: "approve" | "reject";
+      }) => {
+        if (!user) return;
+        store.recordAudioReview(user.id, { segmentId, hash, decision });
+      },
+    });
   } catch (error: unknown) {
     const e = error as Error & { status?: number };
     if (e instanceof SyntaxError)
