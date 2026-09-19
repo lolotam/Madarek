@@ -231,10 +231,13 @@ test("admin reviews clips in the browser", async ({ page }) => {
 
   await page.goto("/admin");
   await page.getByRole("tab", { name: "السجل" }).click();
+  // The QA database persists across runs, so earlier runs leave older
+  // entries; the log is newest first, so check the latest one.
   const auditEntry = page
     .locator("li.panel")
     .filter({ hasText: "مراجعة مقطع صوتي" })
-    .filter({ hasText: "map.intro" });
+    .filter({ hasText: "map.intro" })
+    .first();
   await expect(
     auditEntry.getByRole("heading", { name: "مراجعة مقطع صوتي" }),
   ).toBeVisible();

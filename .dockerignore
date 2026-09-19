@@ -1,0 +1,22 @@
+# Dependencies and build output are produced inside the image.
+node_modules
+.next
+*.tsbuildinfo
+
+# Local state and secrets never enter the image.
+.data
+.env
+.env.*
+!.env.example
+
+# Source textbooks, test artifacts and tooling folders.
+GRADE-*
+test-results
+playwright-report
+.playwright-mcp
+.codex-remote-attachments
+tmp
+.git
+.github
+Dockerfile
+.dockerignore

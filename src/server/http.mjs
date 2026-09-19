@@ -1,12 +1,28 @@
 export const JSON_BODY_LIMIT = 16000;
 
+function firstHeader(req, name) {
+  return req.headers.get(name)?.split(",")[0].trim() || "";
+}
+
 export function expectedOriginFrom(req) {
   // Next normalizes loopback hosts to localhost in nextUrl. The actual Host
   // header preserves the browser origin; APP_ORIGIN pins it for deployment.
-  return (
-    process.env.APP_ORIGIN ||
-    `${req.nextUrl.protocol}//${req.headers.get("host")}`
-  );
+  // Behind a TLS-terminating proxy (Dokploy/Traefik) the app sees plain HTTP,
+  // so fall back to the proxy's X-Forwarded-* headers when APP_ORIGIN is unset.
+  if (process.env.APP_ORIGIN) return process.env.APP_ORIGIN;
+  const proto = firstHeader(req, "x-forwarded-proto");
+  const host =
+    firstHeader(req, "x-forwarded-host") || req.headers.get("host") || "";
+  return `${proto ? proto + ":" : req.nextUrl.protocol}//${host}`;
+}
+
+/** Whether the browser reached us over HTTPS, for the session cookie's Secure flag. */
+export function isSecureRequest(req) {
+  try {
+    return new URL(expectedOriginFrom(req)).protocol === "https:";
+  } catch {
+    return false;
+  }
 }
 
 export function originForbidden(req) {

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { store } from "@/server/db";
 import { publicQuestions, grade, modelReason } from "@/server/questions.mjs";
 import { signAudioGrant } from "@/server/audio/grant.mjs";
-import { readJsonBody } from "@/server/http.mjs";
+import { isSecureRequest, readJsonBody } from "@/server/http.mjs";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 const cookieName = "hana_session";
@@ -77,7 +77,7 @@ export async function POST(
       res.cookies.set(cookieName, store.createSession(signed.id), {
         httpOnly: true,
         sameSite: "lax",
-        secure: req.nextUrl.protocol === "https:",
+        secure: isSecureRequest(req),
         path: "/",
         maxAge: 7 * 86400,
       });

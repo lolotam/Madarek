@@ -129,7 +129,7 @@ npm.cmd run test:e2e
 ## متغيرات البيئة
 
 - `DATABASE_PATH`: اختياري، مسار قاعدة البيانات؛ الافتراضي `.data/learning.sqlite`.
-- `APP_ORIGIN`: اختياري محليًا؛ عند التجهيز لخادم خلف proxy حدده بعنوان الموقع الكامل للتحقق من مصدر طلبات التعديل. إعداد HTTPS وCookies يُراجع قبل النشر العام.
+- `APP_ORIGIN`: اختياري محليًا، **مطلوب في الإنتاج** (مثل `https://madarek.wlidmohamed.co`). يثبّت التحقق من مصدر طلبات التعديل، ويجعل كوكي الجلسة Secure خلف proxy. عند غيابه تُستخدم ترويسات `X-Forwarded-Proto` و`X-Forwarded-Host`.
 
 - `SETTINGS_ENCRYPTION_KEY`: مفتاح 32 بايت (base64 أو 64 خانة hex) لتشفير مفاتيح الخدمات المحفوظة من لوحة الإدارة. من دونه تُعطَّل حقول الأسرار في اللوحة، ولا يُحفظ أي سر دون تشفير. تغييره يجعل الأسرار المحفوظة غير قابلة للقراءة.
 - `ELEVENLABS_API_KEY` و`ELEVENLABS_VOICE_ID` و`ELEVENLABS_MODEL_ID` (الافتراضي `eleven_multilingual_v2`) و`ELEVENLABS_MAX_CHARACTERS`: بدائل عند غياب القيم في لوحة الإدارة، فإعدادات القاعدة تتقدم. `ELEVENLABS_OUTPUT_FORMAT` اختياري.
@@ -144,6 +144,7 @@ npm.cmd run test:e2e
 
 - `docs/PRD.md`: الرؤية الكاملة والقرارات المعتمدة وتحديث نطاق التنفيذ.
 - `docs/AUDIO-NARRATION-DESIGN.md`: تصميم الشرح الصوتي وحالته.
+- `docs/DEPLOYMENT.md`: النشر بـ Docker على Dokploy على `madarek.wlidmohamed.co`، مع المتغيرات والمجلد الدائم `/app/.data` وإنشاء المدير.
 - `docs/SCIENCE-SOURCE-MAP.md`: فهرس الكتاب ودلائل الطبعة وصفحات درس المغذّيات.
 - `docs/CONTENT-INVENTORY.md`: لقطة الحصر السابقة أثناء النسخ؛ ليست بيانًا حيًا لكل الملفات الحالية.
 - `docs/superpowers/plans/2026-09-19-science-first-slice.md`: خطة النسخة الأولى.
