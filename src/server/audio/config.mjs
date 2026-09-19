@@ -40,7 +40,17 @@ function fromEnv() {
 }
 
 function withSettingsStore(reader) {
+  // Inside the Next server, reuse the shared store from src/server/db.ts
+  // instead of reopening and migrating SQLite on every audio request.
+  const shared = globalThis.learningStore;
+  if (shared) return reader(shared);
   const filename = defaultDatabasePath();
+  if (
+    process.env.NEXT_RUNTIME &&
+    existsSync(/*turbopackIgnore: true*/ filename)
+  ) {
+    return reader((globalThis.learningStore = createStore(filename)));
+  }
   if (
     filename !== ":memory:" &&
     !existsSync(/*turbopackIgnore: true*/ filename)
