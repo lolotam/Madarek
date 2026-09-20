@@ -1,6 +1,8 @@
 # Rewards Foundation (XP, Coins, Streak, Mastery) Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
+
+**Status: delivered 2026-09-19** in commits `a9ce268`, `5fbfd06`, `efecfa0` (mobile fix `88985e6`). See `docs/ROADMAP.md`.
 
 **Goal:** Give students a daily reason to return — a learning-based streak, XP with titles, Madarek coins and per-concept mastery — and show parents what their child understood and how regularly they study.
 
@@ -71,12 +73,12 @@ Mastery per concept (from the quiz `concept` tags), newest attempt first: `secur
 
 **Files:** none
 
-- [ ] **Step 1: Install dependencies in the worktree**
+- [x] **Step 1: Install dependencies in the worktree**
 
 Run: `npm ci`
 Expected: completes without errors.
 
-- [ ] **Step 2: Run the unit suite to confirm a green baseline**
+- [x] **Step 2: Run the unit suite to confirm a green baseline**
 
 Run: `npm test`
 Expected: all tests pass. If anything fails here, stop and report — do not start the plan on a red baseline.
@@ -89,7 +91,7 @@ Expected: all tests pass. If anything fails here, stop and report — do not sta
 - Create: `src/server/rewards.mjs`
 - Test: `tests/rewards.test.mjs`
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 Create `tests/rewards.test.mjs`:
 
@@ -183,12 +185,12 @@ test("titles follow XP and match the student's gender", () => {
 });
 ```
 
-- [ ] **Step 2: Run the tests to verify they fail**
+- [x] **Step 2: Run the tests to verify they fail**
 
 Run: `node --test tests/rewards.test.mjs`
 Expected: FAIL — `Cannot find module '.../src/server/rewards.mjs'`.
 
-- [ ] **Step 3: Implement the rules**
+- [x] **Step 3: Implement the rules**
 
 Create `src/server/rewards.mjs`:
 
@@ -293,12 +295,12 @@ export function levelFor(xp, gender) {
 }
 ```
 
-- [ ] **Step 4: Run the tests to verify they pass**
+- [x] **Step 4: Run the tests to verify they pass**
 
 Run: `node --test tests/rewards.test.mjs`
 Expected: PASS (7 tests).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/server/rewards.mjs tests/rewards.test.mjs
@@ -314,7 +316,7 @@ git commit -m "Add pure reward rules: Kuwait study day, streak, XP, coins and ti
 - Modify: `src/server/questions.mjs` (add exports after `publicQuestions`, around line 134)
 - Test: `tests/rewards.test.mjs` (append)
 
-- [ ] **Step 1: Append the failing tests**
+- [x] **Step 1: Append the failing tests**
 
 Add to the imports at the top of `tests/rewards.test.mjs`:
 
@@ -376,12 +378,12 @@ test("the nutrients quiz exposes its lesson id and unique concepts", () => {
 });
 ```
 
-- [ ] **Step 2: Run the tests to verify they fail**
+- [x] **Step 2: Run the tests to verify they fail**
 
 Run: `node --test tests/rewards.test.mjs`
 Expected: FAIL — cannot find `src/server/mastery.mjs`.
 
-- [ ] **Step 3: Implement mastery and the quiz exports**
+- [x] **Step 3: Implement mastery and the quiz exports**
 
 Create `src/server/mastery.mjs`:
 
@@ -418,12 +420,12 @@ export function quizConcepts() {
 }
 ```
 
-- [ ] **Step 4: Run the tests to verify they pass**
+- [x] **Step 4: Run the tests to verify they pass**
 
 Run: `node --test tests/rewards.test.mjs`
 Expected: PASS (10 tests).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/server/mastery.mjs src/server/questions.mjs tests/rewards.test.mjs
@@ -438,7 +440,7 @@ git commit -m "Add per-concept mastery and expose the quiz's lesson id and conce
 - Modify: `src/server/store.mjs` (imports line 11; `createStore` signature line ~93; schema block lines ~98–108; column migration after line ~122; `childAttempts` ~229; `submit` insert ~464; `deleteFamily` ~826)
 - Test: `tests/rewards-store.test.mjs`
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 Create `tests/rewards-store.test.mjs`:
 
@@ -552,12 +554,12 @@ test("deleting a family also removes its reward history", () => {
 
 Note: the third test only fails after Task 4 adds reward writes (the foreign keys then block deletion). It is written now so the cleanup lands together with the tables.
 
-- [ ] **Step 2: Run the tests to verify they fail**
+- [x] **Step 2: Run the tests to verify they fail**
 
 Run: `node --test tests/rewards-store.test.mjs`
 Expected: FAIL — `lesson_id` column missing (`no such column: lesson_id`) and `lessonId` undefined.
 
-- [ ] **Step 3: Implement the schema changes**
+- [x] **Step 3: Implement the schema changes**
 
 In `src/server/store.mjs`:
 
@@ -632,14 +634,14 @@ export function createStore(filename, { now = Date.now } = {}) {
           ).run(...ids);
 ```
 
-- [ ] **Step 4: Run the tests to verify they pass, and the old suites still pass**
+- [x] **Step 4: Run the tests to verify they pass, and the old suites still pass**
 
 Run: `node --test tests/rewards-store.test.mjs`
 Expected: PASS (3 tests).
 Run: `npm test`
 Expected: all suites PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/server/store.mjs tests/rewards-store.test.mjs
@@ -654,7 +656,7 @@ git commit -m "Add reward tables, tag quiz attempts with their lesson and clean 
 - Modify: `src/server/store.mjs` (imports; helpers before `childSnapshot`; `childSnapshot`; `saveProgress`; `submit`; `savePractice`)
 - Test: `tests/rewards-store.test.mjs` (append)
 
-- [ ] **Step 1: Append the failing tests**
+- [x] **Step 1: Append the failing tests**
 
 Append to `tests/rewards-store.test.mjs`:
 
@@ -749,12 +751,12 @@ test("parents see each child's title, streak and concept mastery", () => {
 });
 ```
 
-- [ ] **Step 2: Run the tests to verify they fail**
+- [x] **Step 2: Run the tests to verify they fail**
 
 Run: `node --test tests/rewards-store.test.mjs`
 Expected: FAIL — `first.rewards` is undefined; the delete-family test from Task 3 may still pass because nothing writes rewards yet.
 
-- [ ] **Step 3: Implement grants and the summary**
+- [x] **Step 3: Implement grants and the summary**
 
 In `src/server/store.mjs`, add imports below the questions import:
 
@@ -939,12 +941,12 @@ In `savePractice`, replace `return { mode: "model_answer", feedback: modelReason
       return { mode: "model_answer", feedback: modelReason, rewards };
 ```
 
-- [ ] **Step 4: Run all unit tests**
+- [x] **Step 4: Run all unit tests**
 
 Run: `npm test`
 Expected: all suites PASS, including the 7 tests in `tests/rewards-store.test.mjs`. If `tests/core.test.mjs` or `tests/admin.test.mjs` compare `saveProgress`/`savePractice` output with `deepEqual`, they will now see the extra `rewards` key — update those assertions to check the fields they care about rather than removing the new key.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/server/store.mjs tests/rewards-store.test.mjs
@@ -959,7 +961,7 @@ git commit -m "Grant XP and coins for study activity and expose rewards and mast
 - Create: `src/components/rewards/types.ts`
 - Create: `src/content/rewards.ts`
 
-- [ ] **Step 1: Create the types**
+- [x] **Step 1: Create the types**
 
 `src/components/rewards/types.ts`:
 
@@ -995,7 +997,7 @@ export type ConceptStatus = "secure" | "review" | "needs_help" | "not_started";
 export type Mastery = { concept: string; status: ConceptStatus }[];
 ```
 
-- [ ] **Step 2: Create the labels**
+- [x] **Step 2: Create the labels**
 
 `src/content/rewards.ts`:
 
@@ -1037,12 +1039,12 @@ export function weekdayName(day: string) {
 }
 ```
 
-- [ ] **Step 3: Type-check**
+- [x] **Step 3: Type-check**
 
 Run: `npx tsc --noEmit`
 Expected: no errors.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/components/rewards/types.ts src/content/rewards.ts
@@ -1059,7 +1061,7 @@ git commit -m "Add reward types and Arabic labels for the dashboards" -m "Co-Aut
 
 Follow `design-system/hana-learning/pages/platform.md` tokens; the variables below (`--violet`, `--amber-soft`, …) already exist in `globals.css`. No new colours.
 
-- [ ] **Step 1: Create the components**
+- [x] **Step 1: Create the components**
 
 `src/components/rewards/student-rewards.tsx`:
 
@@ -1267,7 +1269,7 @@ export function RewardChips({ rewards }: { rewards?: RewardEntry[] }) {
 }
 ```
 
-- [ ] **Step 2: Append the styles**
+- [x] **Step 2: Append the styles**
 
 Append to `src/app/globals.css`:
 
@@ -1454,12 +1456,12 @@ Append to `src/app/globals.css`:
 }
 ```
 
-- [ ] **Step 3: Type-check**
+- [x] **Step 3: Type-check**
 
 Run: `npx tsc --noEmit`
 Expected: no errors.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/components/rewards/student-rewards.tsx src/app/globals.css
@@ -1475,7 +1477,7 @@ git commit -m "Add student reward components: title and XP bar, daily mission, m
 - Modify: `src/components/quiz.tsx` (`Result` type ~line 31; result card ~line 150)
 - Modify: `src/components/lesson.tsx` (progress feedback ~line 84)
 
-- [ ] **Step 1: Dashboard types and imports**
+- [x] **Step 1: Dashboard types and imports**
 
 In `src/components/dashboard.tsx` add imports:
 
@@ -1502,7 +1504,7 @@ type ChildData = {
 };
 ```
 
-- [ ] **Step 2: Student block**
+- [x] **Step 2: Student block**
 
 Just after `const student = data as ChildData;` add:
 
@@ -1528,14 +1530,14 @@ In the `{user.role === "student" && (<> ... </>)}` block:
 
 Keep the existing three `Stat` cards — `tests/browser/learning.spec.ts:173` asserts "أفضل درجة مسجلة".
 
-- [ ] **Step 3: Quiz result chips**
+- [x] **Step 3: Quiz result chips**
 
 In `src/components/quiz.tsx`:
 - Import: `import { RewardChips } from "./rewards/student-rewards";` and `import type { RewardEntry } from "./rewards/types";`.
 - Add `rewards?: RewardEntry[];` to the `Result` type.
 - Directly after the `<p className="save-label">…</p>` element in the result card, add `<RewardChips rewards={result.rewards} />`.
 
-- [ ] **Step 4: Lesson section feedback**
+- [x] **Step 4: Lesson section feedback**
 
 In `src/components/lesson.tsx`, replace the success feedback in the progress handler:
 
@@ -1555,12 +1557,12 @@ In `src/components/lesson.tsx`, replace the success feedback in the progress han
       });
 ```
 
-- [ ] **Step 5: Type-check and unit tests**
+- [x] **Step 5: Type-check and unit tests**
 
 Run: `npx tsc --noEmit` → no errors.
 Run: `npm test` → all PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/components/dashboard.tsx src/components/quiz.tsx src/components/lesson.tsx
@@ -1575,7 +1577,7 @@ git commit -m "Show title, daily mission, mastery and earned rewards to students
 - Create: `src/components/rewards/child-insights.tsx`
 - Modify: `src/components/dashboard.tsx` (`ChildPanel`, after the `child-summary` div ~line 385)
 
-- [ ] **Step 1: Create the component**
+- [x] **Step 1: Create the component**
 
 `src/components/rewards/child-insights.tsx`:
 
@@ -1632,7 +1634,7 @@ export function ChildInsights({
 
 `MasteryList` lives in a `"use client"` module; importing it here is fine because `ChildPanel` is itself inside the client `Dashboard`.
 
-- [ ] **Step 2: Render it in `ChildPanel`**
+- [x] **Step 2: Render it in `ChildPanel`**
 
 In `src/components/dashboard.tsx` import `import { ChildInsights } from "./rewards/child-insights";` and, directly after the closing `</div>` of `<div className="child-summary">`, add:
 
@@ -1640,11 +1642,11 @@ In `src/components/dashboard.tsx` import `import { ChildInsights } from "./rewar
       <ChildInsights rewards={child.rewards} mastery={child.mastery} />
 ```
 
-- [ ] **Step 3: Type-check**
+- [x] **Step 3: Type-check**
 
 Run: `npx tsc --noEmit` → no errors.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/components/rewards/child-insights.tsx src/components/dashboard.tsx
@@ -1658,7 +1660,7 @@ git commit -m "Show parents each child's study consistency, level and concept ma
 **Files:**
 - Create: `tests/browser/rewards.spec.ts`
 
-- [ ] **Step 1: Write the end-to-end test**
+- [x] **Step 1: Write the end-to-end test**
 
 `tests/browser/rewards.spec.ts`:
 
@@ -1712,21 +1714,21 @@ test("a student earns XP for a lesson step and the daily mission shows as done",
 });
 ```
 
-- [ ] **Step 2: Build**
+- [x] **Step 2: Build**
 
 Run: `npm run build`
 Expected: build succeeds with no type errors.
 
-- [ ] **Step 3: Run the browser suites**
+- [x] **Step 3: Run the browser suites**
 
 Run: `npx playwright test tests/browser/rewards.spec.ts tests/browser/learning.spec.ts tests/browser/accessibility.spec.ts`
 Expected: PASS. If an axe violation appears on the dashboard, fix the markup (labels, contrast) rather than excluding the rule.
 
-- [ ] **Step 4: Check the phone width by eye**
+- [x] **Step 4: Check the phone width by eye**
 
 Run the app (`npm run start`), sign in as the student from the test, and view `/dashboard` at 360 px wide. Hero, mission card and streak dots stack vertically with no horizontal scrolling.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add tests/browser/rewards.spec.ts
@@ -1740,7 +1742,7 @@ git commit -m "Add browser test for the daily mission and lesson XP" -m "Co-Auth
 **Files:**
 - Modify: `docs/IMPLEMENTATION-STATUS.md` (append a section)
 
-- [ ] **Step 1: Append the section**
+- [x] **Step 1: Append the section**
 
 ```markdown
 ## Rewards (Phase 1)
@@ -1753,7 +1755,7 @@ git commit -m "Add browser test for the daily mission and lesson XP" -m "Co-Auth
 - Numbers live in `src/server/rewards.mjs` and are provisional until real usage data exists.
 ```
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add docs/IMPLEMENTATION-STATUS.md

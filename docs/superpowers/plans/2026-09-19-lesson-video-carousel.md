@@ -1,6 +1,8 @@
 # Lesson Video Carousel Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
+
+**Status: delivered 2026-09-19** in commits `dadb38a` and `e6ac1bc` (mobile fix `88985e6`). No videos have been added by the owner yet. See `docs/ROADMAP.md`.
 
 **Goal:** Let an admin attach YouTube videos to a lesson (or to a general "how to use Madarek" guide) and show them to students as a carousel after the quiz, opening in a modal player that never autoplays and pauses the lesson narration.
 
@@ -40,8 +42,8 @@
 
 ### Task 0: Baseline
 
-- [ ] **Step 1:** Run `npm ci` (skip if `node_modules` already exists in this worktree).
-- [ ] **Step 2:** Run `npm test`. Expected: all PASS. Stop and report if red.
+- [x] **Step 1:** Run `npm ci` (skip if `node_modules` already exists in this worktree).
+- [x] **Step 2:** Run `npm test`. Expected: all PASS. Stop and report if red.
 
 ---
 
@@ -51,7 +53,7 @@
 - Create: `src/server/videos.mjs`
 - Test: `tests/videos.test.mjs`
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 `tests/videos.test.mjs`:
 
@@ -101,12 +103,12 @@ test("durations accept m:ss and h:mm:ss and reject nonsense", () => {
 });
 ```
 
-- [ ] **Step 2: Run to verify failure**
+- [x] **Step 2: Run to verify failure**
 
 Run: `node --test tests/videos.test.mjs`
 Expected: FAIL — cannot find `src/server/videos.mjs`.
 
-- [ ] **Step 3: Implement**
+- [x] **Step 3: Implement**
 
 `src/server/videos.mjs`:
 
@@ -153,12 +155,12 @@ export function parseDuration(value) {
 }
 ```
 
-- [ ] **Step 4: Run to verify pass**
+- [x] **Step 4: Run to verify pass**
 
 Run: `node --test tests/videos.test.mjs`
 Expected: PASS (3 tests).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/server/videos.mjs tests/videos.test.mjs
@@ -173,7 +175,7 @@ git commit -m "Parse YouTube links and video durations for lesson videos" -m "Co
 - Modify: `src/server/store.mjs` (imports; schema string; new methods in `api`, e.g. after `recordAudioReview`)
 - Test: `tests/videos.test.mjs` (append)
 
-- [ ] **Step 1: Append the failing tests**
+- [x] **Step 1: Append the failing tests**
 
 Add `import { createStore } from "../src/server/store.mjs";` to the imports, then append:
 
@@ -279,12 +281,12 @@ test("invalid video input is rejected with a clear message", () => {
 });
 ```
 
-- [ ] **Step 2: Run to verify failure**
+- [x] **Step 2: Run to verify failure**
 
 Run: `node --test tests/videos.test.mjs`
 Expected: FAIL — `store.saveLessonVideo is not a function`.
 
-- [ ] **Step 3: Implement**
+- [x] **Step 3: Implement**
 
 In `src/server/store.mjs` add the import:
 
@@ -413,12 +415,12 @@ Inside `api`, after `recordAudioReview`, add:
     },
 ```
 
-- [ ] **Step 4: Run all unit tests**
+- [x] **Step 4: Run all unit tests**
 
 Run: `npm test`
 Expected: all PASS (videos suite: 5 tests).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/server/store.mjs tests/videos.test.mjs
@@ -434,7 +436,7 @@ git commit -m "Store lesson videos with admin-only, audited save and delete" -m 
 
 This uses the existing catch-all route, so no new Next.js file conventions are involved. If you find yourself creating a new route file instead, read `node_modules/next/dist/docs/` first (see `AGENTS.md`).
 
-- [ ] **Step 1: GET handlers**
+- [x] **Step 1: GET handlers**
 
 In `GET`, directly after the `if (action === "quiz") ...` statement, add:
 
@@ -454,7 +456,7 @@ Inside the `if (action.startsWith("admin/")) { ... }` block, after `admin/audit`
         return response(store.listLessonVideos(user.id));
 ```
 
-- [ ] **Step 2: POST handlers**
+- [x] **Step 2: POST handlers**
 
 In `POST`, after `if (action === "admin/settings") ...`, add:
 
@@ -465,13 +467,13 @@ In `POST`, after `if (action === "admin/settings") ...`, add:
       return response(store.deleteLessonVideo(user.id, body));
 ```
 
-- [ ] **Step 3: Type-check and smoke-test**
+- [x] **Step 3: Type-check and smoke-test**
 
 Run: `npx tsc --noEmit` → no errors.
 Run `npm run build` then `npm run start`, and in a second terminal: `curl -s "http://localhost:3000/api/videos?lesson=nutrients"`
 Expected: `{"videos":[]}`. And `curl -s "http://localhost:3000/api/videos?lesson=../x"` → `{"error":"درس غير معروف."}` with status 400. Stop the server.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add "src/app/api/[...action]/route.ts"
@@ -487,7 +489,7 @@ git commit -m "Expose lesson videos publicly and to admins through the API" -m "
 - Create: `src/components/video-carousel.tsx`
 - Modify: `src/app/globals.css` (append)
 
-- [ ] **Step 1: Let `ModalDialog` take a class**
+- [x] **Step 1: Let `ModalDialog` take a class**
 
 In `src/components/ui/modal-dialog.tsx`, add `className?: string;` to the props type, destructure `className`, and change the content element's class:
 
@@ -496,7 +498,7 @@ In `src/components/ui/modal-dialog.tsx`, add `className?: string;` to the props 
                 className={"admin-dialog" + (className ? " " + className : "")}
 ```
 
-- [ ] **Step 2: Create the carousel**
+- [x] **Step 2: Create the carousel**
 
 `src/components/video-carousel.tsx`:
 
@@ -614,7 +616,7 @@ export function VideoCarousel({
 }
 ```
 
-- [ ] **Step 3: Append styles**
+- [x] **Step 3: Append styles**
 
 Append to `src/app/globals.css`:
 
@@ -712,11 +714,11 @@ Append to `src/app/globals.css`:
 }
 ```
 
-- [ ] **Step 4: Type-check**
+- [x] **Step 4: Type-check**
 
 Run: `npx tsc --noEmit` → no errors.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/components/ui/modal-dialog.tsx src/components/video-carousel.tsx src/app/globals.css
@@ -731,7 +733,7 @@ git commit -m "Add a video carousel with a modal YouTube player that never autop
 - Modify: `src/components/lesson.tsx`
 - Modify: `src/components/dashboard.tsx`
 
-- [ ] **Step 1: Lesson — after the quiz, pausing narration**
+- [x] **Step 1: Lesson — after the quiz, pausing narration**
 
 In `src/components/lesson.tsx`:
 - Change the audio import to `import { AudioProvider, useAudio } from "./audio/audio-provider";`
@@ -755,17 +757,17 @@ function LessonVideos() {
 
 - Render `<LessonVideos />` directly after the closing `</section>` of `<section id="quiz" …>` and before `<div className="lesson-navigation">`.
 
-- [ ] **Step 2: Dashboards — general guides**
+- [x] **Step 2: Dashboards — general guides**
 
 In `src/components/dashboard.tsx` add `import { VideoCarousel } from "./video-carousel";` and:
 - As the last child of the `user.role === "parent"` fragment: `<VideoCarousel lessonId="platform" title="دليل استخدام مدارك" />`
 - As the last child of the `user.role === "student"` fragment (after `<History …/>`): `<VideoCarousel lessonId="platform" title="كيف تستخدمين مدارك؟" />`
 
-- [ ] **Step 3: Type-check**
+- [x] **Step 3: Type-check**
 
 Run: `npx tsc --noEmit` → no errors.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/components/lesson.tsx src/components/dashboard.tsx
@@ -782,7 +784,7 @@ git commit -m "Show lesson videos after the quiz and platform guides on the dash
 - Modify: `src/app/admin/page.tsx`
 - Modify: `src/app/globals.css` (append)
 
-- [ ] **Step 1: Create the tab component**
+- [x] **Step 1: Create the tab component**
 
 `src/components/admin-videos.tsx`:
 
@@ -1024,7 +1026,7 @@ export function VideosTab({ initial }: { initial: VideoList }) {
 }
 ```
 
-- [ ] **Step 2: Wire the tab into the admin dashboard**
+- [x] **Step 2: Wire the tab into the admin dashboard**
 
 In `src/components/admin.tsx`:
 - Add `Clapperboard` to the lucide import list.
@@ -1062,7 +1064,7 @@ In `src/app/admin/page.tsx`, load and pass the data:
 
 and add `initialVideos={videos as Props["initialVideos"]}` to `<AdminDashboard …/>`.
 
-- [ ] **Step 3: Append admin styles**
+- [x] **Step 3: Append admin styles**
 
 Append to `src/app/globals.css`:
 
@@ -1116,11 +1118,11 @@ Append to `src/app/globals.css`:
 }
 ```
 
-- [ ] **Step 4: Type-check**
+- [x] **Step 4: Type-check**
 
 Run: `npx tsc --noEmit` → no errors.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/components/admin-videos.tsx src/components/admin.tsx src/app/admin/page.tsx src/app/globals.css
@@ -1134,7 +1136,7 @@ git commit -m "Add an admin tab to add, edit, order, publish and delete lesson v
 **Files:**
 - Create: `tests/browser/videos.spec.ts`
 
-- [ ] **Step 1: Write the end-to-end test**
+- [x] **Step 1: Write the end-to-end test**
 
 `tests/browser/videos.spec.ts`:
 
@@ -1214,18 +1216,18 @@ test("an admin adds a lesson video and it opens after the quiz without autoplay"
 });
 ```
 
-- [ ] **Step 2: Build and run the browser suites**
+- [x] **Step 2: Build and run the browser suites**
 
 Run: `npm run build`
 Expected: succeeds.
 Run: `npx playwright test tests/browser/videos.spec.ts tests/browser/admin.spec.ts tests/browser/learning.spec.ts tests/browser/accessibility.spec.ts`
 Expected: PASS. Fix any axe finding in the markup rather than excluding rules.
 
-- [ ] **Step 3: Check the phone layout by eye**
+- [x] **Step 3: Check the phone layout by eye**
 
 Run `npm run start`, add one published video from the admin tab, open the lesson at 360 px wide. The carousel scrolls sideways inside its own strip, the page itself does not scroll horizontally, and the modal player fits the screen.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add tests/browser/videos.spec.ts

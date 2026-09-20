@@ -1,6 +1,8 @@
 # Shop and Avatars (Phase 2) Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
+
+**Status: delivered 2026-09-19** in commits `f7352b4` and `7b6e6ec`; avatar art generated in `17e3e00`. Avatars render full portraits plus an accessory badge instead of stacked layers, because a text-to-image model cannot produce aligned isolated layers. See `docs/ROADMAP.md`.
 
 **Goal:** Let students spend the Madarek coins they earn from learning on a layered 2D avatar (skin, hair/hijab, outfit, accessory, card frame), unlock special items through achievements, and show that avatar on the student and parent dashboards.
 
@@ -72,7 +74,7 @@ For scale: one perfect Nutrients quiz on the first day pays 120 coins (10 daily 
 
 **Files:** Create `src/server/shop.mjs`, `tests/shop.test.mjs` (the avatar-slot assertion is added in Task 4).
 
-- [ ] **Step 1: Write the failing tests** — `tests/shop.test.mjs`:
+- [x] **Step 1: Write the failing tests** — `tests/shop.test.mjs`:
 
 ```js
 import test from "node:test";
@@ -141,9 +143,9 @@ test("an avatar is valid only when every layer is an owned item of that layer", 
 });
 ```
 
-- [ ] **Step 2: Run to verify failure** — `node --test tests/shop.test.mjs` → FAIL (module not found).
+- [x] **Step 2: Run to verify failure** — `node --test tests/shop.test.mjs` → FAIL (module not found).
 
-- [ ] **Step 3: Implement** — `src/server/shop.mjs`:
+- [x] **Step 3: Implement** — `src/server/shop.mjs`:
 
 ```js
 // Shop catalogue and avatar rules. Prices are provisional, like rewards.mjs:
@@ -244,8 +246,8 @@ export function validateAvatar(config, purchased, progress) {
 }
 ```
 
-- [ ] **Step 4:** `node --test tests/shop.test.mjs` → PASS (4 tests).
-- [ ] **Step 5: Commit** — `git add src/server/shop.mjs tests/shop.test.mjs` · message "Add shop catalogue and avatar ownership rules".
+- [x] **Step 4:** `node --test tests/shop.test.mjs` → PASS (4 tests).
+- [x] **Step 5: Commit** — `git add src/server/shop.mjs tests/shop.test.mjs` · message "Add shop catalogue and avatar ownership rules".
 
 ---
 
@@ -253,7 +255,7 @@ export function validateAvatar(config, purchased, progress) {
 
 **Files:** Modify `src/server/store.mjs`; create `tests/shop-store.test.mjs`.
 
-- [ ] **Step 1: Write the failing tests** — `tests/shop-store.test.mjs`:
+- [x] **Step 1: Write the failing tests** — `tests/shop-store.test.mjs`:
 
 ```js
 import test from "node:test";
@@ -370,9 +372,9 @@ test("deleting a family removes its purchases and avatars", () => {
 });
 ```
 
-- [ ] **Step 2:** `node --test tests/shop-store.test.mjs` → FAIL (`store.buyItem is not a function`).
+- [x] **Step 2:** `node --test tests/shop-store.test.mjs` → FAIL (`store.buyItem is not a function`).
 
-- [ ] **Step 3: Implement** in `src/server/store.mjs` (locate by content; line numbers drift):
+- [x] **Step 3: Implement** in `src/server/store.mjs` (locate by content; line numbers drift):
 
 1. Import: `import { AVATAR_LAYERS, SHOP_ITEMS, DEFAULT_AVATAR, shopItem, isUnlocked, isOwned, validateAvatar } from "./shop.mjs";`
 2. Schema string, next to the `streaks` table:
@@ -511,8 +513,8 @@ test("deleting a family removes its purchases and avatars", () => {
 
 7. `deleteFamily`: extend the cleanup list to `["reward_ledger", "activity_days", "streaks", "purchases", "avatars"]`.
 
-- [ ] **Step 4:** `npm test` → all suites PASS (existing rewards tests still see `coins` equal to earned because nothing was spent).
-- [ ] **Step 5: Commit** — "Store purchases and avatars; coin balance is earned minus spent".
+- [x] **Step 4:** `npm test` → all suites PASS (existing rewards tests still see `coins` equal to earned because nothing was spent).
+- [x] **Step 5: Commit** — "Store purchases and avatars; coin balance is earned minus spent".
 
 ---
 
@@ -520,7 +522,7 @@ test("deleting a family removes its purchases and avatars", () => {
 
 **Files:** Modify `src/app/api/[...action]/route.ts` (existing catch-all only; no new route files).
 
-- [ ] **Step 1:** In `GET`, after the `dashboard` branch:
+- [x] **Step 1:** In `GET`, after the `dashboard` branch:
 
 ```ts
     if (action === "shop") {
@@ -529,7 +531,7 @@ test("deleting a family removes its purchases and avatars", () => {
     }
 ```
 
-- [ ] **Step 2:** In `POST`, after the `if (!user) return … 401` line:
+- [x] **Step 2:** In `POST`, after the `if (!user) return … 401` line:
 
 ```ts
     if (action === "shop/buy")
@@ -538,7 +540,7 @@ test("deleting a family removes its purchases and avatars", () => {
       return response(store.saveAvatar(user.id, body.avatar));
 ```
 
-- [ ] **Step 3:** `npx tsc --noEmit` clean; `npm test` green. Commit — "Expose shop, purchase and avatar endpoints".
+- [x] **Step 3:** `npx tsc --noEmit` clean; `npm test` green. Commit — "Expose shop, purchase and avatar endpoints".
 
 ---
 
@@ -546,7 +548,7 @@ test("deleting a family removes its purchases and avatars", () => {
 
 **Files:** Create `src/content/avatar-slots.ts`, `src/content/shop.ts`, `src/components/shop/types.ts`; append a test to `tests/shop.test.mjs`; create `docs/delegation/2026-09-19-avatar-image-requests.md`.
 
-- [ ] **Step 1: Failing test** — append to `tests/shop.test.mjs` (add the import at the top):
+- [x] **Step 1: Failing test** — append to `tests/shop.test.mjs` (add the import at the top):
 
 ```js
 import { AVATAR_SLOTS, avatarSlot } from "../src/content/avatar-slots.ts";
@@ -567,7 +569,7 @@ test("every drawable item has a pending 512px layer slot; frames and 'no accesso
 });
 ```
 
-- [ ] **Step 2: Implement** `src/content/avatar-slots.ts` — must not use `@/` imports (node test runner):
+- [x] **Step 2: Implement** `src/content/avatar-slots.ts` — must not use `@/` imports (node test runner):
 
 ```ts
 import type { ImageSlot } from "./image-slots";
@@ -665,8 +667,8 @@ export function frameClass(frameId: string) {
 }
 ```
 
-- [ ] **Step 3:** Write `docs/delegation/2026-09-19-avatar-image-requests.md`: one row per slot (id, output path `public/images/avatar/<id>.png`, 512×512 transparent, alt, full prompt) plus the rule "generate `base-2` first and use it as the alignment template for every other layer; connect by dropping the PNG and setting `ready: true` in `src/content/avatar-slots.ts`".
-- [ ] **Step 4:** `npm test`, `npx tsc --noEmit` green. Commit — "Register pending avatar layer image slots".
+- [x] **Step 3:** Write `docs/delegation/2026-09-19-avatar-image-requests.md`: one row per slot (id, output path `public/images/avatar/<id>.png`, 512×512 transparent, alt, full prompt) plus the rule "generate `base-2` first and use it as the alignment template for every other layer; connect by dropping the PNG and setting `ready: true` in `src/content/avatar-slots.ts`".
+- [x] **Step 4:** `npm test`, `npx tsc --noEmit` green. Commit — "Register pending avatar layer image slots".
 
 ---
 
@@ -674,7 +676,7 @@ export function frameClass(frameId: string) {
 
 **Files:** Create `src/components/avatar/avatar.tsx`; append CSS.
 
-- [ ] **Step 1:** `src/components/avatar/avatar.tsx`:
+- [x] **Step 1:** `src/components/avatar/avatar.tsx`:
 
 ```tsx
 import Image from "next/image";
@@ -730,7 +732,7 @@ export function Avatar({
 }
 ```
 
-- [ ] **Step 2:** Append to `src/app/globals.css`:
+- [x] **Step 2:** Append to `src/app/globals.css`:
 
 ```css
 /* Avatar */
@@ -780,7 +782,7 @@ export function Avatar({
 }
 ```
 
-- [ ] **Step 3:** `npx tsc --noEmit` clean. Commit — "Add layered avatar component with initial fallback".
+- [x] **Step 3:** `npx tsc --noEmit` clean. Commit — "Add layered avatar component with initial fallback".
 
 ---
 
@@ -790,7 +792,7 @@ export function Avatar({
 
 Before creating the route, read `node_modules/next/dist/docs/01-app/03-api-reference/04-functions/cookies.md` and `redirect.md` (this Next.js version differs from training data — `cookies()` is async). Mirror `src/app/dashboard/page.tsx`.
 
-- [ ] **Step 1:** `src/app/shop/page.tsx`:
+- [x] **Step 1:** `src/app/shop/page.tsx`:
 
 ```tsx
 import { cookies } from "next/headers";
@@ -813,7 +815,7 @@ export default async function Page() {
 }
 ```
 
-- [ ] **Step 2:** `src/components/shop/shop.tsx`:
+- [x] **Step 2:** `src/components/shop/shop.tsx`:
 
 ```tsx
 "use client";
@@ -1032,7 +1034,7 @@ export function Shop({ initial, name }: { initial: ShopState; name: string }) {
 }
 ```
 
-- [ ] **Step 3:** Append shop CSS (existing tokens only; RTL; phone-first):
+- [x] **Step 3:** Append shop CSS (existing tokens only; RTL; phone-first):
 
 ```css
 /* Shop */
@@ -1158,7 +1160,7 @@ export function Shop({ initial, name }: { initial: ShopState; name: string }) {
 }
 ```
 
-- [ ] **Step 4:** `npx tsc --noEmit`, `npm run build` green. Commit — "Add the student shop page and avatar editor".
+- [x] **Step 4:** `npx tsc --noEmit`, `npm run build` green. Commit — "Add the student shop page and avatar editor".
 
 ---
 
@@ -1166,16 +1168,16 @@ export function Shop({ initial, name }: { initial: ShopState; name: string }) {
 
 **Files:** Modify `src/components/rewards/types.ts`, `src/components/rewards/student-rewards.tsx`, `src/components/dashboard.tsx`.
 
-- [ ] **Step 1:** In `RewardSummary` (rewards/types.ts) add `coinsEarned: number; coinsSpent: number;`.
-- [ ] **Step 2:** `RewardsHero` takes `avatar: AvatarConfig` and `name: string`; render `<Avatar config={avatar} name={name} size="md" />` as the first child of the hero and, under the title progress text, `<Link href="/shop" className="text-link">خصّصي شخصيتك من المتجر <ArrowLeft size={16} /></Link>`. Keep every existing heading/label (tests rely on "مستكشفة مبتدئة", "الخبرة", "عملات مدارك"). On phones the avatar stacks above the title.
-- [ ] **Step 3:** In `dashboard.tsx`, add `avatar: AvatarConfig` to `ChildData`; pass `avatar={student.avatar} name={student.user.name}` to `RewardsHero`; in `ChildPanel` replace `<span className="avatar">{child.user.name.slice(0, 1)}</span>` with `<Avatar config={child.avatar} name={child.user.name} size="sm" />`.
-- [ ] **Step 4:** `npx tsc --noEmit`, `npm test` green. Commit — "Show the student's avatar on both dashboards".
+- [x] **Step 1:** In `RewardSummary` (rewards/types.ts) add `coinsEarned: number; coinsSpent: number;`.
+- [x] **Step 2:** `RewardsHero` takes `avatar: AvatarConfig` and `name: string`; render `<Avatar config={avatar} name={name} size="md" />` as the first child of the hero and, under the title progress text, `<Link href="/shop" className="text-link">خصّصي شخصيتك من المتجر <ArrowLeft size={16} /></Link>`. Keep every existing heading/label (tests rely on "مستكشفة مبتدئة", "الخبرة", "عملات مدارك"). On phones the avatar stacks above the title.
+- [x] **Step 3:** In `dashboard.tsx`, add `avatar: AvatarConfig` to `ChildData`; pass `avatar={student.avatar} name={student.user.name}` to `RewardsHero`; in `ChildPanel` replace `<span className="avatar">{child.user.name.slice(0, 1)}</span>` with `<Avatar config={child.avatar} name={child.user.name} size="sm" />`.
+- [x] **Step 4:** `npx tsc --noEmit`, `npm test` green. Commit — "Show the student's avatar on both dashboards".
 
 ---
 
 ### Task 8: Browser test, docs, verification
 
-- [ ] **Step 1:** `tests/browser/shop.spec.ts`:
+- [x] **Step 1:** `tests/browser/shop.spec.ts`:
 
 ```ts
 import { test, expect } from "@playwright/test";
@@ -1235,9 +1237,9 @@ test("a student buys and wears a lab coat with coins earned from the quiz", asyn
 });
 ```
 
-- [ ] **Step 2:** Add `/shop` (signed in as a student) to the axe route loop in `tests/browser/accessibility.spec.ts` only if that spec already signs a student in; otherwise add a separate axe check at the end of `shop.spec.ts` using `@axe-core/playwright` with tags `wcag2a`, `wcag2aa`, `wcag21aa`.
-- [ ] **Step 3:** Append a "Shop and avatars (Phase 2)" section to `docs/IMPLEMENTATION-STATUS.md`: balance = earned − spent; XP never drops; earned items; image slots pending in `src/content/avatar-slots.ts`; request list in `docs/delegation/2026-09-19-avatar-image-requests.md`.
-- [ ] **Step 4:** Gates: `npm test`, `npx tsc --noEmit`, `npm run build`, full `npx playwright test` (E2E_PORT set). Screenshot `/shop` and the student dashboard at 360 and 1440 to confirm layout.
+- [x] **Step 2:** Add `/shop` (signed in as a student) to the axe route loop in `tests/browser/accessibility.spec.ts` only if that spec already signs a student in; otherwise add a separate axe check at the end of `shop.spec.ts` using `@axe-core/playwright` with tags `wcag2a`, `wcag2aa`, `wcag21aa`.
+- [x] **Step 3:** Append a "Shop and avatars (Phase 2)" section to `docs/IMPLEMENTATION-STATUS.md`: balance = earned − spent; XP never drops; earned items; image slots pending in `src/content/avatar-slots.ts`; request list in `docs/delegation/2026-09-19-avatar-image-requests.md`.
+- [x] **Step 4:** Gates: `npm test`, `npx tsc --noEmit`, `npm run build`, full `npx playwright test` (E2E_PORT set). Screenshot `/shop` and the student dashboard at 360 and 1440 to confirm layout.
 
 ---
 
