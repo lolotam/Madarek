@@ -1,6 +1,6 @@
 # Deploying Madarek on Dokploy
 
-Target: `https://madarek.walidmohamed.com`, built from `https://github.com/lolotam/Madarek` (branch `main`) with the repository `Dockerfile`.
+Target: `https://madarek.cc`, built from `https://github.com/lolotam/Madarek` (branch `main`) with the repository `Dockerfile`.
 
 ## What the image is
 
@@ -12,7 +12,7 @@ Target: `https://madarek.walidmohamed.com`, built from `https://github.com/lolot
 
 ## 1. DNS
 
-Create an **A record** `madarek` → your Dokploy server's public IP in the `walidmohamed.com` DNS zone. If the zone is on Cloudflare, either use "DNS only" (grey cloud) so Let's Encrypt can issue the certificate, or keep it proxied with SSL mode **Full (strict)** after the certificate exists.
+In the `madarek.cc` DNS zone create an **A record** for the apex (`@`) → your Dokploy server's public IP, and one for `www` if you want that hostname too. If the zone is on Cloudflare, either use "DNS only" (grey cloud) so Let's Encrypt can issue the certificate, or keep it proxied with SSL mode **Full (strict)** after the certificate exists.
 
 ## 2. Create the application
 
@@ -28,7 +28,7 @@ In Dokploy: **Projects → Create Project** (e.g. `madarek`) → **Create Servic
 **Environment** tab:
 
 ```env
-APP_ORIGIN=https://madarek.walidmohamed.com
+APP_ORIGIN=https://madarek.cc
 SETTINGS_ENCRYPTION_KEY=<paste a new random value>
 ```
 
@@ -63,23 +63,27 @@ Use a named volume, not a bind mount to a host folder. On first use a named volu
 
 **Domains → Add Domain**:
 
-- Host: `madarek.walidmohamed.com`
+- Host: `madarek.cc`
 - Path: `/`
 - Container port: **3000**
 - HTTPS: on, certificate: **Let's Encrypt**
+
+`www.madarek.cc` is added the same way and then sent to the apex with **Redirects → Add Redirect**: regex `^https://www\.madarek\.cc/(.*)`, replacement `https://madarek.cc/${1}`, permanent. A redeploy applies it.
+
+`APP_ORIGIN` must equal the live origin exactly. If the domain changes and this variable does not, pages still load but every POST is refused with `طلب غير مسموح` — logins, quiz submissions and purchases all fail.
 
 ## 6. Deploy
 
 Press **Deploy** and follow the build log. The build runs `npm ci` and `next build` inside Docker; nothing needs to be built locally. When it's running:
 
-- `https://madarek.walidmohamed.com` shows the home page.
-- `https://madarek.walidmohamed.com/api/session` returns `{"user":null}`.
+- `https://madarek.cc` shows the home page.
+- `https://madarek.cc/api/session` returns `{"user":null}`.
 
 ## 7. First admin account (production)
 
 The production database starts empty; local accounts are **not** copied.
 
-1. Open `https://madarek.walidmohamed.com/login?mode=register`, register the admin email, and **remove the child row** before submitting.
+1. Open `https://madarek.cc/login?mode=register`, register the admin email, and **remove the child row** before submitting.
 2. In Dokploy open the application's **Terminal** (Docker container shell) and run:
 
    ```sh

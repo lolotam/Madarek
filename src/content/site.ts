@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-export const siteUrl = "https://madarek.walidmohamed.com";
+export const siteUrl = "https://madarek.cc";
 export const siteDescription =
   "علوم الصف الثامن من المنهج الكويتي ٢٠٢٦–٢٠٢٧: شرح عربي مبسّط، أنشطة تفاعلية واختبارات، مع متابعة الأسرة لتقدّم الأبناء.";
 

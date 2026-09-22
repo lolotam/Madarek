@@ -1,6 +1,6 @@
 # مدارك — Roadmap and status
 
-One page for every phase. `[x]` = delivered, verified by tests and live on https://madarek.walidmohamed.com unless noted. `[ ]` = not started.
+One page for every phase. `[x]` = delivered, verified by tests and live on https://madarek.cc unless noted. `[ ]` = not started.
 Last updated 2026-09-20 at commit `17e3e00`. Detailed plans live in `docs/superpowers/plans/`, delegation records in `docs/delegation/`.
 
 ---

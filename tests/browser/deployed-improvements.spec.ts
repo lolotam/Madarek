@@ -44,24 +44,24 @@ test("published pages have canonical share metadata and a public sitemap", async
   page,
   request,
 }) => {
-  const origin = "https://madarek.walidmohamed.com";
+  const origin = "https://madarek.cc";
   for (const path of ["/", "/grade/8/science", "/grade/8/science/nutrients"]) {
     await page.goto(path);
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
       "href",
       path === "/"
-        ? /^https:\/\/madarek\.walidmohamed\.com\/?$/
+        ? /^https:\/\/madarek\.cc\/?$/
         : origin + path,
     );
     await expect(page.locator('meta[property="og:url"]')).toHaveAttribute(
       "content",
       path === "/"
-        ? /^https:\/\/madarek\.walidmohamed\.com\/?$/
+        ? /^https:\/\/madarek\.cc\/?$/
         : origin + path,
     );
     await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
       "content",
-      /https:\/\/madarek\.walidmohamed\.com\/images\/.+\.png/,
+      /https:\/\/madarek\.cc\/images\/.+\.png/,
     );
   }
   await page.goto("/login");
