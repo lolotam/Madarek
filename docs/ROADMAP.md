@@ -83,6 +83,19 @@ Plan: `docs/superpowers/plans/2026-09-19-shop-and-avatars.md` · commits `f7352b
 - [x] 126 portraits (skin × hair/hijab × outfit) + 4 accessory badges generated and connected
 - [ ] Watch whether prices feel fair once students earn real coins
 
+## Phase 2c — Motion + SVG interactive layer (done)
+
+- [x] Animated journey art in the lab: food breaks into units that travel to the body, stations light with the step (`src/components/lesson-diagrams.tsx`)
+- [x] Relationship map food ↔ nutrient: curves measured from the real node boxes, link kind shown in colour **and** in words
+- [x] Ordering drill «رتّبي الرحلة» with per-card visual correction
+- [x] Classification drill «صنّفي المغذّيات» with on-the-spot correction: right cards settle into the row, wrong ones shake back and say why
+- [x] Tap-then-place instead of drag, so finger, mouse and keyboard all work; art is `aria-hidden` and the captions carry the meaning
+- [x] `tests/browser/lesson-drills.spec.ts`; the drills add no narration targets, so no new audio clips are needed
+- [x] Choosing a food starts the journey its main nutrient belongs to; olive oil says plainly that fat does not travel the carbohydrate path
+- [x] Stack decisions and setup recorded in `docs/EXPLAINER-STACK.md`; lesson build rules in `.claude/skills/lesson-explainer/SKILL.md`
+- [ ] Watch whether the two drills feel long after the lab; consider moving one behind a «نشاط إضافي» toggle
+- [ ] Decide whether large card icons should become photorealistic image slots (interface icons stay line icons)
+
 ## Cross-cutting — done this round
 
 - [x] Gamification branch merged into `main` (`2c788f3`), dialogs raised above the audio dock

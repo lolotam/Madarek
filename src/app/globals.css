@@ -2142,36 +2142,33 @@ html[data-audio-dock] .lesson-section-heading {
 .energy-steps {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
-  padding-block: 38px;
+  gap: 12px;
+  padding-block: 10px 30px;
 }
+/* Captions under the animated journey: the art above carries the icons and
+   the direction, so these stay plain labels that light up with the step. */
 .energy-step {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-  position: relative;
-}
-.energy-step > div {
-  width: 80px;
-  height: 80px;
-  border-radius: 20px;
-  background: var(--violet-soft);
-  color: var(--violet-ink);
   display: grid;
   place-items: center;
+  padding: 10px 8px;
+  border-radius: 12px;
+  text-align: center;
+  color: var(--muted);
+  transition:
+    color 0.2s,
+    background 0.2s;
+}
+.energy-step.lit {
+  color: var(--violet-ink);
+  background: var(--violet-soft);
+}
+/* The caption follows the colour of the journey drawn above it. */
+.energy-lab.energy .energy-step.lit {
+  color: var(--amber-ink);
+  background: var(--amber-soft);
 }
 .energy-step b {
   font-size: 14px;
-}
-.flow-arrow {
-  position: absolute;
-  left: -27px;
-  top: 29px;
-  color: #c6b6d8;
-}
-.energy-step.lit .flow-arrow {
-  color: var(--violet-ink);
 }
 .experiment-caption {
   text-align: center;
@@ -2994,9 +2991,9 @@ html[data-audio-dock] .lesson-section-heading {
     padding: 12px 17px;
     font-size: 13px;
   }
-.main-nav {
-  gap: 18px;
-}
+  .main-nav {
+    gap: 18px;
+  }
   .lesson-feature {
     gap: 45px;
   }
@@ -3634,25 +3631,14 @@ html[data-audio-dock] .lesson-section-heading {
     padding: 19px;
   }
   .energy-steps {
-    gap: 13px;
-    padding-block: 31px;
+    gap: 6px;
+    padding-block: 6px 24px;
   }
-  .energy-step > div {
-    width: 65px;
-    height: 65px;
-    border-radius: 15px;
+  .energy-step {
+    padding: 8px 4px;
   }
   .energy-step b {
     font-size: 11px;
-    text-align: center;
-  }
-  .energy-step > div svg {
-    width: 30px;
-  }
-  .flow-arrow {
-    width: 16px;
-    left: -16px;
-    top: 23px;
   }
   .experiment-caption {
     font-size: 13px;
@@ -4650,9 +4636,15 @@ html[data-audio-dock] .lesson-section-heading {
   background: var(--frame);
   aspect-ratio: 1;
 }
-.avatar-sm { width: 52px; }
-.avatar-md { width: 104px; }
-.avatar-lg { width: min(220px, 60vw); }
+.avatar-sm {
+  width: 52px;
+}
+.avatar-md {
+  width: 104px;
+}
+.avatar-lg {
+  width: min(220px, 60vw);
+}
 .avatar-inner {
   grid-area: 1 / 1;
   position: relative;
@@ -4682,14 +4674,33 @@ html[data-audio-dock] .lesson-section-heading {
   color: var(--violet-ink);
   font-size: 1.1em;
 }
-.avatar-sm .avatar-initial { font-size: 20px; }
-.avatar-md .avatar-initial { font-size: 40px; }
-.avatar-lg .avatar-initial { font-size: 80px; }
-.avatar-frame-violet { --frame: var(--violet); }
-.avatar-frame-azure { --frame: var(--azure); }
-.avatar-frame-amber { --frame: var(--amber); }
+.avatar-sm .avatar-initial {
+  font-size: 20px;
+}
+.avatar-md .avatar-initial {
+  font-size: 40px;
+}
+.avatar-lg .avatar-initial {
+  font-size: 80px;
+}
+.avatar-frame-violet {
+  --frame: var(--violet);
+}
+.avatar-frame-azure {
+  --frame: var(--azure);
+}
+.avatar-frame-amber {
+  --frame: var(--amber);
+}
 .avatar-frame-rainbow {
-  --frame: conic-gradient(var(--amber), var(--orange), var(--pink), var(--violet), var(--azure), var(--amber));
+  --frame: conic-gradient(
+    var(--amber),
+    var(--orange),
+    var(--pink),
+    var(--violet),
+    var(--azure),
+    var(--amber)
+  );
 }
 .avatar-frame-streak {
   --frame: linear-gradient(135deg, var(--amber), var(--orange), var(--pink));
@@ -4825,4 +4836,443 @@ html[data-audio-dock] .lesson-section-heading {
   .rewards-hero {
     grid-template-columns: 1fr;
   }
+}
+
+/* Animated journey art inside the energy lab. The chips below it carry the
+   meaning; this layer only shows the movement. */
+.journey-art {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: 20px;
+  overflow: visible;
+}
+.journey-tube {
+  fill: none;
+  stroke: #ede6f4;
+  stroke-width: 13;
+  stroke-linecap: round;
+}
+.journey-tube-lit {
+  fill: none;
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+.energy-lab .journey-art + .energy-steps {
+  padding-block: 14px 26px;
+}
+
+/* Relationship map: HTML nodes, SVG curves measured from their boxes. */
+.relation-map {
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--white);
+  padding: 26px;
+}
+.relation-frame {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 90px;
+}
+.relation-lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.relation-line {
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  transition:
+    stroke 0.2s,
+    stroke-width 0.2s,
+    opacity 0.2s;
+}
+.relation-line.dim {
+  stroke: #e4dcec;
+  stroke-width: 1.5;
+  opacity: 0.6;
+}
+.relation-line.active.main {
+  stroke: var(--violet);
+  stroke-width: 3.5;
+}
+.relation-line.active.also {
+  stroke: var(--azure);
+}
+.relation-line.active.helps {
+  stroke: var(--amber);
+  stroke-dasharray: 6 7;
+}
+.relation-column {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.relation-head {
+  font-size: 12px;
+  font-weight: 650;
+  color: var(--muted);
+}
+.relation-node {
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: var(--white);
+  font-size: 13px;
+  font-weight: 600;
+  text-align: start;
+  transition:
+    background 0.2s,
+    border 0.2s;
+}
+.relation-node.yellow {
+  color: var(--amber-ink);
+}
+.relation-node.red {
+  color: var(--pink-ink);
+}
+.relation-node.blue {
+  color: var(--azure-ink);
+}
+.relation-node.green {
+  color: var(--violet-ink);
+}
+.relation-node[data-linked="true"] {
+  border-color: currentColor;
+  background: var(--paper);
+}
+.relation-node[aria-pressed="true"] {
+  border: 2px solid currentColor;
+  padding: 9px 13px;
+  background: var(--paper);
+  box-shadow: 0 4px 14px #241b3514;
+}
+.relation-reading {
+  display: flex;
+  align-items: start;
+  gap: 9px;
+  margin-top: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--violet-ink);
+}
+.relation-reading svg {
+  margin-top: 4px;
+  flex: none;
+}
+.relation-legend {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  padding: 0;
+  margin: 12px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+.legend-swatch {
+  display: inline-block;
+  width: 22px;
+  height: 3px;
+  border-radius: 2px;
+  margin-inline-end: 8px;
+  vertical-align: middle;
+}
+.legend-swatch.main {
+  background: var(--violet);
+}
+.legend-swatch.also {
+  background: var(--azure);
+}
+.legend-swatch.helps {
+  background: var(--amber);
+}
+
+/* Ordering and sorting drills */
+.drill {
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--white);
+  padding: 26px;
+  margin-bottom: 22px;
+}
+.drill-head {
+  display: flex;
+  align-items: start;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.drill-badge {
+  width: 46px;
+  height: 46px;
+  flex: none;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+}
+.drill-badge.violet {
+  background: var(--violet-soft);
+  color: var(--violet-ink);
+}
+.drill-badge.amber {
+  background: var(--amber-soft);
+  color: var(--amber-ink);
+}
+.drill-head h3 {
+  font-size: 18px;
+  margin-top: 4px;
+}
+.order-drill .segmented {
+  max-width: 400px;
+}
+.order-list {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.order-card {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  min-height: 66px;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--paper);
+}
+.order-card.right {
+  border-color: var(--violet);
+  background: var(--violet-soft);
+}
+.order-card.wrong {
+  border-color: var(--amber);
+  background: var(--amber-soft);
+}
+.order-rank {
+  width: 32px;
+  height: 32px;
+  flex: none;
+  border-radius: 10px;
+  background: #fff;
+  color: var(--violet-ink);
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 14px;
+}
+.order-icon {
+  display: flex;
+  color: var(--violet-ink);
+}
+.order-card b {
+  font-size: 14px;
+}
+.order-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 650;
+}
+.order-card.right .order-mark {
+  color: var(--violet-ink);
+}
+.order-card.wrong .order-mark {
+  color: var(--amber-ink);
+}
+.order-moves {
+  margin-inline-start: auto;
+  display: flex;
+  gap: 6px;
+}
+.order-moves button {
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: var(--white);
+  color: var(--violet-ink);
+  display: grid;
+  place-items: center;
+}
+.order-moves button:hover:not(:disabled) {
+  background: var(--violet-soft);
+}
+.sort-steps {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 13px;
+}
+.sort-progress {
+  font-size: 12px;
+  font-weight: 650;
+  color: var(--muted);
+}
+.sort-tray {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  min-height: 72px;
+  padding: 14px;
+  margin: 14px 0 18px;
+  border: 1px dashed #d8cee4;
+  border-radius: 14px;
+  background: var(--paper);
+}
+.sort-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 9px 15px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: var(--white);
+  font-size: 13px;
+  font-weight: 600;
+}
+.sort-chip.yellow {
+  color: var(--amber-ink);
+}
+.sort-chip.red {
+  color: var(--pink-ink);
+}
+.sort-chip.blue {
+  color: var(--azure-ink);
+}
+.sort-chip.green {
+  color: var(--violet-ink);
+}
+.sort-chip.selected {
+  border: 2px solid currentColor;
+  padding: 8px 14px;
+  box-shadow: 0 6px 18px #241b3518;
+}
+.sort-chip.placed {
+  border-color: currentColor;
+}
+.sort-tray-empty {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--violet-ink);
+}
+.sort-bins {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.sort-bin {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 150px;
+  padding: 16px;
+  border: 1.5px dashed #cdbfdd;
+  border-radius: 16px;
+  background: var(--paper);
+  text-align: start;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+.sort-bin:not(:disabled):hover {
+  border-color: var(--violet);
+  background: var(--violet-soft);
+}
+.sort-bin:disabled {
+  opacity: 1;
+  cursor: default;
+  border-style: solid;
+  border-color: var(--line);
+}
+.sort-bin-head b {
+  display: block;
+  font-size: 14px;
+}
+.sort-bin-head small {
+  font-size: 12px;
+  color: var(--muted);
+}
+.sort-bin-body {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: start;
+  gap: 8px;
+}
+.sort-bin-empty {
+  font-size: 12px;
+  color: var(--muted);
+}
+@media (max-width: 767px) {
+  .relation-map,
+  .drill {
+    padding: 18px;
+  }
+  .relation-frame {
+    gap: 12px 26px;
+  }
+  .relation-node {
+    font-size: 12px;
+    padding: 9px 10px;
+  }
+  .relation-node[aria-pressed="true"] {
+    padding: 8px 9px;
+  }
+  .relation-reading,
+  .sort-steps {
+    font-size: 12px;
+  }
+  .drill-head h3 {
+    font-size: 16px;
+  }
+  .order-card {
+    gap: 10px;
+    padding: 10px 12px;
+  }
+  .order-card b {
+    font-size: 13px;
+  }
+  .order-icon {
+    display: none;
+  }
+  .order-mark {
+    font-size: 11px;
+  }
+  .sort-bins {
+    grid-template-columns: 1fr;
+  }
+  .sort-bin {
+    min-height: 0;
+  }
+}
+
+/* Bridge from a chosen food to the animated journey its nutrient starts. */
+.food-follow {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid #241b3512;
+}
+.food-follow p {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.food-follow .micro-copy {
+  margin: 0;
 }

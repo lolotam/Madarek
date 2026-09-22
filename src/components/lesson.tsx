@@ -21,7 +21,10 @@ import {
   FoodExplorer,
   EnergyLab,
   Practice,
+  type LabRequest,
 } from "./lesson-activities";
+import { RelationMap } from "./lesson-diagrams";
+import { JourneyOrder, NutrientSort } from "./lesson-drills";
 import { Quiz } from "./quiz";
 import { PlateArt } from "./illustrations";
 import { api, useSession } from "./providers";
@@ -59,6 +62,7 @@ export function Lesson() {
       tone: "success" | "info" | "error";
       text: string;
     } | null>(null);
+  const [labRequest, setLabRequest] = useState<LabRequest>();
   const reduce = useReducedMotion();
   useEffect(() => {
     setSections([]);
@@ -273,10 +277,16 @@ export function Lesson() {
           />
           <h3 className="activity-title">أ. ماذا يوجد في طعامك؟</h3>
           <p>اختاري طعامًا لتكتشفي بعض مغذّياته ووظائفها.</p>
-          <FoodExplorer />
+          <FoodExplorer onFollow={setLabRequest} />
           <h3 className="activity-title">ب. من الطعام… إلى ما يفعله الجسم</h3>
           <p>تحكّمي في الخطوات وراقبي العلاقة بين المغذّي ووظيفته.</p>
-          <EnergyLab />
+          <EnergyLab request={labRequest} />
+          <h3 className="activity-title">ج. شبكة العلاقات</h3>
+          <p>
+            اضغطي على طعام لترَي مغذّياته، أو على مغذٍّ لترَي الأطعمة التي
+            تحتويه.
+          </p>
+          <RelationMap />
           <div className="fiber-note" data-audio-target={fiberNoteTarget.id}>
             <Leaf size={29} />
             <div>
@@ -300,6 +310,11 @@ export function Lesson() {
             title="فكّري، أجيبي، وتعلّمي من المحاولة."
             part="practice"
           />
+          <h3 className="activity-title">أ. رتّبي الرحلة</h3>
+          <JourneyOrder />
+          <h3 className="activity-title">ب. صنّفي المغذّيات</h3>
+          <NutrientSort />
+          <h3 className="activity-title">ج. اختاري وعلّلي</h3>
           <Practice />
           {completeButton("practice")}
         </section>

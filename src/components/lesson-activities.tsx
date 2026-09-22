@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import * as Tabs from "@radix-ui/react-tabs";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   ArrowLeft,
   Check,
@@ -13,7 +13,7 @@ import {
   Info,
   CheckCircle2,
 } from "lucide-react";
-import { nutrients, foods } from "@/content/nutrients";
+import { nutrients, foods, foodJourney, journeys } from "@/content/nutrients";
 import {
   conceptDetailTarget,
   conceptGroupTarget,
@@ -29,6 +29,7 @@ import {
   type LabStep,
 } from "@/content/audio-targets";
 import { NutrientIcon } from "./nutrient-icon";
+import { JourneyArt } from "./lesson-diagrams";
 import { api } from "./providers";
 import { useAudio } from "./audio/audio-provider";
 
@@ -144,8 +145,15 @@ export function ConceptTree() {
   );
 }
 
-export function FoodExplorer() {
+export type LabRequest = { mode: "energy" | "repair"; token: number };
+
+export function FoodExplorer({
+  onFollow,
+}: {
+  onFollow: (request: LabRequest) => void;
+}) {
   const [selected, setSelected] = useState("oats");
+  const reduce = useReducedMotion();
   const { registerReveal, notifyManualOverride } = useAudio();
   useEffect(() => {
     return registerReveal((reveal) => {
@@ -153,6 +161,7 @@ export function FoodExplorer() {
     });
   }, [registerReveal]);
   const food = foods.find((f) => f.id === selected)!;
+  const journey = foodJourney[selected];
   return (
     <div className="food-lab">
       <div className="food-options" aria-label="اختاري طعامًا">
@@ -202,6 +211,29 @@ export function FoodExplorer() {
           <h3>{food.main}</h3>
           <span className="food-also">ومعه: {food.also}</span>
           <p>{food.description}</p>
+          <div className="food-follow">
+            <p>{journey.lead}</p>
+            {journey.mode ? (
+              <button
+                type="button"
+                className="button small soft"
+                onClick={() => {
+                  notifyManualOverride();
+                  onFollow({ mode: journey.mode!, token: Date.now() });
+                  document.getElementById("energy-lab")?.scrollIntoView({
+                    behavior: reduce ? "auto" : "smooth",
+                    block: "center",
+                  });
+                }}
+              >
+                <Play size={16} /> تابعي {journeys[journey.mode].name}
+              </button>
+            ) : (
+              <span className="micro-copy">
+                نقف عندها في درس «النظام الغذائي المتوازن».
+              </span>
+            )}
+          </div>
         </div>
       </div>
       <p className="insight">
@@ -212,10 +244,15 @@ export function FoodExplorer() {
   );
 }
 
-export function EnergyLab() {
+export function EnergyLab({ request }: { request?: LabRequest }) {
   const [mode, setMode] = useState<"energy" | "repair">("energy"),
     [step, setStep] = useState(0);
   const { registerReveal, notifyManualOverride } = useAudio();
+  useEffect(() => {
+    if (!request) return;
+    setMode(request.mode);
+    setStep(0);
+  }, [request]);
   useEffect(() => {
     return registerReveal((reveal) => {
       if (reveal.kind === "lab") {
@@ -224,44 +261,9 @@ export function EnergyLab() {
       }
     });
   }, [registerReveal]);
-  const steps =
-    mode === "energy"
-      ? [
-          {
-            name: "الكربوهيدرات",
-            text: "نبدأ بطعام يحتوي كربوهيدرات، مثل الخبز أو الأرز.",
-            icon: "wheat",
-          },
-          {
-            name: "الجلوكوز",
-            text: "يحوّل الجسم الكربوهيدرات إلى سكريات بسيطة، أهمها الجلوكوز.",
-            icon: "blocks",
-          },
-          {
-            name: "طاقة للخلايا",
-            text: "تستخدم الخلايا الجلوكوز للحصول على الطاقة اللازمة لأداء وظائفها.",
-            icon: "leaf",
-          },
-        ]
-      : [
-          {
-            name: "مصدر للبروتين",
-            text: "يمكن أن يأتي البروتين من البيض أو الحليب أو البقوليات مثل العدس.",
-            icon: "beans",
-          },
-          {
-            name: "البناء والإصلاح",
-            text: "يستخدم الجسم مكوّنات البروتينات لبناء العضلات وإصلاح الأنسجة التالفة.",
-            icon: "blocks",
-          },
-          {
-            name: "دعم التئام الجروح",
-            text: "هذا يفسّر أهمية البروتينات في التئام الجروح والنمو.",
-            icon: "leaf",
-          },
-        ];
+  const steps = journeys[mode].steps;
   return (
-    <div className="energy-lab">
+    <div className={"energy-lab " + mode} id="energy-lab">
       <div className="segmented" role="group" aria-label="اختاري التجربة">
         {(
           [
@@ -285,6 +287,7 @@ export function EnergyLab() {
           </button>
         ))}
       </div>
+      <JourneyArt mode={mode} step={step} />
       <div className="energy-steps">
         {steps.map((s, i) => (
           <div
@@ -292,16 +295,7 @@ export function EnergyLab() {
             className={"energy-step " + (i <= step ? "lit" : "")}
             data-audio-target={labStepTarget(mode, i as LabStep).id}
           >
-            <motion.div
-              animate={{
-                scale: i === step ? 1.08 : 1,
-                opacity: i <= step ? 1 : 0.35,
-              }}
-            >
-              <NutrientIcon name={s.icon} size={38} />
-            </motion.div>
             <b>{s.name}</b>
-            {i < 2 && <ArrowLeft className="flow-arrow" size={23} />}
           </div>
         ))}
       </div>
