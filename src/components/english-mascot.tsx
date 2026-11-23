@@ -5,6 +5,7 @@ import {
   defaultEnglishMascot,
   englishMascots,
 } from "@/content/english-mascots.mjs";
+import { EnglishWords } from "./english-glossary";
 
 const imagePath = (name: string) => `/english/mascots/${name}`;
 const reactions = {
@@ -64,9 +65,11 @@ export function EnglishMascotChoice({
 export function EnglishMascot({
   selected,
   outcome,
+  hint,
 }: {
   selected?: string | null;
   outcome: keyof typeof reactions;
+  hint?: string;
 }) {
   const mascot =
     englishMascots.find((item) => item.id === selected) ?? englishMascots[0];
@@ -95,6 +98,11 @@ export function EnglishMascot({
       <div>
         <strong>{reacting ? message : mascot.name}</strong>
         <span>{reacting ? mascot.name : message}</span>
+        {hint && (
+          <p className="school-mascot-hint">
+            <EnglishWords text={hint} />
+          </p>
+        )}
       </div>
     </aside>
   );

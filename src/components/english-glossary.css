@@ -1,0 +1,54 @@
+.english-word {
+  cursor: help;
+  text-decoration: underline dotted #67549a74;
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 1px;
+}
+.english-word[data-embedded] {
+  cursor: inherit;
+}
+.english-word:focus-visible {
+  outline: 2px solid #7445ba;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+.english-word-tip {
+  position: fixed;
+  z-index: 1010;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: min(224px, calc(100vw - 16px));
+  min-height: 56px;
+  padding: 0.45rem 0.6rem;
+  transform: translateY(-100%);
+  border: 1px solid #cbb9ed;
+  border-radius: 0.85rem;
+  color: #2d1d51;
+  background: #fffaf1;
+  box-shadow: 0 5px 20px #35205038;
+  pointer-events: none;
+}
+.english-word-tip[data-below] {
+  transform: none;
+}
+.english-word-tip strong,
+.english-word-tip bdi {
+  display: block;
+  line-height: 1.45;
+}
+.english-word-tip bdi {
+  color: #62488a;
+  font-size: 0.82rem;
+}
+.english-word-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 2.6rem;
+  height: 2.6rem;
+  font-size: 1.7rem;
+}
+.english-word-sprite {
+  background: url("/english/school-objects-3d.webp") no-repeat;
+  background-size: 300% 300%;
+}

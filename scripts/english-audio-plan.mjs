@@ -2,6 +2,10 @@ import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import lessons from "../src/server/english-lessons.json" with { type: "json" };
 import { grammarRules } from "../src/content/english-grammar.ts";
+import {
+  expandEnglishLessons,
+  interactiveAudioClip,
+} from "../src/server/english-interactive.mjs";
 
 const punctuation = { "?": "Question mark", ".": "Full stop", ",": "Comma" };
 
@@ -28,9 +32,10 @@ function clip(id, text) {
   clips[id] = line;
 }
 
-for (const lesson of lessons) {
+for (const lesson of expandEnglishLessons(lessons)) {
   for (const q of lesson.questions) {
-    clip(`${q.id}-prompt`, q.prompt);
+    const prompt = interactiveAudioClip(q) ?? `${q.id}-prompt`;
+    if (!Object.hasOwn(clips, prompt)) clip(prompt, q.prompt);
     if (q.passage?.trim()) clip(`${q.id}-passage`, q.passage);
     if (q.audio?.trim()) clip(`${q.id}-listening`, q.audio);
     if (q.options) {

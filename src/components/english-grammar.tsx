@@ -2,6 +2,7 @@ import Link from "next/link";
 import { grammarPath, grammarRules } from "@/content/english-grammar";
 import { questionCount } from "@/server/english.mjs";
 import { EnglishAudioButton, EnglishAudioSpeed } from "./english-audio";
+import { EnglishGlossary, EnglishWords } from "./english-glossary";
 import { Diagram } from "./english-lesson";
 
 export function QuestionBadge({ count }: { count: number }) {
@@ -43,7 +44,7 @@ export function GrammarGuide({
 }: {
   rule: (typeof grammarRules)[number];
 }) {
-  return (
+  const guide = (
     <section className="container section school school-guide">
       <div className="school-audio-toolbar">
         <div className="breadcrumbs">
@@ -55,7 +56,9 @@ export function GrammarGuide({
       <header className="school-guide-hero" data-rule={rule.id}>
         <div>
           <div className="school-rule-audio-title" lang="en" dir="ltr">
-            <p>{rule.english}</p>
+            <p>
+              <EnglishWords text={rule.english} />
+            </p>
             <EnglishAudioButton
               clip={`grammar-${rule.id}-title`}
               label="اسمع اسم القاعدة"
@@ -78,13 +81,19 @@ export function GrammarGuide({
             <h2>
               <span aria-hidden="true">{step.icon}</span> {step.title}
             </h2>
-            <p>{step.note}</p>
+            <p>
+              <EnglishWords text={step.note} />
+            </p>
             <ul dir="ltr" lang="en">
               {step.samples.map(([pattern, example], exampleIndex) => (
                 <li key={pattern}>
                   <div>
-                    <strong>{pattern}</strong>
-                    <span>{example}</span>
+                    <strong>
+                      <EnglishWords text={pattern} />
+                    </strong>
+                    <span>
+                      <EnglishWords text={example} />
+                    </span>
                   </div>
                   <EnglishAudioButton
                     clip={`grammar-${rule.id}-${stepIndex + 1}-${exampleIndex + 1}`}
@@ -100,4 +109,5 @@ export function GrammarGuide({
       </div>
     </section>
   );
+  return <EnglishGlossary>{guide}</EnglishGlossary>;
 }

@@ -7,6 +7,7 @@ import {
   useState,
   type PointerEvent,
 } from "react";
+import { EnglishWords } from "./english-glossary";
 
 export type MatchOptions = { left: string[]; right: string[] };
 type Point = { x: number; y: number };
@@ -199,7 +200,7 @@ export function MatchingBoard({
                 setSelected(selected === index ? null : index);
               }}
             >
-              {label}
+              <EnglishWords text={label} embedded />
             </button>
           ))}
         </div>
@@ -221,7 +222,7 @@ export function MatchingBoard({
                 if (selected != null) connect(selected, index);
               }}
             >
-              {label}
+              <EnglishWords text={label} embedded />
             </button>
           ))}
         </div>

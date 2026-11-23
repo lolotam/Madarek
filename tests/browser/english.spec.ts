@@ -302,7 +302,7 @@ test("iPad practice shows counts, lets pupils drag and swap matches, and opens g
   ).toHaveCount(20);
   await expect(
     page.locator(".school-index a").filter({ hasText: "Every day" }),
-  ).toContainText("٥٥ سؤالًا");
+  ).toContainText("١١٠ سؤالًا");
   await expect(page.locator(".school-grammar-card")).toHaveCount(3);
   await page
     .locator(".school-grammar-card")
@@ -312,9 +312,9 @@ test("iPad practice shows counts, lets pupils drag and swap matches, and opens g
     page.getByRole("heading", { name: "المضارع البسيط", exact: true }),
   ).toBeVisible();
   await expect(page.getByLabel("انتقل لسؤال").locator("option")).toHaveCount(
-    55,
+    110,
   );
-  await page.getByLabel("انتقل لسؤال").selectOption("54");
+  await page.getByLabel("انتقل لسؤال").selectOption("104");
   await expect(page.locator(".school-work h2")).toContainText("Sara");
 
   await page.goto("/grade/2/english/4");
@@ -466,6 +466,120 @@ test("English audio plays at the selected pronunciation speed across lessons", a
   await expect(speed.last()).toHaveValue("0.5");
 });
 
+test("touch activities give hints, allow retries, and explain English words", async ({
+  browser,
+  baseURL,
+}) => {
+  for (const viewport of [
+    { width: 390, height: 844 },
+    { width: 820, height: 1180 },
+  ]) {
+    const context = await browser.newContext({
+      baseURL,
+      viewport,
+      hasTouch: true,
+      isMobile: true,
+    });
+    try {
+      const page = await context.newPage();
+      await page.goto("/grade/2/english/1");
+      const word = page.locator('.school-heading [data-word="school"]');
+      await word.hover();
+      await expect(page.getByRole("tooltip")).toContainText("مدرسة");
+      await page.keyboard.press("Escape");
+      await word.tap();
+      await expect(page.getByRole("tooltip")).toContainText("مدرسة");
+      await expect(page.locator(".english-word-sprite")).toBeVisible();
+      const jump = page.getByLabel("انتقل لسؤال");
+      const submit = page.getByRole("button", {
+        name: "إرسال الإجابة",
+        exact: true,
+      });
+      const retry = page.getByRole("button", {
+        name: "جرّب تاني",
+        exact: true,
+      });
+      const result = page.locator(".school-result");
+      const mascotHint = page.locator(".school-mascot-hint");
+
+      await jump.selectOption("10");
+      const bank = page.locator(".school-tile-bank");
+      const addWord = (name: string) =>
+        bank.getByRole("button", { name, exact: true }).tap();
+      await addWord("wake up");
+      await expect(submit).toBeDisabled();
+      await addWord("early.");
+      await addWord("I");
+      await submit.tap();
+      await expect(mascotHint).toContainText("مين اللي بيعمل الفعل");
+      await retry.tap();
+      await page.getByRole("button", { name: "امسح الترتيب" }).tap();
+      for (const name of ["I", "wake up", "early."]) await addWord(name);
+      await submit.tap();
+      await expect(result).toContainText("100٪");
+
+      await jump.selectOption("11");
+      await page.getByRole("button", { name: "عدّل we", exact: true }).tap();
+      await bank.getByRole("button", { name: "We", exact: true }).tap();
+      await submit.tap();
+      await expect(mascotHint).toContainText("علامة النهاية");
+      await retry.tap();
+      await page.getByRole("button", { name: "عدّل علامة الترقيم" }).tap();
+      await bank.getByRole("button", { name: "نقطة", exact: true }).tap();
+      await submit.tap();
+      await expect(result).toContainText("100٪");
+
+      await jump.selectOption("12");
+      const board = page.locator(".school-place-board");
+      const piece = board.locator("[data-place-item]");
+      await expect(board).toHaveAttribute("data-model", "3d");
+      await piece.tap();
+      await board.locator('[data-position="right"]').tap();
+      await submit.tap();
+      await expect(mascotHint).toContainText("كلمة المكان");
+      await retry.tap();
+      await board.scrollIntoViewIfNeeded();
+      const target = board.locator('[data-position="under"]');
+      const from = await piece.boundingBox();
+      const to = await target.boundingBox();
+      if (!from || !to) throw Error("Placement board is not visible");
+      const client = await context.newCDPSession(page);
+      const start = { x: from.x + from.width / 2, y: from.y + from.height / 2 };
+      const end = { x: to.x + to.width / 2, y: to.y + to.height / 2 };
+      await client.send("Input.dispatchTouchEvent", {
+        type: "touchStart",
+        touchPoints: [start],
+      });
+      for (const t of [0.25, 0.5, 0.75, 1]) {
+        await client.send("Input.dispatchTouchEvent", {
+          type: "touchMove",
+          touchPoints: [
+            {
+              x: start.x + t * (end.x - start.x),
+              y: start.y + t * (end.y - start.y),
+            },
+          ],
+        });
+      }
+      await client.send("Input.dispatchTouchEvent", {
+        type: "touchEnd",
+        touchPoints: [],
+      });
+      await expect(target).toHaveAttribute("aria-pressed", "true");
+      // The CDP drag already exercises touch events. Use a click for the separate submit gesture.
+      await submit.click();
+      await expect(result).toContainText("100٪");
+      expect(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth <= innerWidth,
+        ),
+      ).toBe(true);
+    } finally {
+      await context.close();
+    }
+  }
+});
+
 test("AI Settings opens the device flow and fills the model selector after authentication", async ({
   page,
 }) => {
@@ -526,7 +640,7 @@ test("AI Settings opens the device flow and fills the model selector after authe
   await expect(
     content.getByRole("heading", { name: "إنجليزي الصف الثاني" }),
   ).toBeVisible();
-  await expect(content).toContainText("٥٣١ مقطعًا");
+  await expect(content).toContainText("٦١٠ مقطعًا");
   await content.getByText("الدروس والأسئلة", { exact: true }).click();
   await expect(content.locator("li")).toHaveCount(20);
 });

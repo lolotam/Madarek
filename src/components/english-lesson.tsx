@@ -6,6 +6,14 @@ import { RotateCcw } from "lucide-react";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { MatchingBoard, type MatchOptions } from "./english-matching";
 import { EnglishMascot } from "./english-mascot";
+import { EnglishGlossary, EnglishWords } from "./english-glossary";
+import {
+  ScenePlacement,
+  SentenceCorrection,
+  SentenceOrdering,
+  type FixPart,
+  type PlaceExercise,
+} from "./english-interactive";
 import {
   EnglishSpellingRecorder,
   type SpellingReview,
@@ -31,11 +39,15 @@ import {
 type Question = {
   id: string;
   prompt: string;
+  promptClip?: string;
   scene: string;
   passage?: string;
   audio?: string;
   options?: string[];
   matches?: MatchOptions;
+  order?: string[];
+  fix?: FixPart[];
+  place?: PlaceExercise;
   kind: string;
 };
 export type EnglishAttempt = {
@@ -137,7 +149,10 @@ export function GradeDetails({ row }: { row: LessonGrade & { id?: number } }) {
           </ul>
           {row.score !== 100 && (
             <p>
-              مثال صحيح · <bdi lang="en">{row.detail.correction}</bdi>
+              مثال صحيح ·{" "}
+              <bdi lang="en">
+                <EnglishWords text={row.detail.correction} />
+              </bdi>
             </p>
           )}
         </>
@@ -182,6 +197,7 @@ export function Diagram({
     player.setAttribute("width", String(size.width));
     player.setAttribute("height", String(size.height));
     player.setAttribute("srcdoc", sceneDocument(q.scene, q.id, layout));
+    player.setAttribute("interactive", "");
     player.setAttribute("aria-hidden", "true");
     if (!motion.matches) {
       player.setAttribute("autoplay", "");
@@ -215,7 +231,9 @@ export function Diagram({
           ) : (
             <div className="school-diagram-preview" lang="en" dir="ltr">
               {q.scene.split("|").map((step) => (
-                <span key={step}>{step}</span>
+                <span key={step}>
+                  <EnglishWords text={step} />
+                </span>
               ))}
             </div>
           )}
@@ -235,6 +253,11 @@ export function Diagram({
   );
 }
 const clockFaces = Array.from("🕛🕐🕑🕒🕓🕔🕕🕖🕗🕘🕙🕚");
+const activityLabels: Record<string, string> = {
+  order: "ترتيب جملة",
+  fix: "تصحيح",
+  place: "مشهد 3D",
+};
 
 function ClockModel({ hour }: { hour: number }) {
   const details = useRef<HTMLDetailsElement>(null);
@@ -362,15 +385,21 @@ function AnswerReaction({ correct }: { correct: boolean }) {
   );
 }
 
-export function EnglishLesson({
-  page,
-  lesson,
-  grammar = false,
-}: {
+type LessonProps = {
   page: number;
   grammar?: boolean;
   lesson: { title: string; ar: string; icon: string; questions: Question[] };
-}) {
+};
+
+export function EnglishLesson(props: LessonProps) {
+  return (
+    <EnglishGlossary>
+      <EnglishPractice {...props} />
+    </EnglishGlossary>
+  );
+}
+
+function EnglishPractice({ page, lesson, grammar = false }: LessonProps) {
   const { user, loading } = useSession();
   const router = useRouter();
   const [fromMap, setFromMap] = useState(false);
@@ -389,8 +418,17 @@ export function EnglishLesson({
   const [practiceRun, setPracticeRun] = useState(0);
   const questionKey = `${q.id}-${practiceRun}`;
   const readyToSubmit =
-    Boolean(draft.trim()) && (!q.matches || !draft.split(",").includes("-1"));
+    Boolean(draft.trim()) &&
+    (!q.matches || !draft.split(",").includes("-1")) &&
+    (!q.order || draft.split(",").length === q.order.length);
   const [showReaction, setShowReaction] = useState(false);
+  const interactiveHint =
+    showReaction &&
+    (q.order || q.fix || q.place) &&
+    row?.score != null &&
+    row.score < 100
+      ? row.feedback
+      : undefined;
   const answerForm = useRef<HTMLFormElement>(null);
   const resultPanel = useRef<HTMLDivElement>(null);
   const audio = useRef<AudioContext | null>(null);
@@ -699,7 +737,7 @@ export function EnglishLesson({
         <div>
           <p>{lesson.ar}</p>
           <h1 lang="en" dir="ltr">
-            {lesson.title}
+            <EnglishWords text={lesson.title} />
           </h1>
           {!grammar && (page === 14 || page === 15) && (
             <Link
@@ -742,6 +780,8 @@ export function EnglishLesson({
                 {lesson.questions.map((item, index) => (
                   <option key={item.id} value={index}>
                     {(index + 1).toLocaleString("ar-u-nu-arab")}
+                    {activityLabels[item.kind] &&
+                      ` · ${activityLabels[item.kind]}`}
                   </option>
                 ))}
               </select>
@@ -750,7 +790,7 @@ export function EnglishLesson({
         </div>
         {q.passage && (
           <blockquote dir="ltr" lang="en">
-            {q.passage}
+            <EnglishWords text={q.passage} />
             <EnglishAudioButton
               key={questionKey}
               clip={`${q.id}-passage`}
@@ -759,7 +799,7 @@ export function EnglishLesson({
             />
           </blockquote>
         )}
-        <Diagram key={practiceRun} q={q} />
+        {!q.place && <Diagram key={practiceRun} q={q} />}
         {clockHour >= 0 && (
           <ClockModel key={`clock-${q.id}`} hour={clockHour} />
         )}
@@ -767,11 +807,11 @@ export function EnglishLesson({
           <Pencils key={`pencils-${q.id}`} far={step === 0} />
         )}
         <h2 dir="ltr" lang="en">
-          {q.prompt}
+          <EnglishWords text={q.prompt} />
         </h2>
         <div className="school-question-audio" key={`audio-${questionKey}`}>
           <EnglishAudioButton
-            clip={`${q.id}-prompt`}
+            clip={q.promptClip ?? `${q.id}-prompt`}
             label="اسمع السؤال"
             text={q.prompt}
           />
@@ -799,7 +839,31 @@ export function EnglishLesson({
         <form ref={answerForm} onSubmit={submit}>
           <fieldset disabled={busy}>
             <legend className="sr-only">إجابتك</legend>
-            {q.matches ? (
+            {q.order ? (
+              <SentenceOrdering
+                key={questionKey}
+                tiles={q.order}
+                value={draft}
+                onChange={update}
+                disabled={busy}
+              />
+            ) : q.fix ? (
+              <SentenceCorrection
+                key={questionKey}
+                parts={q.fix}
+                value={draft}
+                onChange={update}
+                disabled={busy}
+              />
+            ) : q.place ? (
+              <ScenePlacement
+                key={questionKey}
+                exercise={q.place}
+                value={draft}
+                onChange={update}
+                disabled={busy}
+              />
+            ) : q.matches ? (
               <MatchingBoard
                 key={questionKey}
                 options={q.matches}
@@ -823,7 +887,9 @@ export function EnglishLesson({
                       value={o}
                       onChange={() => update(o)}
                     />
-                    <span lang="en">{o}</span>
+                    <span lang="en">
+                      <EnglishWords text={o} embedded />
+                    </span>
                   </label>
                 ))}
               </div>
@@ -872,6 +938,7 @@ export function EnglishLesson({
               <EnglishMascot
                 selected={user?.englishMascot}
                 outcome={outcome === "incorrect" ? "retry" : outcome}
+                hint={interactiveHint}
               />
             )}
             <div className="school-result-heading">
@@ -909,7 +976,11 @@ export function EnglishLesson({
                 تحديث الدرجة
               </button>
             )}
-            <p>{row.feedback}</p>
+            {!interactiveHint && (
+              <p>
+                <EnglishWords text={row.feedback} />
+              </p>
+            )}
             {returnToMap && (
               <div className="school-journey-completion">
                 <p>خلّصت الدرس! هترجع للخريطة بعد لحظات.</p>
@@ -938,12 +1009,14 @@ export function EnglishLesson({
                 update(draft);
                 answerForm.current
                   ?.querySelector<HTMLElement>(
-                    "input:checked, textarea, [data-match-left]",
+                    "input:checked, textarea, [data-match-left], [data-practice-control]:not(:disabled)",
                   )
                   ?.focus();
               }}
             >
-              تعديل الإجابة
+              {(q.order || q.fix || q.place) && row.score !== 100
+                ? "جرّب تاني"
+                : "تعديل الإجابة"}
             </button>
           </div>
         )}

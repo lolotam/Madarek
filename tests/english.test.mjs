@@ -2,14 +2,27 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { createStore } from "../src/server/store.mjs";
 import { sceneDocument } from "../src/content/english-scene.mjs";
+import {
+  englishWordPattern,
+  wordMeaning,
+} from "../src/content/english-glossary.mjs";
+import { grammarRules } from "../src/content/english-grammar.ts";
 import { activity, englishJourney, questions } from "../src/server/english.mjs";
 
-test("all 20 English lessons have diagrams and keep the key on the server", () => {
-  for (let page = 1; page <= 20; page++) {
+test("each English lesson adds one interactive question per original and keeps the key on the server", () => {
+  for (let page = 1; page <= 21; page++) {
     const lesson = activity(page);
     assert.equal(
       lesson.questions.length,
-      page === 15 ? 55 : page === 14 ? 13 : 10,
+      page === 15 ? 110 : page === 14 ? 26 : page === 21 ? 30 : 20,
+    );
+    const interactive = lesson.questions.filter(({ id }) =>
+      id.includes("-play-"),
+    );
+    assert.equal(interactive.length, lesson.questions.length / 2);
+    assert.deepEqual(
+      new Set(interactive.map(({ kind }) => kind)),
+      new Set(["order", "fix", "place"]),
     );
     for (const q of lesson.questions) {
       assert.match(sceneDocument(q.scene, q.id), /data-composition-id/);
@@ -33,15 +46,15 @@ test("the English journey awards the best score once per saved question", () => 
   );
   assert.deepEqual(first, {
     page: 1,
-    possible: 10,
-    answered: 10,
-    scored: 10,
-    points: 9.8,
+    possible: 20,
+    answered: 20,
+    scored: 20,
+    points: 19.8,
     complete: true,
   });
   assert.deepEqual(second, {
     page: 2,
-    possible: 10,
+    possible: 20,
     answered: 1,
     scored: 0,
     points: 0,
@@ -128,10 +141,78 @@ test("matching validates a complete one-to-one answer and gives partial credit",
     assert.deepEqual(check(wrong).matchResults, [true, false, false]);
     for (const invalid of ["0,0,1", "1,-1,0", "0,1", "2,0,3"])
       assert.throws(() => check(invalid));
-    assert.equal(activity(21).questions.length, 15);
+    assert.equal(activity(21).questions.length, 30);
   } finally {
     db.close();
   }
+});
+
+test("the interactive answers use the shared grading, hints and retry flow", () => {
+  const db = createStore(":memory:");
+  try {
+    for (const [qid, wrong, hint] of [
+      ["1-play-1", "0,1,2", /مين اللي بيعمل الفعل/],
+      ["1-play-2", "1,1", /أول حرف/],
+      ["1-play-3", "right", /كلمة المكان/],
+      ["15-play-2", "0", /المضارع البسيط/],
+    ]) {
+      const scored = db.english.preview({ qid, answer: wrong });
+      assert.ok(scored.score < 100);
+      assert.match(scored.feedback, hint);
+      assert.equal(
+        db.english.preview({ qid, answer: questions.get(qid).answer }).score,
+        100,
+      );
+    }
+    assert.throws(() =>
+      db.english.preview({ qid: "1-play-1", answer: "0,0,0" }),
+    );
+    assert.throws(() => db.english.preview({ qid: "1-play-2", answer: "4,2" }));
+    assert.throws(() =>
+      db.english.preview({ qid: "1-play-3", answer: "sideways" }),
+    );
+  } finally {
+    db.close();
+  }
+});
+
+test("all lesson and grammar words have an Arabic gloss", () => {
+  const missing = new Set();
+  const check = (text) => {
+    if (!text) return;
+    for (const [word] of text.matchAll(englishWordPattern)) {
+      if (!wordMeaning(word)) missing.add(word.toLowerCase());
+    }
+  };
+  for (let page = 1; page <= 21; page++) {
+    const lesson = activity(page);
+    check(lesson.title);
+    for (const q of lesson.questions) {
+      [
+        q.prompt,
+        q.passage,
+        q.audio,
+        q.scene,
+        ...(q.options ?? []),
+        ...(q.order ?? []),
+        ...Object.values(q.matches ?? {}).flat(),
+        ...(q.fix?.flatMap((p) => p.choices ?? [p.text]) ?? []),
+      ].forEach(check);
+    }
+  }
+  for (const rule of grammarRules) {
+    check(rule.english);
+    check(rule.scene);
+    rule.steps.forEach(({ note, samples }) =>
+      [note, ...samples.flat()].forEach(check),
+    );
+  }
+  assert.deepEqual([...missing], []);
+  assert.deepEqual(wordMeaning("School"), {
+    meaning: "مدرسة",
+    icon: "🏫",
+    sprite: 1,
+  });
 });
 
 test("spelling records a Whisper transcript and protects playback", async () => {

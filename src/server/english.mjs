@@ -1,6 +1,14 @@
 import { assess, punctuationMark, rubricFor } from "./english-rubrics.mjs";
 import { englishIndex } from "../content/english-index.mjs";
-import lessons from "./english-lessons.json" with { type: "json" };
+import originalLessons from "./english-lessons.json" with { type: "json" };
+import {
+  displayInteractiveAnswer,
+  expandEnglishLessons,
+  interactiveAnswer,
+  interactiveAudioClip,
+  interactiveGrade,
+} from "./english-interactive.mjs";
+const lessons = expandEnglishLessons(originalLessons);
 export const questions = new Map(
   lessons.flatMap((l) => l.questions.map((q) => [q.id, q])),
 );
@@ -47,9 +55,12 @@ export function activity(page) {
   if (!lesson) return null;
   return {
     ...lesson,
-    questions: lesson.questions.map(({ answer, rubric, strict, ...q }) => ({
-      ...q,
-    })),
+    questions: lesson.questions.map(
+      ({ answer, rubric, strict, hint, ...q }) => ({
+        ...q,
+        promptClip: interactiveAudioClip({ ...q, answer }),
+      }),
+    ),
   };
 }
 const normalize = (value) =>
@@ -60,6 +71,8 @@ function matchedPairs(question, answer) {
 }
 
 export function mark(q, answer) {
+  const interactive = interactiveGrade(q, answer);
+  if (interactive) return interactive;
   if (q.kind === "match") {
     const matchResults = matchedPairs(q, answer);
     const correct = matchResults.filter(Boolean).length;
@@ -147,6 +160,7 @@ export function englishStore(db, { requireRole, fail }) {
     if (!r) return r;
     const question = questions.get(r.qid);
     const match = question?.kind === "match";
+    const answerText = question && displayInteractiveAnswer(question, r.answer);
     const voice =
       isSpellingRecordingQuestion(r.qid) &&
       db
@@ -159,6 +173,7 @@ export function englishStore(db, { requireRole, fail }) {
       possible: 1,
       detail: r.detail ? JSON.parse(r.detail) : null,
       prompt: question?.prompt,
+      ...(answerText && { answerText }),
       ...(voice && { recording: voice }),
       ...(match && {
         matchResults: matchedPairs(question, r.answer),
@@ -193,6 +208,7 @@ export function englishStore(db, { requireRole, fail }) {
       typeof answer !== "string" ||
       !answer.trim() ||
       answer.length > 500 ||
+      !interactiveAnswer(question, answer) ||
       (question.kind === "choice" && !question.options.includes(answer))
     )
       fail("تحقّق من الإجابة.");

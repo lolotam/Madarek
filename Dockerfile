@@ -44,7 +44,7 @@ COPY --from=build --chown=node:node /app/public ./public
 # Narration scripts are read from disk at runtime, and the admin/audio CLIs
 # (scripts/*.mjs) import src/server/*.mjs; both use only Node built-ins.
 COPY --from=build --chown=node:node /app/src/server ./src/server
-COPY --from=build --chown=node:node /app/src/content/english-mascots.mjs ./src/content/english-mascots.mjs
+COPY --from=build --chown=node:node /app/src/content/english-mascots.mjs /app/src/content/english-index.mjs /app/src/content/english-placement.mjs ./src/content/
 COPY --from=build --chown=node:node /app/scripts ./scripts
 
 # All state (SQLite database + generated audio) lives here. Mount a persistent
