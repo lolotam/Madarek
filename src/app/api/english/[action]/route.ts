@@ -34,6 +34,13 @@ async function request(req: NextRequest, ctx: Context) {
     if (!user) return reply({ error: "سجّل الدخول أولًا." }, 401);
     if (action === "history" && req.method === "GET")
       return reply(store.english.history(user.id));
+    if (action === "reset" && req.method === "POST") {
+      if (user.role !== "student")
+        return reply({ error: "ابدأ من الأول من حساب الطالب." }, 403);
+      const parsed = await readJsonBody(req);
+      if (!parsed.ok) return reply({ error: parsed.error }, parsed.status);
+      return reply(store.english.resetLesson(user.id, parsed.body.page));
+    }
     if (action === "mascot" && req.method === "POST") {
       if (user.role !== "student")
         return reply({ error: "الطالب يقدر يختار شخصيته من حسابه." }, 403);

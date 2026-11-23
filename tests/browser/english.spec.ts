@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { createStore } from "../../src/server/store.mjs";
+import { activity, questions } from "../../src/server/english.mjs";
 import { resolve } from "node:path";
 import { randomUUID } from "node:crypto";
 
@@ -33,6 +34,8 @@ test("a mobile pupil opens a school-day lesson, submits and reloads a saved answ
     AudioBufferSourceNode.prototype.start = function (...args) {
       start.apply(this, args);
       document.documentElement.dataset.applause = "played";
+      const peak = this.buffer?.getChannelData(0).reduce((max, s) => Math.max(max, Math.abs(s)), 0);
+      if (peak !== undefined) document.documentElement.dataset.applausePeak = peak.toFixed(2);
     };
   });
   await page.setViewportSize({ width: 390, height: 844 });
@@ -47,10 +50,8 @@ test("a mobile pupil opens a school-day lesson, submits and reloads a saved answ
   await page.getByLabel("كلمة المرور أو رمز الدخول").fill(secret);
   await page.getByRole("button", { name: "دخول إلى مساحتي" }).click();
   await expect(page).toHaveURL(/\/grade\/2\/english\/1$/);
-  await expect(page.locator(".school-mascot")).toHaveAttribute(
-    "aria-label",
-    /برق/,
-  );
+  const assistant = page.locator(".school-lesson .school-mascot");
+  await expect(assistant).toHaveCount(0);
   const firstQuestion = page.locator(".school-work h2");
   const question = await firstQuestion.textContent();
   const next = page.getByRole("button", { name: "السؤال التالي" });
@@ -62,6 +63,8 @@ test("a mobile pupil opens a school-day lesson, submits and reloads a saved answ
     "incorrect",
   );
   await expect(page.locator(".school-miss")).toHaveText("×");
+  await expect(assistant).toHaveAttribute("aria-label", /برق/);
+  await expect(assistant).toContainText("حاول مرة تانية!");
   await expect(page.locator(".school-mascot img")).toHaveAttribute(
     "src",
     /barq\/retry\.gif$/,
@@ -82,20 +85,25 @@ test("a mobile pupil opens a school-day lesson, submits and reloads a saved answ
   await page.emulateMedia({ reducedMotion: "no-preference" });
 
   await page.getByRole("button", { name: "تعديل الإجابة" }).click();
+  await expect(assistant).toHaveCount(0);
   await expect(
     page.getByRole("radio", { name: "Go to bed", exact: true }),
   ).toBeFocused();
   await page.getByRole("radio", { name: "Get up", exact: true }).check();
   await page.getByRole("button", { name: "إرسال الإجابة" }).click();
   await expect(page.locator(".school-result")).toContainText(
-    "أحسنت! إجابتك صحيحة · 100٪",
+    "إجابتك صحيحة · 100٪",
   );
+  await expect(assistant).toContainText("أحسنت!");
+  const reactionImage = await assistant.locator("img").boundingBox();
+  expect(reactionImage?.width).toBeGreaterThan(100);
   await expect(page.locator(".school-confetti span")).toHaveCount(24);
   await expect(page.locator(".school-mascot img")).toHaveAttribute(
     "src",
     /barq\/correct\.gif$/,
   );
   await expect(page.locator("html")).toHaveAttribute("data-applause", "played");
+  await expect(page.locator("html")).toHaveAttribute("data-applause-peak", "0.72");
   await expect(firstQuestion).toHaveText(question!);
   const attempts = await (
     await page.request.get("/api/english/history")
@@ -106,11 +114,29 @@ test("a mobile pupil opens a school-day lesson, submits and reloads a saved answ
       .map((attempt: { score: number }) => attempt.score),
   ).toEqual([100, 0]);
   await next.click();
+  await expect(assistant).toHaveCount(0);
   await expect(firstQuestion).toHaveText("What do you carry to school?");
   await page.reload();
   await expect(page.locator(".school-confetti")).toHaveCount(0);
+  await expect(assistant).toHaveCount(0);
   await expect(page.locator(".school-result")).toContainText("100٪");
-  await expect(page.locator("hyperframes-player")).toHaveCount(1);
+  const diagramPlayer = page.locator("hyperframes-player");
+  await expect(diagramPlayer).toHaveCount(1);
+  await expect(diagramPlayer).toHaveAttribute("width", "570");
+  await expect(diagramPlayer).toHaveAttribute("loop", "");
+  await diagramPlayer.evaluate((player) => {
+    let previousTime = 0;
+    player.addEventListener("timeupdate", (event) => {
+      const { currentTime } = (event as CustomEvent<{ currentTime: number }>)
+        .detail;
+      if (previousTime > 2.8 && currentTime < 0.8)
+        player.dataset.testLooped = "true";
+      previousTime = currentTime;
+    });
+  });
+  await expect(diagramPlayer).toHaveAttribute("data-test-looped", "true", {
+    timeout: 8500,
+  });
   await expect
     .poll(() => page.frames().some((f) => f.url() === "about:srcdoc"))
     .toBe(true);
@@ -161,11 +187,83 @@ test("a mobile pupil opens a school-day lesson, submits and reloads a saved answ
   await page.getByRole("button", { name: "حفظ الشخصية" }).click();
   await expect(page.getByText("تم حفظ شخصيتك.", { exact: true })).toBeVisible();
   await page.goto("/grade/2/english/9");
-  await expect(page.locator(".school-mascot")).toHaveAttribute(
-    "aria-label",
-    /لوز/,
-  );
+  await expect(assistant).toHaveCount(0);
   await expect(page.getByRole("button", { name: "سجّل تهجئتك" })).toBeVisible();
+  await page.getByRole("textbox", { name: "اكتب إجابتك بالإنجليزية" }).fill("shoes");
+  await page.getByRole("button", { name: "إرسال الإجابة" }).click();
+  await expect(assistant).toHaveAttribute("aria-label", /لوز/);
+
+  await page.goto("/grade/2/english/1");
+  await expect(page.locator(".school-result")).toBeVisible();
+  await next.click();
+  await page.getByRole("radio", { name: "A school bag", exact: true }).check();
+  await page.getByRole("button", { name: "إرسال الإجابة" }).click();
+  await expect(page.locator(".school-result")).toContainText("100٪");
+  const reset = page.getByRole("button", {
+    name: "ابدأ من الأول",
+    exact: true,
+  });
+  await reset.click();
+  const confirmation = page.getByRole("dialog", {
+    name: "ابدأ الدرس من الأول؟",
+  });
+  await confirmation
+    .getByRole("button", { name: "إلغاء", exact: true })
+    .click();
+  await expect(firstQuestion).toHaveText("What do you carry to school?");
+  await expect(page.locator(".school-result")).toBeVisible();
+  await reset.click();
+  await confirmation
+    .getByRole("button", { name: "امسح وابدأ من الأول" })
+    .click();
+  await expect(firstQuestion).toHaveText(question!);
+  await expect(page.getByText("الدرس بدأ من الأول.")).toBeVisible();
+  await expect(page.locator(".school-result")).toHaveCount(0);
+  await page.reload();
+  await expect(page.locator(".school-result")).toHaveCount(0);
+  const remaining: { qid: string }[] = await (
+    await page.request.get("/api/english/history")
+  ).json();
+  expect(remaining.some(({ qid }) => qid.startsWith("1-"))).toBe(false);
+  expect(remaining.some(({ qid }) => qid.startsWith("17-"))).toBe(true);
+
+  const firstLesson = activity(1);
+  if (!firstLesson) throw new Error("Missing English lesson 1");
+  for (const { id } of firstLesson.questions.slice(1)) {
+    const question = questions.get(id);
+    if (!question) throw new Error(`Missing English question ${id}`);
+    const seeded = await page.request.post("/api/english/answer", {
+      data: { qid: id, answer: question.answer, nonce: randomUUID() },
+    });
+    expect(seeded.ok()).toBe(true);
+  }
+  await page.goto("/dashboard");
+  const map = page.getByRole("region", { name: "رحلة الإنجليزي" });
+  const stops = map.locator("a.english-journey-stop");
+  await expect(stops).toHaveCount(20);
+  const firstStop = stops.first();
+  await expect(firstStop).toHaveAttribute("aria-current", "step");
+  await expect(map.locator(".english-journey-mascot img")).toHaveAttribute("src", /louz/);
+  const [firstBox, secondBox] = await Promise.all([firstStop.boundingBox(), stops.nth(1).boundingBox()]);
+  expect(secondBox!.y - firstBox!.y).toBeGreaterThan(350);
+  await firstStop.click();
+  await expect(page).toHaveURL(/english\/1\?from=map$/);
+  await page.getByRole("radio", { name: "Get up", exact: true }).check();
+  await page.getByRole("button", { name: "إرسال الإجابة" }).click();
+  await expect(page.getByText("خلّصت الدرس! هترجع للخريطة بعد لحظات.")).toBeVisible();
+  await expect(page).toHaveURL(/dashboard\?fromLesson=1#english-map$/, { timeout: 15000 });
+  await expect(firstStop).toHaveAttribute("data-complete", "");
+  await expect(firstStop.locator(".english-journey-score")).toBeVisible();
+  await expect(stops.nth(1)).toHaveAttribute("aria-current", "step");
+  const mapMascot = map.locator(".english-journey-mascot");
+  await expect(mapMascot).toHaveAttribute("data-at-stage", "2");
+  await expect.poll(async () => {
+    const [actor, token] = await Promise.all([
+      mapMascot.boundingBox(),
+      stops.nth(1).locator(".english-journey-token").boundingBox(),
+    ]);
+    return actor && token ? Math.abs((actor.x + actor.width / 2) - (token.x + token.width / 2)) : Infinity;
+  }).toBeLessThan(2);
 });
 
 test("a visitor submits and sees each question graded before moving on", async ({
@@ -221,6 +319,12 @@ test("iPad practice shows counts, lets pupils drag and swap matches, and opens g
 
   await page.goto("/grade/2/english/4");
   const next = page.getByRole("button", { name: "السؤال التالي" });
+  await expect(page.locator("hyperframes-player")).toHaveAttribute(
+    "width",
+    "840",
+  );
+  const diagram = await page.locator(".school-diagram-frame").boundingBox();
+  expect(diagram?.height).toBeGreaterThan(250);
   await next.click();
   await next.click();
   const board = page.locator(".school-match-board");
@@ -248,6 +352,9 @@ test("iPad practice shows counts, lets pupils drag and swap matches, and opens g
   const submit = page.getByRole("button", { name: "إرسال الإجابة" });
   await submit.click();
   await expect(page.locator(".school-result")).toContainText("33٪");
+  const assistant = page.locator(".school-lesson .school-mascot");
+  await expect(assistant).toContainText("قربت! جرّب تاني.");
+  expect((await assistant.locator("img").boundingBox())?.width).toBeGreaterThan(145);
   await page.getByRole("button", { name: "تعديل الإجابة" }).click();
   await board.scrollIntoViewIfNeeded();
   await dragMatch("Library", "Read a book");

@@ -1,6 +1,8 @@
 "use client";
 import Link from "next/link";
 import Script from "next/script";
+import { useRouter } from "next/navigation";
+import { RotateCcw } from "lucide-react";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { MatchingBoard, type MatchOptions } from "./english-matching";
 import { EnglishMascot } from "./english-mascot";
@@ -13,9 +15,19 @@ import {
   EnglishAudioButton,
   EnglishAudioSpeed,
 } from "./english-audio";
-import { playApplause } from "./english-applause";
-import { sceneDocument } from "@/content/english-scene.mjs";
+import { playApplause, prepareApplauseFallback } from "./english-applause";
+import { diagramSizes, sceneDocument } from "@/content/english-scene.mjs";
 import { api, useSession } from "./providers";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
 type Question = {
   id: string;
   prompt: string;
@@ -138,44 +150,82 @@ export function Diagram({
 }: {
   q: Pick<Question, "scene"> & { id?: string };
 }) {
-  const host = useRef<HTMLDivElement>(null),
-    [ready, setReady] = useState(false);
+  const figure = useRef<HTMLElement>(null);
+  const host = useRef<HTMLDivElement>(null);
+  const playerRef = useRef<
+    | (HTMLElement & {
+        seek?: (time: number) => void;
+        play?: () => void;
+        pause?: () => void;
+      })
+    | null
+  >(null);
+  const [ready, setReady] = useState(false);
+  const [layout, setLayout] = useState<keyof typeof diagramSizes>("wide");
+  const size = diagramSizes[layout];
+
+  useEffect(() => {
+    if (!figure.current) return;
+    const observer = new ResizeObserver(([entry]) => {
+      setLayout(entry.contentRect.width < 540 ? "compact" : "wide");
+    });
+    observer.observe(figure.current);
+    return () => observer.disconnect();
+  }, []);
+
   useEffect(() => {
     if (!host.current || !ready) return;
-    const player = document.createElement("hyperframes-player");
-    player.setAttribute("width", "840");
-    player.setAttribute("height", "232");
-    player.setAttribute("srcdoc", sceneDocument(q.scene, q.id));
+    const player = document.createElement("hyperframes-player") as NonNullable<
+      typeof playerRef.current
+    >;
+    const motion = matchMedia("(prefers-reduced-motion: reduce)");
+    player.setAttribute("width", String(size.width));
+    player.setAttribute("height", String(size.height));
+    player.setAttribute("srcdoc", sceneDocument(q.scene, q.id, layout));
     player.setAttribute("aria-hidden", "true");
-    if (!matchMedia("(prefers-reduced-motion: reduce)").matches)
+    if (!motion.matches) {
       player.setAttribute("autoplay", "");
+      player.setAttribute("loop", "");
+    }
+    function updateMotion() {
+      player.toggleAttribute("loop", !motion.matches);
+      if (motion.matches) player.pause?.();
+      else player.play?.();
+    }
     host.current.replaceChildren(player);
-    return () => player.remove();
-  }, [q.scene, q.id, ready]);
+    playerRef.current = player;
+    motion.addEventListener("change", updateMotion);
+    return () => {
+      motion.removeEventListener("change", updateMotion);
+      playerRef.current = null;
+      player.remove();
+    };
+  }, [q.scene, q.id, ready, layout, size]);
+
   return (
     <>
       <Script src="/english/player.js" onReady={() => setReady(true)} />
-      <figure className="school-diagram" aria-label={q.scene}>
-        {ready ? (
-          <div key="player" ref={host} />
-        ) : (
-          <div key="fallback">
-            {q.scene.split("|").map((step) => (
-              <span key={step}>{step}</span>
-            ))}
-          </div>
-        )}
+      <figure ref={figure} className="school-diagram" aria-label={q.scene}>
+        <div
+          className="school-diagram-frame"
+          style={{ aspectRatio: `${size.width} / ${size.height}` }}
+        >
+          {ready ? (
+            <div className="school-diagram-player" ref={host} />
+          ) : (
+            <div className="school-diagram-preview" lang="en" dir="ltr">
+              {q.scene.split("|").map((step) => (
+                <span key={step}>{step}</span>
+              ))}
+            </div>
+          )}
+        </div>
         <button
           type="button"
+          disabled={!ready}
           onClick={() => {
-            const p = host.current?.firstElementChild as
-              | (HTMLElement & {
-                  seek?: (t: number) => void;
-                  play?: () => void;
-                })
-              | null;
-            p?.seek?.(0);
-            p?.play?.();
+            playerRef.current?.seek?.(0);
+            playerRef.current?.play?.();
           }}
         >
           إعادة الحركة
@@ -322,6 +372,9 @@ export function EnglishLesson({
   lesson: { title: string; ar: string; icon: string; questions: Question[] };
 }) {
   const { user, loading } = useSession();
+  const router = useRouter();
+  const [fromMap, setFromMap] = useState(false);
+  const [returnToMap, setReturnToMap] = useState(false);
   const [step, setStep] = useState(0);
   const q = lesson.questions[step];
   const clockHour =
@@ -330,6 +383,11 @@ export function EnglishLesson({
     [row, setRow] = useState<LessonResult | null>(null),
     [busy, setBusy] = useState(false),
     [error, setError] = useState("");
+  const [resetOpen, setResetOpen] = useState(false);
+  const [resetError, setResetError] = useState("");
+  const [resetDone, setResetDone] = useState(false);
+  const [practiceRun, setPracticeRun] = useState(0);
+  const questionKey = `${q.id}-${practiceRun}`;
   const readyToSubmit =
     Boolean(draft.trim()) && (!q.matches || !draft.split(",").includes("-1"));
   const [showReaction, setShowReaction] = useState(false);
@@ -344,6 +402,20 @@ export function EnglishLesson({
         : row?.score == null
           ? "pending"
           : "partial";
+
+  useEffect(() => {
+    setFromMap(
+      new URLSearchParams(window.location.search).get("from") === "map",
+    );
+  }, []);
+
+  useEffect(() => {
+    if (!returnToMap) return;
+    const timer = window.setTimeout(() => {
+      router.replace(`/dashboard?fromLesson=${page}#english-map`);
+    }, 6500);
+    return () => window.clearTimeout(timer);
+  }, [page, returnToMap, router]);
 
   useEffect(
     () => () => {
@@ -363,39 +435,91 @@ export function EnglishLesson({
 
   function prepareAudio() {
     try {
-      audio.current ??= new AudioContext();
+      const AudioContextType =
+        window.AudioContext ??
+        (
+          window as Window & {
+            webkitAudioContext?: typeof AudioContext;
+          }
+        ).webkitAudioContext;
+      if (!AudioContextType) return prepareApplauseFallback();
+      const context = (audio.current ??= new AudioContextType());
       // Unlock audio in the click handler before waiting for the grading response.
-      void audio.current.resume().catch(() => {});
+      return context.resume().then(
+        () => () => {
+          if (context.state === "running") playApplause(context);
+        },
+        () => null,
+      );
     } catch {
       // Visual feedback stays available in browsers without Web Audio.
+      return Promise.resolve(null);
     }
   }
 
-  function showResult(attempt: LessonResult) {
+  function showResult(
+    attempt: LessonResult,
+    audioReady?: ReturnType<typeof prepareAudio>,
+  ) {
     setRow(attempt);
     setShowReaction(true);
-    if (attempt.score === 100 && audio.current?.state === "running") {
-      playApplause(audio.current);
+    if (attempt.score === 100) void audioReady?.then((play) => play?.());
+  }
+  async function checkMapCompletion(attempt: LessonResult) {
+    if (!fromMap || attempt.preview || user?.role !== "student") return;
+    try {
+      const history: EnglishAttempt[] = await api("english/history");
+      const attempted = new Set(history.map(({ qid }) => qid));
+      if (
+        lesson.questions.every(({ id }) => attempted.has(id)) &&
+        !history.some(({ id, qid }) => qid === q.id && id !== attempt.id)
+      ) {
+        setReturnToMap(true);
+      }
+    } catch {
+      // The student can return using the map link if the progress check fails.
     }
   }
   const nonce = useRef("");
   const edited = useRef(false);
   function change(index: number) {
+    setReturnToMap(false);
     edited.current = false;
     setStep(index);
     setDraft("");
     setShowReaction(false);
     setRow(null);
     setError("");
+    setResetDone(false);
     nonce.current = "";
   }
   function update(value: string) {
+    setReturnToMap(false);
     edited.current = true;
     setDraft(value);
     nonce.current = "";
     setShowReaction(false);
     setRow(null);
     setError("");
+    setResetDone(false);
+  }
+  async function resetLesson() {
+    if (loading || busy) return;
+    setBusy(true);
+    setResetError("");
+    try {
+      if (user?.role === "student") await api("english/reset", { page });
+      change(0);
+      // A history request that began before the reset may still return old attempts.
+      edited.current = true;
+      setPracticeRun((run) => run + 1);
+      setResetDone(true);
+      setResetOpen(false);
+    } catch (error) {
+      setResetError((error as Error).message);
+    } finally {
+      setBusy(false);
+    }
   }
   useEffect(() => {
     if (!user || user.role !== "student") return;
@@ -417,12 +541,16 @@ export function EnglishLesson({
   }, [q.id, user]);
   async function refreshGrade() {
     if (!row || row.preview) return;
-    prepareAudio();
+    const audioReady = showReaction ? prepareAudio() : undefined;
     setBusy(true);
     try {
       const rows: EnglishAttempt[] = await api("english/history");
       const refreshed = rows.find((attempt) => attempt.id === row.id);
-      if (refreshed) showResult(refreshed);
+      if (refreshed) {
+        if (showReaction && refreshed.score !== row.score)
+          showResult(refreshed, audioReady);
+        else setRow(refreshed);
+      }
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -436,7 +564,7 @@ export function EnglishLesson({
   ): Promise<SpellingReview | undefined> {
     if (busy || row) return;
     edited.current = true;
-    prepareAudio();
+    const audioReady = receipt ? prepareAudio() : undefined;
     setBusy(true);
     setError("");
     try {
@@ -454,7 +582,8 @@ export function EnglishLesson({
       if (!response.ok) throw new Error(result.error || "تعذّر تقييم التسجيل.");
       if (!receipt) return result as SpellingReview;
       setDraft(result.answer);
-      showResult(result);
+      showResult(result, audioReady);
+      await checkMapCompletion(result);
     } catch (error) {
       setError((error as Error).message);
       throw error;
@@ -465,7 +594,7 @@ export function EnglishLesson({
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (loading || busy || row || !readyToSubmit) return;
-    prepareAudio();
+    const audioReady = prepareAudio();
     nonce.current ||= Array.from(
       crypto.getRandomValues(new Uint8Array(16)),
       (b) => b.toString(16).padStart(2, "0"),
@@ -473,13 +602,13 @@ export function EnglishLesson({
     setBusy(true);
     setError("");
     try {
-      showResult(
-        await api("english/answer", {
-          qid: q.id,
-          answer: draft,
-          nonce: nonce.current,
-        }),
-      );
+      const result = await api("english/answer", {
+        qid: q.id,
+        answer: draft,
+        nonce: nonce.current,
+      });
+      showResult(result, audioReady);
+      await checkMapCompletion(result);
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -490,7 +619,11 @@ export function EnglishLesson({
     <section id="practice" className="container section school school-lesson">
       <div className="school-audio-toolbar">
         <div className="breadcrumbs">
-          {grammar ? (
+          {fromMap ? (
+            <Link href="/dashboard#english-map" prefetch={false}>
+              خريطة الدروس
+            </Link>
+          ) : grammar ? (
             <Link href="/grade/2/english/grammar">شرح القواعد</Link>
           ) : (
             <>
@@ -499,8 +632,69 @@ export function EnglishLesson({
             </>
           )}
         </div>
-        <EnglishAudioSpeed />
+        <div className="school-lesson-settings">
+          <EnglishAudioSpeed />
+          <Dialog
+            open={resetOpen}
+            onOpenChange={(open) => {
+              if (busy) return;
+              setResetError("");
+              setResetOpen(open);
+            }}
+          >
+            <DialogTrigger asChild>
+              <button
+                type="button"
+                className="button outline small"
+                disabled={loading || busy}
+              >
+                <RotateCcw size={17} aria-hidden /> ابدأ من الأول
+              </button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle className="text-xl font-bold">
+                  ابدأ الدرس من الأول؟
+                </DialogTitle>
+                <DialogDescription>
+                  {user?.role === "student"
+                    ? "هتتمسح كل إجاباتك ودرجاتك وتسجيلاتك في الدرس ده، وهترجع لأول سؤال."
+                    : "هترجع لأول سؤال وتبدأ الدرس من جديد."}
+                </DialogDescription>
+              </DialogHeader>
+              {resetError && <p role="alert">{resetError}</p>}
+              <DialogFooter>
+                <DialogClose asChild>
+                  <button
+                    type="button"
+                    className="button outline"
+                    disabled={busy}
+                  >
+                    إلغاء
+                  </button>
+                </DialogClose>
+                <button
+                  type="button"
+                  className="button primary"
+                  disabled={busy}
+                  onClick={resetLesson}
+                >
+                  {busy
+                    ? "بنبدأ من الأول…"
+                    : user?.role === "student"
+                      ? "امسح وابدأ من الأول"
+                      : "ابدأ من الأول"}
+                </button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
+      {resetDone && (
+        <p className="school-reset-message" role="status">
+          الدرس بدأ من الأول.
+        </p>
+      )}
       <header className="school-heading">
         <div>
           <p>{lesson.ar}</p>
@@ -528,16 +722,6 @@ export function EnglishLesson({
         }
       >
         <div className="school-steps">
-          <EnglishMascot
-            selected={user?.englishMascot}
-            outcome={
-              outcome === "pending"
-                ? "idle"
-                : outcome === "correct"
-                  ? "correct"
-                  : "retry"
-            }
-          />
           <b>
             سؤال {(step + 1).toLocaleString("ar-u-nu-arab")} من{" "}
             {lesson.questions.length.toLocaleString("ar-u-nu-arab")}
@@ -568,14 +752,14 @@ export function EnglishLesson({
           <blockquote dir="ltr" lang="en">
             {q.passage}
             <EnglishAudioButton
-              key={q.id}
+              key={questionKey}
               clip={`${q.id}-passage`}
               label="اسمع القطعة"
               text={q.passage}
             />
           </blockquote>
         )}
-        <Diagram q={q} />
+        <Diagram key={practiceRun} q={q} />
         {clockHour >= 0 && (
           <ClockModel key={`clock-${q.id}`} hour={clockHour} />
         )}
@@ -585,7 +769,7 @@ export function EnglishLesson({
         <h2 dir="ltr" lang="en">
           {q.prompt}
         </h2>
-        <div className="school-question-audio" key={`audio-${q.id}`}>
+        <div className="school-question-audio" key={`audio-${questionKey}`}>
           <EnglishAudioButton
             clip={`${q.id}-prompt`}
             label="اسمع السؤال"
@@ -617,7 +801,7 @@ export function EnglishLesson({
             <legend className="sr-only">إجابتك</legend>
             {q.matches ? (
               <MatchingBoard
-                key={q.id}
+                key={questionKey}
                 options={q.matches}
                 value={draft}
                 onChange={update}
@@ -663,7 +847,7 @@ export function EnglishLesson({
             user?.role === "student" &&
             !row && (
               <EnglishSpellingRecorder
-                key={q.id}
+                key={questionKey}
                 onEvaluate={evaluateRecording}
                 busy={busy}
               />
@@ -684,6 +868,12 @@ export function EnglishLesson({
             ref={resultPanel}
             role="status"
           >
+            {showReaction && (
+              <EnglishMascot
+                selected={user?.englishMascot}
+                outcome={outcome === "incorrect" ? "retry" : outcome}
+              />
+            )}
             <div className="school-result-heading">
               {outcome !== "pending" && (
                 <span aria-hidden="true" className="school-result-mark">
@@ -696,7 +886,7 @@ export function EnglishLesson({
               )}
               <strong>
                 {outcome === "correct"
-                  ? "أحسنت! إجابتك صحيحة · 100٪"
+                  ? "إجابتك صحيحة · 100٪"
                   : outcome === "incorrect"
                     ? "إجابة خاطئة · 0٪"
                     : row.preview && row.score === null
@@ -720,6 +910,25 @@ export function EnglishLesson({
               </button>
             )}
             <p>{row.feedback}</p>
+            {returnToMap && (
+              <div className="school-journey-completion">
+                <p>خلّصت الدرس! هترجع للخريطة بعد لحظات.</p>
+                <Link
+                  className="button primary small"
+                  href={`/dashboard?fromLesson=${page}#english-map`}
+                  prefetch={false}
+                >
+                  ارجع للخريطة
+                </Link>
+                <button
+                  type="button"
+                  className="button outline small"
+                  onClick={() => setReturnToMap(false)}
+                >
+                  خليك للمراجعة
+                </button>
+              </div>
+            )}
             {!row.preview && <small>{markSource(row.source)}</small>}
             <button
               type="button"
@@ -774,18 +983,22 @@ export function EnglishLesson({
             <Link
               className="button primary"
               href={
-                grammar
-                  ? "/grade/2/english/grammar"
-                  : page < 20
-                    ? "/grade/2/english/" + (page + 1)
-                    : "/dashboard"
+                fromMap
+                  ? "/dashboard#english-map"
+                  : grammar
+                    ? "/grade/2/english/grammar"
+                    : page < 20
+                      ? "/grade/2/english/" + (page + 1)
+                      : "/dashboard"
               }
             >
-              {grammar
-                ? "العودة للقواعد"
-                : page < 20
-                  ? "الدرس التالي"
-                  : "شوف تقدّمك"}
+              {fromMap
+                ? "العودة للخريطة"
+                : grammar
+                  ? "العودة للقواعد"
+                  : page < 20
+                    ? "الدرس التالي"
+                    : "شوف تقدّمك"}
             </Link>
           )}
         </footer>

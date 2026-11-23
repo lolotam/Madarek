@@ -112,18 +112,30 @@
 .school-diagram {
   margin: 1rem 0;
   position: relative;
+  min-width: 0;
   border-radius: 1rem;
   overflow: hidden;
   background: #e4f1ed;
 }
-.school-diagram > div {
-  aspect-ratio: 840/232;
+.school-diagram-frame {
+  position: relative;
+  direction: ltr;
+}
+.school-diagram-player,
+.school-diagram-preview {
+  position: absolute;
+  inset: 0;
+}
+.school-diagram-preview {
   display: flex;
   align-items: center;
   justify-content: space-evenly;
-  direction: ltr;
+  padding: 0.5rem;
+  gap: 0.5rem;
+  text-align: center;
 }
 .school-diagram hyperframes-player {
+  display: block;
   width: 100%;
   height: 100%;
 }
@@ -236,6 +248,17 @@
   margin-inline-start: 0.7rem;
   margin-block-start: 0.35rem;
 }
+.school-journey-completion {
+  margin-block: 0.8rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 0.75rem;
+  color: #245044;
+  background: #fff9e9;
+}
+.school-journey-completion p {
+  margin: 0.15rem 0 0.3rem;
+  font-weight: 750;
+}
 .school-work[data-answer-shake] {
   animation: school-answer-shake 340ms ease-out;
 }
@@ -342,7 +365,7 @@
   margin-top: 1.2rem;
 }
 .school-pencils > div {
-  height: 125px;
+  height: clamp(10rem, 29vw, 17rem);
   background: #f6f2e8;
   border-radius: 1rem;
 }
@@ -582,7 +605,7 @@
   font-size: clamp(1.1rem, 2.3vw, 1.35rem);
 }
 .school-lesson .school-diagram {
-  width: min(100%, 920px);
+  width: 100%;
   align-self: center;
 }
 .school-question-jump {
@@ -703,7 +726,7 @@
   min-height: 2.35rem;
 }
 .school-clock-screen {
-  height: 12rem;
+  height: clamp(12rem, 30vw, 18rem);
   display: grid;
   place-items: center;
   font-size: 5rem;
@@ -750,6 +773,20 @@
 }
 .school-audio-toolbar .breadcrumbs {
   margin: 0;
+}
+.school-lesson-settings {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+}
+.school-lesson-settings .button {
+  min-height: 2.75rem;
+}
+.school-reset-message {
+  margin-block: 0 1rem;
+  color: #245044;
+  font-weight: 750;
 }
 .school-audio-speed {
   display: inline-flex;

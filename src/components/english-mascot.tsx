@@ -7,6 +7,13 @@ import {
 } from "@/content/english-mascots.mjs";
 
 const imagePath = (name: string) => `/english/mascots/${name}`;
+const reactions = {
+  idle: { animation: "idle", message: "أنا معاك." },
+  correct: { animation: "correct", message: "أحسنت!" },
+  retry: { animation: "retry", message: "حاول مرة تانية!" },
+  partial: { animation: "retry", message: "قربت! جرّب تاني." },
+  pending: { animation: "idle", message: "إجابتك قيد المراجعة." },
+};
 
 export function EnglishMascotChoice({
   name = "englishMascot",
@@ -59,20 +66,17 @@ export function EnglishMascot({
   outcome,
 }: {
   selected?: string | null;
-  outcome: "idle" | "correct" | "retry";
+  outcome: keyof typeof reactions;
 }) {
   const mascot =
     englishMascots.find((item) => item.id === selected) ?? englishMascots[0];
-  const message =
-    outcome === "correct"
-      ? "أحسنت!"
-      : outcome === "retry"
-        ? "حاول مرة تانية!"
-        : "أنا معاك.";
+  const { animation, message } = reactions[outcome];
+  const reacting = outcome !== "idle";
   return (
     <aside
       key={mascot.id + outcome}
       className="school-mascot"
+      data-reaction={reacting ? outcome : undefined}
       aria-label={`${mascot.name}، مساعدك في الإنجليزي`}
     >
       <picture>
@@ -82,15 +86,15 @@ export function EnglishMascot({
         />
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={`${imagePath(mascot.id)}/${outcome}.gif`}
+          src={`${imagePath(mascot.id)}/${animation}.gif`}
           width="108"
           height="108"
           alt=""
         />
       </picture>
       <div>
-        <strong>{mascot.name}</strong>
-        <span>{message}</span>
+        <strong>{reacting ? message : mascot.name}</strong>
+        <span>{reacting ? mascot.name : message}</span>
       </div>
     </aside>
   );

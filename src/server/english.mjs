@@ -1,4 +1,5 @@
 import { assess, punctuationMark, rubricFor } from "./english-rubrics.mjs";
+import { englishIndex } from "../content/english-index.mjs";
 import lessons from "./english-lessons.json" with { type: "json" };
 export const questions = new Map(
   lessons.flatMap((l) => l.questions.map((q) => [q.id, q])),
@@ -12,6 +13,34 @@ export function isSpellingRecordingQuestion(id) {
 }
 export function questionCount(page) {
   return lessons[page - 1]?.questions.length ?? 0;
+}
+export function englishJourney(attempts) {
+  const bestScores = new Map();
+  for (const { qid, score } of attempts) {
+    if (!bestScores.has(qid) || (score ?? -1) > (bestScores.get(qid) ?? -1))
+      bestScores.set(qid, score);
+  }
+  return lessons.slice(0, englishIndex.length).map(({ questions }, index) => {
+    let answered = 0,
+      scored = 0,
+      score = 0;
+    for (const { id } of questions) {
+      if (!bestScores.has(id)) continue;
+      answered++;
+      const best = bestScores.get(id);
+      if (best == null) continue;
+      scored++;
+      score += best;
+    }
+    return {
+      page: index + 1,
+      possible: questions.length,
+      answered,
+      scored,
+      points: score / 100,
+      complete: answered === questions.length,
+    };
+  });
 }
 export function activity(page) {
   const lesson = lessons[page - 1];
@@ -95,7 +124,15 @@ export function englishStore(db, { requireRole, fail }) {
     CREATE INDEX IF NOT EXISTS english_history ON english_attempts(user_id,id);
     CREATE TABLE IF NOT EXISTS english_recordings (
       attempt_id INTEGER PRIMARY KEY REFERENCES english_attempts(id) ON DELETE CASCADE,
-      transcript TEXT NOT NULL, wav BLOB NOT NULL);`);
+      transcript TEXT NOT NULL, wav BLOB NOT NULL);
+    CREATE TABLE IF NOT EXISTS english_attempt_sequence (
+      slot INTEGER PRIMARY KEY CHECK(slot=1), last_id INTEGER NOT NULL);
+    INSERT OR IGNORE INTO english_attempt_sequence(slot,last_id)
+      SELECT 1, COALESCE(MAX(id),0) FROM english_attempts;
+    CREATE TRIGGER IF NOT EXISTS english_attempt_sequence_insert AFTER INSERT ON english_attempts
+      BEGIN
+        UPDATE english_attempt_sequence SET last_id=MAX(last_id,NEW.id) WHERE slot=1;
+      END;`);
   const columns = db
     .prepare("PRAGMA table_info(english_attempts)")
     .all()
@@ -183,8 +220,9 @@ export function englishStore(db, { requireRole, fail }) {
     const send = !source && model && q.kind === "write";
     const created = db
       .prepare(
-        `INSERT INTO english_attempts(user_id,nonce,qid,answer,score,source,feedback,model,created_at,detail)
-        VALUES(?,?,?,?,?,?,?,?,?,?) ON CONFLICT(user_id,nonce) DO NOTHING`,
+        `INSERT INTO english_attempts(id,user_id,nonce,qid,answer,score,source,feedback,model,created_at,detail)
+        VALUES((SELECT last_id+1 FROM english_attempt_sequence WHERE slot=1),?,?,?,?,?,?,?,?,?,?)
+        ON CONFLICT(user_id,nonce) DO NOTHING`,
       )
       .run(
         uid,
@@ -210,6 +248,16 @@ export function englishStore(db, { requireRole, fail }) {
   return {
     history,
     selected,
+    resetLesson(uid, page) {
+      requireRole(uid, ["student"]);
+      const lesson = Number.isSafeInteger(page) ? lessons[page - 1] : undefined;
+      if (!lesson?.questions.length) fail("الدرس غير متاح.", 404);
+      const ids = lesson.questions.map(({ id }) => id);
+      db.prepare(
+        `DELETE FROM english_attempts WHERE user_id=? AND qid IN (${ids.map(() => "?").join(",")})`,
+      ).run(uid, ...ids);
+      return { ok: true };
+    },
     preview({ qid, answer }) {
       const grade = mark(questionForAnswer(qid, answer), answer);
       return {
@@ -273,7 +321,9 @@ export function englishStore(db, { requireRole, fail }) {
         attempt.id,
         attempt.generation,
       );
-      return row(attempt.id);
+      const current = row(attempt.id);
+      if (!current) fail("المحاولة اتمسحت. ابعت الإجابة من جديد.", 409);
+      return current;
     },
     review(admin, id, score) {
       requireRole(admin, ["admin"]);

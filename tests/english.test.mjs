@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { createStore } from "../src/server/store.mjs";
 import { sceneDocument } from "../src/content/english-scene.mjs";
-import { activity, questions } from "../src/server/english.mjs";
+import { activity, englishJourney, questions } from "../src/server/english.mjs";
 
 test("all 20 English lessons have diagrams and keep the key on the server", () => {
   for (let page = 1; page <= 20; page++) {
@@ -17,6 +17,37 @@ test("all 20 English lessons have diagrams and keep the key on the server", () =
       assert.ok(questions.has(q.id));
     }
   }
+});
+
+test("the English journey awards the best score once per saved question", () => {
+  const answers = activity(1).questions.map(({ id }, index) => ({
+    qid: id,
+    score: index ? 100 : null,
+  }));
+  const [first, second, ...later] = englishJourney(
+    answers.concat(
+      { qid: "1-1", score: 80 },
+      { qid: "1-1", score: 60 },
+      { qid: "2-1", score: null },
+    ),
+  );
+  assert.deepEqual(first, {
+    page: 1,
+    possible: 10,
+    answered: 10,
+    scored: 10,
+    points: 9.8,
+    complete: true,
+  });
+  assert.deepEqual(second, {
+    page: 2,
+    possible: 10,
+    answered: 1,
+    scored: 0,
+    points: 0,
+    complete: false,
+  });
+  assert.equal(later.length, 18);
 });
 test("username login, English attempts, partial credit, retries and family isolation", () => {
   const db = createStore(":memory:");
@@ -136,6 +167,12 @@ test("spelling records a Whisper transcript and protects playback", async () => 
     const wav = Buffer.from("recorded sound");
     const request = { qid: "9-1", answer: "shoes", nonce: "spelling-audio-01" };
     const voice = { transcript: "S-H-O-E-S.", wav };
+    const otherLesson = db.english.submit(child.id, {
+      qid: "4-1",
+      answer: "In the lab",
+      nonce: "english-other-lesson",
+    }).attempt;
+    const otherPupil = db.english.submit(other.id, request).attempt;
     const recorded = db.english.submitRecording(child.id, request, voice);
     assert.equal(recorded.score, 100);
     assert.equal(recorded.source, "whisper");
@@ -155,6 +192,23 @@ test("spelling records a Whisper transcript and protects playback", async () => 
     assert.throws(() =>
       db.english.submitRecording(child.id, { ...request, qid: "4-1" }, voice),
     );
+    assert.throws(() => db.english.resetLesson(parent.id, 9));
+    assert.throws(() => db.english.resetLesson(child.id, 100));
+    assert.deepEqual(db.english.resetLesson(child.id, 9), { ok: true });
+    assert.equal(db.english.recording(parent.id, recorded.id), undefined);
+    assert.deepEqual(
+      db.english.history(child.id).map(({ id }) => id),
+      [otherLesson.id],
+    );
+    assert.deepEqual(
+      db.english.history(other.id).map(({ id }) => id),
+      [otherPupil.id],
+    );
+    assert.throws(() => db.english.finish(recorded, 100, "ai", ""), {
+      status: 409,
+    });
+    const replacement = db.english.submitRecording(child.id, request, voice);
+    assert.ok(replacement.id > recorded.id);
   } finally {
     db.close();
   }

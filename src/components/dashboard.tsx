@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { api, useSession, User } from "./providers";
 import { EnglishMascot, EnglishMascotChoice } from "./english-mascot";
+import { EnglishJourney, type EnglishJourneyStage } from "./english-journey";
 import { VideoCarousel } from "./video-carousel";
 import { GradeDetails, markText, markSource, type EnglishAttempt } from "./english-lesson";
 import { Result, ResultDetails } from "./quiz";
@@ -43,6 +44,7 @@ type ChildData = {
 };
 type Snapshot = {
   user: User;
+  englishAttempts?: EnglishAttempt[];
   children?: ChildData[];
   progress?: { sections: string[] };
   attempts?: Result[];
@@ -50,7 +52,11 @@ type Snapshot = {
   stats?: { parents: number; students: number; attempts: number };
   published?: boolean;
 };
-export function Dashboard({ initial }: { initial: Snapshot }) {
+export function Dashboard({ initial, englishStages, fromEnglishLesson }: {
+  initial: Snapshot;
+  englishStages?: EnglishJourneyStage[];
+  fromEnglishLesson?: number;
+}) {
   const [data, setData] = useState(initial),
     [adding, setAdding] = useState(false),
     [error, setError] = useState(""),
@@ -95,28 +101,55 @@ export function Dashboard({ initial }: { initial: Snapshot }) {
     ["map", "explore", "practice", "quiz"].find(
       (s) => !student.progress?.sections.includes(s),
     ) || "quiz";
+  const mascotSettings = user.role === "student" && (
+    <details className="school-mascot-settings panel">
+      <summary>غيّر شخصيتك</summary>
+      <EnglishMascot selected={user.englishMascot} outcome="idle" />
+      <form onSubmit={async event => {
+        event.preventDefault();
+        const mascot = new FormData(event.currentTarget).get("englishMascot");
+        setBusy(true);
+        setError("");
+        try {
+          await api("english/mascot", {mascot});
+          await reload();
+          await refresh();
+          setNotice("تم حفظ شخصيتك.");
+        } catch (cause) {
+          setError((cause as Error).message);
+        } finally { setBusy(false); }
+      }}>
+        <EnglishMascotChoice key={user.englishMascot} initial={user.englishMascot} />
+        <button type="submit" className="button primary small" disabled={busy}>حفظ الشخصية</button>
+      </form>
+    </details>
+  );
   return (
     <section className="container dashboard section">
-      <div className="dashboard-heading">
+      <div className={englishStages ? "dashboard-heading dashboard-heading-map" : "dashboard-heading"}>
         <div>
-          <span className="eyebrow">
-            {user.role === "admin"
-              ? "لوحة الإدارة"
-              : user.role === "parent"
-                ? "مساحة الأسرة"
-                : "مساحتي التعليمية"}
-          </span>
+          {!englishStages && (
+            <span className="eyebrow">
+              {user.role === "admin"
+                ? "لوحة الإدارة"
+                : user.role === "parent"
+                  ? "مساحة الأسرة"
+                  : "مساحتي التعليمية"}
+            </span>
+          )}
           <h1>
             أهلًا، {user.name}
             <span className="title-dot">.</span>
           </h1>
-          <p>
-            {user.role === "parent"
-              ? "صورة أوضح لكل خطوة يخطوها أبناؤك."
-              : user.role === "admin"
-                ? "المحتوى والطلاب، في مكان واحد."
-                : "اكتشاف جديد ينتظرك اليوم."}
-          </p>
+          {!englishStages && (
+            <p>
+              {user.role === "parent"
+                ? "صورة أوضح لكل خطوة يخطوها أبناؤك."
+                : user.role === "admin"
+                  ? "المحتوى والطلاب، في مكان واحد."
+                  : "اكتشاف جديد ينتظرك اليوم."}
+            </p>
+          )}
         </div>
         <button
           onClick={logout}
@@ -126,29 +159,6 @@ export function Dashboard({ initial }: { initial: Snapshot }) {
           <LogOut size={17} /> خروج
         </button>
       </div>
-      {user.role === "student" && (
-        <details className="school-mascot-settings panel">
-          <summary>غيّر شخصيتك</summary>
-          <EnglishMascot selected={user.englishMascot} outcome="idle" />
-          <form onSubmit={async event => {
-            event.preventDefault();
-            const mascot = new FormData(event.currentTarget).get("englishMascot");
-            setBusy(true);
-            setError("");
-            try {
-              await api("english/mascot", {mascot});
-              await reload();
-              await refresh();
-              setNotice("تم حفظ شخصيتك.");
-            } catch (cause) {
-              setError((cause as Error).message);
-            } finally { setBusy(false); }
-          }}>
-            <EnglishMascotChoice key={user.englishMascot} initial={user.englishMascot} />
-            <button type="submit" className="button primary small" disabled={busy}>حفظ الشخصية</button>
-          </form>
-        </details>
-      )}
       {notice && (
         <p className="feedback success" role="status">
           <CheckCircle2 size={18} />
@@ -160,6 +170,14 @@ export function Dashboard({ initial }: { initial: Snapshot }) {
           {error}
         </p>
       )}
+      {englishStages ? (
+        <EnglishJourney
+          stages={englishStages}
+          mascotId={user.englishMascot}
+          fromLesson={fromEnglishLesson}
+          settings={mascotSettings}
+        />
+      ) : mascotSettings}
       {user.role === "parent" && (
         <>
           <div className="dashboard-stats">
