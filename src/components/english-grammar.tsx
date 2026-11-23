@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { grammarPath, grammarRules } from "@/content/english-grammar";
 import { questionCount } from "@/server/english.mjs";
+import { EnglishAudioButton } from "./english-audio";
 import { Diagram } from "./english-lesson";
 
 export function QuestionBadge({ count }: { count: number }) {
@@ -50,9 +51,15 @@ export function GrammarGuide({
       </div>
       <header className="school-guide-hero" data-rule={rule.id}>
         <div>
-          <p lang="en" dir="ltr">
-            {rule.english}
-          </p>
+          <div className="school-rule-audio-title" lang="en" dir="ltr">
+            <p>{rule.english}</p>
+            <EnglishAudioButton
+              clip={`grammar-${rule.id}-title`}
+              label="اسمع اسم القاعدة"
+              text={rule.english}
+              compact
+            />
+          </div>
           <h1>{rule.title}</h1>
           <p>{rule.description}</p>
           <a className="button primary" href="#practice">
@@ -63,17 +70,25 @@ export function GrammarGuide({
         <Diagram q={{ id: rule.id, scene: rule.scene }} />
       </header>
       <div className="school-guide-steps">
-        {rule.steps.map((step) => (
+        {rule.steps.map((step, stepIndex) => (
           <article className="school-rule-step" key={step.title}>
             <h2>
               <span aria-hidden="true">{step.icon}</span> {step.title}
             </h2>
             <p>{step.note}</p>
             <ul dir="ltr" lang="en">
-              {step.samples.map(([pattern, example]) => (
+              {step.samples.map(([pattern, example], exampleIndex) => (
                 <li key={pattern}>
-                  <strong>{pattern}</strong>
-                  <span>{example}</span>
+                  <div>
+                    <strong>{pattern}</strong>
+                    <span>{example}</span>
+                  </div>
+                  <EnglishAudioButton
+                    clip={`grammar-${rule.id}-${stepIndex + 1}-${exampleIndex + 1}`}
+                    label="اسمع المثال"
+                    text={`${pattern}. ${example}`}
+                    compact
+                  />
                 </li>
               ))}
             </ul>

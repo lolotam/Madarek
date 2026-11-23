@@ -122,6 +122,7 @@ test("a mobile pupil opens a school-day lesson, submits and reloads a saved answ
     ),
   ).toBe(true);
   await page.goto("/grade/2/english/6");
+  await expect(page.locator(".school-pencils canvas")).toHaveCount(1);
   await expect(page.locator(".school-pencils canvas")).toBeVisible();
   await page.goto("/grade/2/english/17");
   await page.getByRole("textbox").fill("I like english.");
@@ -250,6 +251,64 @@ test("iPad practice shows counts, lets pupils drag and swap matches, and opens g
   await page.goto("/grade/2/english/3");
   await page.locator(".school-clock summary").click();
   await expect(page.locator(".school-clock canvas")).toBeVisible();
+});
+
+test("English prompts, listening recordings, passages and grammar examples play recorded audio", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    const NativeAudio = window.Audio;
+    const clips: HTMLAudioElement[] = [];
+    Object.assign(window, {
+      Audio: function (source: string) {
+        const audio = new NativeAudio(source);
+        clips.push(audio);
+        return audio;
+      },
+      englishTestClips: clips,
+    });
+  });
+  async function play(label: string, filename: string) {
+    const downloaded = page.waitForResponse((response) =>
+      response.url().endsWith(filename),
+    );
+    await page
+      .getByRole("button", { name: label, exact: true })
+      .first()
+      .click();
+    expect((await downloaded).ok()).toBe(true);
+    await expect
+      .poll(() =>
+        page.evaluate((name) => {
+          const { englishTestClips } = window as unknown as {
+            englishTestClips: HTMLAudioElement[];
+          };
+          const clip = englishTestClips.find((a) => a.src.endsWith(name));
+          return !!clip && clip.readyState >= 2 && !clip.paused;
+        }, filename),
+      )
+      .toBe(true);
+  }
+  await page.goto("/grade/2/english/4");
+  await play("اسمع السؤال", "/4-1-prompt.mp3");
+  await play("اسمع الاختيارات", "/4-1-options.mp3");
+  await page.getByRole("button", { name: "السؤال التالي" }).click();
+  await expect
+    .poll(() =>
+      page.evaluate(() => {
+        const { englishTestClips } = window as unknown as {
+          englishTestClips: HTMLAudioElement[];
+        };
+        return englishTestClips.every((clip) => clip.paused);
+      }),
+    )
+    .toBe(true);
+  await page.goto("/grade/2/english/7");
+  await play("اسمع التسجيل", "/7-1-listening.mp3");
+  await page.goto("/grade/2/english/11");
+  await play("اسمع القطعة", "/11-1-passage.mp3");
+  await page.goto("/grade/2/english/grammar/pronouns");
+  await play("اسمع المثال", "/grammar-pronouns-1-1.mp3");
 });
 
 test("AI Settings opens the device flow and fills the model selector after authentication", async ({

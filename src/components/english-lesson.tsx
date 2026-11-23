@@ -3,6 +3,7 @@ import Link from "next/link";
 import Script from "next/script";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { MatchingBoard, type MatchOptions } from "./english-matching";
+import { EnglishAudioButton } from "./english-audio";
 import { playApplause } from "./english-applause";
 import { sceneDocument } from "@/content/english-scene.mjs";
 import { api, useSession } from "./providers";
@@ -163,9 +164,13 @@ export function Diagram({
 const clockFaces = Array.from("🕛🕐🕑🕒🕓🕔🕕🕖🕗🕘🕙🕚");
 
 function ClockModel({ hour }: { hour: number }) {
+  const details = useRef<HTMLDetailsElement>(null);
   const host = useRef<HTMLDivElement>(null);
   const slider = useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
+  useEffect(() => {
+    if (details.current?.open) setOpen(true);
+  }, []);
   useEffect(() => {
     if (!open) return;
     let cancelled = false;
@@ -183,6 +188,7 @@ function ClockModel({ hour }: { hour: number }) {
   }, [hour, open]);
   return (
     <details
+      ref={details}
       className="school-clock"
       onToggle={(event) => setOpen(event.currentTarget.open)}
     >
@@ -303,7 +309,6 @@ export function EnglishLesson({
     [error, setError] = useState("");
   const readyToSubmit =
     Boolean(draft.trim()) && (!q.matches || !draft.split(",").includes("-1"));
-  const [transcript, setTranscript] = useState(false);
   const [showReaction, setShowReaction] = useState(false);
   const answerForm = useRef<HTMLFormElement>(null);
   const resultPanel = useRef<HTMLDivElement>(null);
@@ -358,7 +363,6 @@ export function EnglishLesson({
     setDraft("");
     setShowReaction(false);
     setRow(null);
-    setTranscript(false);
     setError("");
     nonce.current = "";
   }
@@ -386,24 +390,8 @@ export function EnglishLesson({
       .catch(() => {});
     return () => {
       active = false;
-      window.speechSynthesis?.cancel();
     };
   }, [q.id, user]);
-  function listen() {
-    if (!window.speechSynthesis) {
-      setTranscript(true);
-      return;
-    }
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(q.audio ?? q.prompt);
-    utterance.lang = "en-GB";
-    utterance.rate = 0.82;
-    utterance.onerror = (e) => {
-      if (e.error !== "canceled" && e.error !== "interrupted")
-        setTranscript(true);
-    };
-    window.speechSynthesis.speak(utterance);
-  }
   async function refreshGrade() {
     if (!row || row.preview) return;
     prepareAudio();
@@ -510,6 +498,12 @@ export function EnglishLesson({
         {q.passage && (
           <blockquote dir="ltr" lang="en">
             {q.passage}
+            <EnglishAudioButton
+              key={q.id}
+              clip={`${q.id}-passage`}
+              label="اسمع القطعة"
+              text={q.passage}
+            />
           </blockquote>
         )}
         <Diagram q={q} />
@@ -518,14 +512,33 @@ export function EnglishLesson({
         <h2 dir="ltr" lang="en">
           {q.prompt}
         </h2>
-        <button type="button" className="button outline small" onClick={listen}>
-          {q.audio ? "اسمع التسجيل" : "اسمع السؤال"}
-        </button>
-        {transcript && (
-          <p lang="en" dir="ltr">
-            {q.audio || q.prompt}
-          </p>
-        )}
+        <div className="school-question-audio" key={q.id}>
+          <EnglishAudioButton
+            clip={`${q.id}-prompt`}
+            label="اسمع السؤال"
+            text={q.prompt}
+          />
+          {q.audio?.trim() && (
+            <EnglishAudioButton
+              clip={`${q.id}-listening`}
+              label="اسمع التسجيل"
+              text={q.audio}
+              transcript
+            />
+          )}
+          {(q.options || q.matches) && (
+            <EnglishAudioButton
+              clip={`${q.id}-options`}
+              label={q.matches ? "اسمع كلمات التوصيل" : "اسمع الاختيارات"}
+              text={(
+                q.options ?? [
+                  ...(q.matches?.left ?? []),
+                  ...(q.matches?.right ?? []),
+                ]
+              ).join(". ")}
+            />
+          )}
+        </div>
         <form ref={answerForm} onSubmit={submit}>
           <fieldset disabled={busy}>
             <legend className="sr-only">إجابتك</legend>

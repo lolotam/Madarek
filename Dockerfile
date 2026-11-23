@@ -36,6 +36,8 @@ COPY --from=build --chown=node:node /app/scripts ./scripts
 # volume at /app/.data or every redeploy starts with an empty database.
 RUN mkdir -p /app/.data/audio && chown -R node:node /app/.data
 
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && rm -rf /var/lib/apt/lists/*
+
 RUN npm install --global @openai/codex@0.171.0 --no-audit --no-fund
 
 USER node
