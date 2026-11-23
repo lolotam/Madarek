@@ -1,3 +1,4 @@
+import { englishIndex } from "./english-index.mjs";
 export type StageId = "primary" | "intermediate" | "secondary";
 
 export type RegisteredLesson = {
@@ -125,7 +126,16 @@ const NUTRIENTS_LESSON = {
 } as const;
 
 export function registeredLessons(published: boolean): RegisteredLesson[] {
-  return [{ ...NUTRIENTS_LESSON, published }];
+  return [
+    { ...NUTRIENTS_LESSON, published },
+    ...englishIndex.map((_, index) => ({
+      grade: 2,
+      subjectId: "english",
+      lessonId: `school-day-${index + 1}`,
+      href: `/grade/2/english/${index + 1}`,
+      published: true,
+    })),
+  ];
 }
 
 export function subjectAvailable(
@@ -202,11 +212,11 @@ export function gradeSubjectsIntro(scienceAvailable: boolean) {
 }
 
 export function subjectsForGrade(grade: number) {
-  return grade === 8 ? GRADE_8_SUBJECTS : [];
+  return grade === 8 ? GRADE_8_SUBJECTS : grade === 2 ? GRADE_8_SUBJECTS.filter(subject => subject.id === "english") : [];
 }
 
 export function isImplementedGradePage(grade: number) {
-  return grade === 8;
+  return grade === 8 || grade === 2;
 }
 
 export function parseGradeParam(value: string) {

@@ -36,6 +36,8 @@ COPY --from=build --chown=node:node /app/scripts ./scripts
 # volume at /app/.data or every redeploy starts with an empty database.
 RUN mkdir -p /app/.data/audio && chown -R node:node /app/.data
 
+RUN npm install --global @openai/codex@0.171.0 --no-audit --no-fund
+
 USER node
 EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \

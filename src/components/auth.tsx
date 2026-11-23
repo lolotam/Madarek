@@ -45,7 +45,7 @@ const rowMotion = {
   duration: 0.25,
 };
 
-export function Auth({ initialMode = "login" }: { initialMode?: string }) {
+export function Auth({ initialMode = "login",returnLesson }: { initialMode?: string;returnLesson?:string }) {
   const reduceMotion = useReducedMotion();
   const [mode, setMode] = useState(initialMode),
     [error, setError] = useState(""),
@@ -101,7 +101,7 @@ export function Auth({ initialMode = "login" }: { initialMode?: string }) {
       if (mode === "register") {
         await api("register", {
           name: data.name,
-          email: data.email,
+          ...(String(data.identifier).includes("@") ? {email:data.identifier} : {username:data.identifier}),
           password: data.password,
           children: children.map((row) => ({
             name: row.name,
@@ -112,10 +112,10 @@ export function Auth({ initialMode = "login" }: { initialMode?: string }) {
           })),
         });
       } else {
-        await api(mode === "student" ? "student-login" : mode, data);
+        await api(mode === "student" ? "student-login" : mode, mode === "student" ? data : {username:data.identifier,password:data.password});
       }
       await refresh();
-      router.push("/dashboard");
+      router.push(returnLesson === "21" ? "/grade/2/english/grammar/past#practice" : returnLesson ? "/grade/2/english/"+returnLesson : "/dashboard");
       router.refresh();
     } catch (e) {
       setError((e as Error).message);
@@ -180,7 +180,7 @@ export function Auth({ initialMode = "login" }: { initialMode?: string }) {
           {mode === "register"
             ? "لنبدأ رحلتكم معًا"
             : mode === "student"
-              ? "أهلًا بالمستكشفة!"
+              ? "أهلًا بك!"
               : "أهلًا بعودتك"}
         </h2>
         <p>
@@ -211,20 +211,20 @@ export function Auth({ initialMode = "login" }: { initialMode?: string }) {
             </label>
           ) : (
             <label className="field">
-              <span>البريد الإلكتروني</span>
+              <span>اسم المستخدم أو البريد الإلكتروني</span>
               <input
                 required
-                name="email"
-                type="email"
+                name="identifier"
+                type="text"
                 maxLength={200}
-                autoComplete="email"
+                autoComplete="username"
                 dir="ltr"
               />
             </label>
           )}
           <label className="field">
             <span id="auth-secret-label">
-              {mode === "student" ? "رمز الدخول" : "كلمة المرور"}
+              {mode === "student" ? "كلمة المرور أو رمز الدخول" : "كلمة المرور"}
             </span>
             <div className="password-field">
               <input
@@ -235,12 +235,12 @@ export function Auth({ initialMode = "login" }: { initialMode?: string }) {
                 }
                 name={mode === "student" ? "pin" : "password"}
                 type={show ? "text" : "password"}
-                inputMode={mode === "student" ? "numeric" : undefined}
+
                 minLength={
                   mode === "student" ? 6 : mode === "register" ? 10 : 1
                 }
-                maxLength={mode === "student" ? 12 : 128}
-                pattern={mode === "student" ? "[0-9]{6,12}" : undefined}
+                maxLength={128}
+
                 autoComplete={
                   mode === "register" ? "new-password" : "current-password"
                 }
@@ -362,10 +362,9 @@ export function Auth({ initialMode = "login" }: { initialMode?: string }) {
                           required
                           aria-labelledby={`child-pin-label-${row.id}`}
                           type={showPins[row.id] ? "text" : "password"}
-                          inputMode="numeric"
-                          pattern="[0-9]{6,12}"
+                          pattern="([0-9]{6,12}|.{8,128})"
                           minLength={6}
-                          maxLength={12}
+                          maxLength={128}
                           autoComplete="new-password"
                           value={row.pin}
                           onChange={(e) =>
@@ -394,7 +393,7 @@ export function Auth({ initialMode = "login" }: { initialMode?: string }) {
                           )}
                         </button>
                       </div>
-                      <small>٦–١٢ رقمًا. يُحفظ للطفل.</small>
+                      <small>٦–١٢ رقمًا أو كلمة مرور من ٨ أحرف على الأقل. يُحفظ للطفل.</small>
                     </label>
                     <button
                       type="button"

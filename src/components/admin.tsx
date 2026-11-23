@@ -1,4 +1,5 @@
 "use client";
+import { EnglishAdmin } from "./english-admin";
 import { FormEvent, useEffect, useId, useState } from "react";
 import Link from "next/link";
 import * as Tabs from "@radix-ui/react-tabs";
@@ -176,6 +177,7 @@ function Notice({
 }
 
 export function AdminDashboard({
+  initialTab="users",
   selfId,
   initialUsers,
   initialSettings,
@@ -183,6 +185,7 @@ export function AdminDashboard({
   initialSnapshot,
   initialVideos,
 }: {
+  initialTab?: "users"|"ai";
   selfId: string;
   initialUsers: UserList;
   initialSettings: SettingsView;
@@ -191,7 +194,7 @@ export function AdminDashboard({
   initialVideos: VideoList;
 }) {
   const reduceMotion = useReducedMotion();
-  const [tab, setTab] = useState("users");
+  const [tab, setTab] = useState<string>(initialTab);
   return (
     <section className="container admin-page section">
       <header className="admin-heading">
@@ -227,6 +230,10 @@ export function AdminDashboard({
               />
             ) : null}
             <Settings2 size={18} /> إعدادات الخدمات
+          </Tabs.Trigger>
+          <Tabs.Trigger value="ai">
+            {tab === "ai" && <motion.span className="admin-tab-ink" layoutId={reduceMotion ? undefined : "admin-tab-ink"}/>}
+            <Settings2 size={18}/> <span lang="en" dir="ltr">AI Settings</span>
           </Tabs.Trigger>
           <Tabs.Trigger value="content">
             {tab === "content" ? (
@@ -264,6 +271,7 @@ export function AdminDashboard({
           <h2 className="sr-only">إعدادات الخدمات</h2>
           <SettingsTab initial={initialSettings} />
         </Tabs.Content>
+        <Tabs.Content value="ai"><EnglishAdmin/></Tabs.Content>
         <Tabs.Content value="content">
           <h2 className="sr-only">المحتوى</h2>
           <ContentTab initial={initialSnapshot} />
@@ -814,17 +822,17 @@ function EditPersonDialog({
             </fieldset>
           </>
         ) : (
+          <><label className="field">اسم المستخدم<input name="username" defaultValue={person.username ?? ""} minLength={3} maxLength={32}/></label>
           <label className="field" htmlFor={`edit-email-${person.id}`}>
-            <span>البريد الإلكتروني (مطلوب)</span>
+            <span>البريد الإلكتروني</span>
             <input
               id={`edit-email-${person.id}`}
               name="email"
               type="email"
               defaultValue={person.email ?? ""}
-              required
               maxLength={200}
             />
-          </label>
+          </label></>
         )}
         <button className="button primary" disabled={busy}>
           {busy ? "جارٍ الحفظ…" : "حفظ التعديلات"}
@@ -875,7 +883,7 @@ function ResetSecretDialog({
       title={isChild ? "رمز دخول جديد" : "كلمة مرور جديدة"}
       description={
         isChild
-          ? "رمز الدخول من 6 إلى 12 رقمًا. الحقل مطلوب."
+          ? "رمز من ٦–١٢ رقمًا أو كلمة مرور من ٨ أحرف على الأقل."
           : "كلمة المرور لا تقل عن 10 أحرف. الحقل مطلوب."
       }
     >
@@ -892,10 +900,9 @@ function ResetSecretDialog({
               id={`pin-${person.id}`}
               name="pin"
               type="password"
-              inputMode="numeric"
-              pattern="[0-9]{6,12}"
+              pattern="([0-9]{6,12}|.{8,128})"
               minLength={6}
-              maxLength={12}
+              maxLength={128}
               required
               autoComplete="new-password"
               aria-invalid={error ? true : undefined}
@@ -954,7 +961,7 @@ function CreateFamilyDialog({
     try {
       await api("admin/families", {
         name: form.get("name"),
-        email: form.get("email"),
+        ...(String(form.get("email")).includes("@") ? {email:form.get("email")} : {username:form.get("email")}),
         password: form.get("password"),
         children,
       });
@@ -984,11 +991,11 @@ function CreateFamilyDialog({
           <input id="family-name" name="name" required maxLength={60} />
         </label>
         <label className="field" htmlFor="family-email">
-          <span>البريد الإلكتروني (مطلوب)</span>
+          <span>اسم المستخدم أو البريد الإلكتروني (مطلوب)</span>
           <input
             id="family-email"
             name="email"
-            type="email"
+            type="text"
             required
             maxLength={200}
             autoComplete="off"
@@ -1070,16 +1077,15 @@ function CreateFamilyDialog({
               </div>
             </fieldset>
             <label className="field" htmlFor={`child-${i}-pin`}>
-              <span>رمز الدخول (٦–١٢ رقمًا)</span>
+              <span>رمز الدخول (٦–١٢ رقمًا أو كلمة مرور من ٨ أحرف على الأقل)</span>
               <input
                 id={`child-${i}-pin`}
                 name={`child-${i}-pin`}
                 type="password"
-                inputMode="numeric"
-                pattern="[0-9]{6,12}"
+                pattern="([0-9]{6,12}|.{8,128})"
                 required
                 minLength={6}
-                maxLength={12}
+                maxLength={128}
                 autoComplete="new-password"
               />
             </label>

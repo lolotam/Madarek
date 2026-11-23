@@ -3,7 +3,7 @@ import { join } from "node:path";
 const email = process.argv[2];
 if (!email) {
   console.error(
-    "Usage: npm run admin -- owner@example.com (register this separate account first)",
+    "Usage: npm run admin -- username-or-email (register this separate account first)",
   );
   process.exit(1);
 }

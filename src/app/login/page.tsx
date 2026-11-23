@@ -6,11 +6,11 @@ export const metadata = {
 export default async function Page({
   searchParams,
 }: {
-  searchParams: Promise<{ mode?: string }>;
+  searchParams: Promise<{ mode?: string; lesson?:string }>;
 }) {
-  const { mode } = await searchParams;
+  const { mode, lesson } = await searchParams;
   return (
-    <Auth
+    <Auth returnLesson={lesson && /^(?:[1-9]|1\d|2[01])$/.test(lesson) ? lesson : undefined}
       initialMode={
         ["login", "register", "student"].includes(mode || "") ? mode : "login"
       }

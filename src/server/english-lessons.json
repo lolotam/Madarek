@@ -1,0 +1,2533 @@
+[
+  {
+    "title": "My school day",
+    "ar": "خريطة يومي",
+    "icon": "🏫",
+    "questions": [
+      {
+        "prompt": "What comes first in the morning?",
+        "options": ["Go to bed", "Get up", "Eat dinner"],
+        "answer": "Get up",
+        "scene": "🌅 Morning|🛏️ Bed|🎒 School",
+        "passage": "",
+        "audio": "",
+        "kind": "choice",
+        "id": "1-1"
+      },
+      {
+        "prompt": "What do you carry to school?",
+        "options": ["A school bag", "A pillow", "A pan"],
+        "answer": "A school bag",
+        "scene": "🏠 Home|🚶 Walk|🏫 School",
+        "passage": "",
+        "audio": "",
+        "kind": "choice",
+        "id": "1-2"
+      },
+      {
+        "id": "1-3",
+        "prompt": "Match each part of the day to a school-day activity.",
+        "kind": "match",
+        "matches": {
+          "left": ["Morning", "Afternoon", "Night"],
+          "right": ["Eat lunch", "Go to bed", "Get ready for school"]
+        },
+        "answer": "2,0,1",
+        "scene": "🌅 Morning|🏫 School day|🌙 Night"
+      },
+      {
+        "id": "1-4",
+        "prompt": "Where do you see your teacher?",
+        "kind": "choice",
+        "options": ["At the beach", "At school", "At the zoo"],
+        "answer": "At school",
+        "scene": "👩‍🏫 Teacher|🏫 Building"
+      },
+      {
+        "id": "1-5",
+        "prompt": "What do you do after you wake up?",
+        "kind": "choice",
+        "options": ["Get out of bed", "Go back to sleep", "Eat dinner"],
+        "answer": "Get out of bed",
+        "scene": "⏰ Morning|🛏️ Bed"
+      },
+      {
+        "id": "1-6",
+        "prompt": "What do you use to write in class?",
+        "kind": "choice",
+        "options": ["A fork", "A sock", "A pencil"],
+        "answer": "A pencil",
+        "scene": "📓 Notebook|👧 Pupil"
+      },
+      {
+        "id": "1-7",
+        "prompt": "When does the school day usually begin?",
+        "kind": "choice",
+        "options": ["After dinner", "In the morning", "At midnight"],
+        "answer": "In the morning",
+        "scene": "🌅 Sunrise|🔔 School bell"
+      },
+      {
+        "id": "1-8",
+        "prompt": "What do you put inside your school bag?",
+        "kind": "choice",
+        "options": ["Books", "A chair", "A bed"],
+        "answer": "Books",
+        "scene": "🎒 Bag|🏫 School"
+      },
+      {
+        "id": "1-9",
+        "prompt": "What comes after school?",
+        "kind": "choice",
+        "options": ["Wake up", "Get dressed for school", "Go home"],
+        "answer": "Go home",
+        "scene": "🔔 Last bell|🏠 Home"
+      },
+      {
+        "id": "1-10",
+        "prompt": "Complete the phrase. I go to ___.",
+        "kind": "write",
+        "answer": "school",
+        "task": "short",
+        "scene": "🎒 Backpack|👋 Goodbye"
+      }
+    ]
+  },
+  {
+    "title": "Ready for school",
+    "ar": "روتين الصباح",
+    "icon": "🪥",
+    "questions": [
+      {
+        "prompt": "I ___ my teeth.",
+        "options": ["comb", "brush", "blend"],
+        "answer": "brush",
+        "scene": "🌤️ Morning|🪥 Toothbrush|🦷 Teeth",
+        "passage": "",
+        "audio": "",
+        "kind": "choice",
+        "id": "2-1"
+      },
+      {
+        "prompt": "Finish the sentence. I ___ my hair.",
+        "answer": "comb|brush",
+        "scene": "🪞 Mirror|🪮 Comb|👧 Hair",
+        "rubric": "",
+        "strict": false,
+        "passage": "",
+        "kind": "write",
+        "id": "2-2",
+        "task": "short"
+      },
+      {
+        "id": "2-3",
+        "prompt": "Match each object to what you do with it.",
+        "kind": "match",
+        "matches": {
+          "left": ["Toothbrush", "Soap", "Comb"],
+          "right": ["Wash my hands", "Comb my hair", "Brush my teeth"]
+        },
+        "answer": "2,0,1",
+        "scene": "🪥 Get ready|🫧 Bathroom"
+      },
+      {
+        "id": "2-4",
+        "prompt": "I ___ my face with water.",
+        "kind": "choice",
+        "options": ["wash", "wear", "pack"],
+        "answer": "wash",
+        "scene": "💧 Water|🙂 Face"
+      },
+      {
+        "id": "2-5",
+        "prompt": "I ___ my school uniform.",
+        "kind": "choice",
+        "options": ["drink", "read", "put on"],
+        "answer": "put on",
+        "scene": "👕 Uniform|🪞 Mirror"
+      },
+      {
+        "id": "2-6",
+        "prompt": "Which thing keeps your feet warm?",
+        "kind": "choice",
+        "options": ["Gloves", "Socks", "Glasses"],
+        "answer": "Socks",
+        "scene": "🦶 Feet|👟 Shoes"
+      },
+      {
+        "id": "2-7",
+        "prompt": "What do you do before you leave home?",
+        "kind": "choice",
+        "options": ["Pack your bag", "Take a bath at school", "Go to bed"],
+        "answer": "Pack your bag",
+        "scene": "🚪 Door|🎒 Backpack"
+      },
+      {
+        "id": "2-8",
+        "prompt": "I ___ my hands before I eat.",
+        "kind": "choice",
+        "options": ["brush", "tie", "wash"],
+        "answer": "wash",
+        "scene": "🫧 Bubbles|🍎 Snack"
+      },
+      {
+        "id": "2-9",
+        "prompt": "Complete it. I put on my ___ before I walk outside.",
+        "kind": "write",
+        "answer": "shoes",
+        "task": "short",
+        "scene": "🦶 Feet|🚪 Outside"
+      },
+      {
+        "id": "2-10",
+        "prompt": "Which action matches the picture?",
+        "kind": "choice",
+        "options": ["Dry your hands", "Pack your bag", "Tie your shoes"],
+        "answer": "Dry your hands",
+        "scene": "🤲 Wet hands|🧺 Towel"
+      }
+    ]
+  },
+  {
+    "title": "Time for breakfast",
+    "ar": "الوقت والوجبات",
+    "icon": "🕕",
+    "questions": [
+      {
+        "prompt": "What time does this clock show?",
+        "options": ["Five o’clock", "Six o’clock", "Seven o’clock"],
+        "answer": "Six o’clock",
+        "scene": "🕕 Clock",
+        "passage": "",
+        "audio": "",
+        "kind": "choice",
+        "id": "3-1"
+      },
+      {
+        "prompt": "I eat ___ in the morning.",
+        "answer": "breakfast",
+        "scene": "🌄 Morning|🥛 Milk|🍞 Toast",
+        "rubric": "",
+        "strict": false,
+        "passage": "",
+        "kind": "write",
+        "id": "3-2",
+        "task": "short"
+      },
+      {
+        "id": "3-3",
+        "prompt": "Match each meal to a part of the day.",
+        "kind": "match",
+        "matches": {
+          "left": ["Breakfast", "Lunch", "Dinner"],
+          "right": ["Middle of the day", "Evening", "Morning"]
+        },
+        "answer": "2,0,1",
+        "scene": "🍽️ Three meals|🌞 A day"
+      },
+      {
+        "id": "3-4",
+        "prompt": "What time is it?",
+        "kind": "choice",
+        "options": ["Four o’clock", "Two o’clock", "Three o’clock"],
+        "answer": "Three o’clock",
+        "scene": "🕒 Clock"
+      },
+      {
+        "id": "3-5",
+        "prompt": "What time is it?",
+        "kind": "choice",
+        "options": ["Seven o’clock", "Eight o’clock", "Nine o’clock"],
+        "answer": "Eight o’clock",
+        "scene": "🕗 Clock"
+      },
+      {
+        "id": "3-6",
+        "prompt": "At noon the clock shows ___.",
+        "kind": "choice",
+        "options": ["twelve o’clock", "six o’clock", "one o’clock"],
+        "answer": "twelve o’clock",
+        "scene": "☀️ Noon|🕛 Clock"
+      },
+      {
+        "id": "3-7",
+        "prompt": "It’s seven in the morning. Which meal fits?",
+        "kind": "choice",
+        "options": ["Dinner", "Lunch", "Breakfast"],
+        "answer": "Breakfast",
+        "scene": "🌅 Morning|🕖 Clock"
+      },
+      {
+        "id": "3-8",
+        "prompt": "What do you drink from a cup?",
+        "kind": "choice",
+        "options": ["An egg", "Milk", "Toast"],
+        "answer": "Milk",
+        "scene": "🥛 Cup|🍞 Plate"
+      },
+      {
+        "id": "3-9",
+        "prompt": "Which word is the name of a meal?",
+        "kind": "choice",
+        "options": ["Lunch", "Clock", "Morning"],
+        "answer": "Lunch",
+        "scene": "🍽️ Table|☀️ Day"
+      },
+      {
+        "id": "3-10",
+        "prompt": "Write the number you see on the clock.",
+        "kind": "write",
+        "answer": "four|4",
+        "task": "short",
+        "scene": "🕓 Clock"
+      }
+    ]
+  },
+  {
+    "title": "Inside my school",
+    "ar": "الفصل والمواد",
+    "icon": "🔬",
+    "questions": [
+      {
+        "prompt": "Where can we do science experiments?",
+        "options": ["In the gym", "In the lab", "In the shop"],
+        "answer": "In the lab",
+        "scene": "🔬 Microscope|🧪 Experiment",
+        "passage": "",
+        "audio": "",
+        "kind": "choice",
+        "id": "4-1"
+      },
+      {
+        "prompt": "We play sports in ___ class.",
+        "answer": "PE|P.E.|physical education",
+        "scene": "⚽ Football|🏀 Basketball|🏃 Running",
+        "rubric": "",
+        "strict": false,
+        "passage": "",
+        "kind": "write",
+        "id": "4-2",
+        "task": "short"
+      },
+      {
+        "id": "4-3",
+        "prompt": "Match each school place to an activity.",
+        "kind": "match",
+        "matches": {
+          "left": ["Library", "Gym", "Science lab"],
+          "right": ["Play basketball", "Do an experiment", "Read a book"]
+        },
+        "answer": "2,0,1",
+        "scene": "🏫 School map|🧭 Where?"
+      },
+      {
+        "id": "4-4",
+        "prompt": "Where can you borrow a book?",
+        "kind": "choice",
+        "options": ["In the playground", "In the library", "On the bus"],
+        "answer": "In the library",
+        "scene": "📖 Book|🔖 Bookmark"
+      },
+      {
+        "id": "4-5",
+        "prompt": "Where do you write on the board?",
+        "kind": "choice",
+        "options": ["In the classroom", "In the kitchen", "In the garden"],
+        "answer": "In the classroom",
+        "scene": "🖍️ Marker|👩‍🏫 Teacher"
+      },
+      {
+        "id": "4-6",
+        "prompt": "What can you play in the gym?",
+        "kind": "choice",
+        "options": ["The piano", "A spelling game on paper", "Basketball"],
+        "answer": "Basketball",
+        "scene": "🏀 Ball|👟 Trainers"
+      },
+      {
+        "id": "4-7",
+        "prompt": "Which person helps you learn at school?",
+        "kind": "choice",
+        "options": ["A farmer", "A teacher", "A pilot"],
+        "answer": "A teacher",
+        "scene": "🏫 School|📚 Books"
+      },
+      {
+        "id": "4-8",
+        "prompt": "What do you sit on at a desk?",
+        "kind": "choice",
+        "options": ["A chair", "A window", "A board"],
+        "answer": "A chair",
+        "scene": "📓 Desk|🧒 Pupil"
+      },
+      {
+        "id": "4-9",
+        "prompt": "Where can you run at break time?",
+        "kind": "choice",
+        "options": [
+          "In the library",
+          "In the science lab",
+          "In the playground"
+        ],
+        "answer": "In the playground",
+        "scene": "🏃 Run|🔔 Break time"
+      },
+      {
+        "id": "4-10",
+        "prompt": "Write the room where you read books at school.",
+        "kind": "write",
+        "answer": "library|the library",
+        "task": "short",
+        "scene": "📚 Shelves|🤫 Quiet"
+      }
+    ]
+  },
+  {
+    "title": "Ask and answer",
+    "ar": "اسأل وجاوب",
+    "icon": "💬",
+    "questions": [
+      {
+        "prompt": "___ do you eat lunch? At two o’clock.",
+        "options": ["Where", "When", "Who"],
+        "answer": "When",
+        "scene": "🍲 Lunch|🕑 Two",
+        "passage": "",
+        "audio": "",
+        "kind": "choice",
+        "id": "5-1"
+      },
+      {
+        "prompt": "Answer in a sentence. Where do you exercise?",
+        "answer": "I exercise in the gym.",
+        "scene": "🏋️ Gym|🌳 Park",
+        "rubric": "Accept any sensible place to exercise. Full credit for a complete English answer.",
+        "strict": false,
+        "passage": "",
+        "kind": "write",
+        "id": "5-2",
+        "task": "writing"
+      },
+      {
+        "id": "5-3",
+        "prompt": "Match each question word to the kind of answer.",
+        "kind": "match",
+        "matches": {
+          "left": ["When?", "Where?", "Who?"],
+          "right": ["A place", "A person", "A time"]
+        },
+        "answer": "2,0,1",
+        "scene": "💬 Ask|🕑 Time|📍 Place"
+      },
+      {
+        "id": "5-4",
+        "prompt": "___ is your school bag? Under my desk.",
+        "kind": "choice",
+        "options": ["Where", "When", "Who"],
+        "answer": "Where",
+        "scene": "🎒 Bag|📍 Under"
+      },
+      {
+        "id": "5-5",
+        "prompt": "___ is at the door? My teacher.",
+        "kind": "choice",
+        "options": ["When", "What time", "Who"],
+        "answer": "Who",
+        "scene": "🚪 Door|👩‍🏫 Teacher"
+      },
+      {
+        "id": "5-6",
+        "prompt": "___ do you eat at break time? An apple.",
+        "kind": "choice",
+        "options": ["Who", "What", "Where"],
+        "answer": "What",
+        "scene": "🍎 Snack|🔔 Break"
+      },
+      {
+        "id": "5-7",
+        "prompt": "Choose an answer. What time do you go to bed?",
+        "kind": "choice",
+        "options": ["At eight o’clock.", "In my bedroom.", "With my friend."],
+        "answer": "At eight o’clock.",
+        "scene": "🌙 Night|🕗 Clock"
+      },
+      {
+        "id": "5-8",
+        "prompt": "Choose an answer. Where do you play?",
+        "kind": "choice",
+        "options": ["At four o’clock.", "After school.", "In the gym."],
+        "answer": "In the gym.",
+        "scene": "🏀 Play|📍 Place"
+      },
+      {
+        "id": "5-9",
+        "prompt": "Complete the question. ___ many books do you have?",
+        "kind": "write",
+        "answer": "how",
+        "task": "short",
+        "scene": "📚 Books|🔢 Count"
+      },
+      {
+        "id": "5-10",
+        "prompt": "Which question asks about a person?",
+        "kind": "choice",
+        "options": [
+          "Who is your friend?",
+          "Where is your friend?",
+          "When do you see your friend?"
+        ],
+        "answer": "Who is your friend?",
+        "scene": "👫 Friend|💬 Question"
+      }
+    ]
+  },
+  {
+    "title": "Near and far",
+    "ar": "قريب وبعيد",
+    "icon": "✏️",
+    "questions": [
+      {
+        "prompt": "Two pencils are far away. ___ are my pencils.",
+        "options": ["These", "That", "Those"],
+        "answer": "Those",
+        "scene": "✋ Here|✏️✏️ Far",
+        "passage": "",
+        "audio": "",
+        "kind": "choice",
+        "id": "6-1"
+      },
+      {
+        "prompt": "One pencil is near me. ___ is my pencil.",
+        "options": ["This", "Those", "These"],
+        "answer": "This",
+        "scene": "✋ Here|✏️ Near",
+        "passage": "",
+        "audio": "",
+        "kind": "choice",
+        "id": "6-2"
+      },
+      {
+        "id": "6-3",
+        "prompt": "Connect the words to their meanings.",
+        "kind": "match",
+        "matches": {
+          "left": ["This", "These", "Those"],
+          "right": [
+            "More than one near me",
+            "More than one far away",
+            "One near me"
+          ]
+        },
+        "answer": "2,0,1",
+        "scene": "🤏 Near|🔭 Far"
+      },
+      {
+        "id": "6-4",
+        "prompt": "One kite is far away. ___ is my kite.",
+        "kind": "choice",
+        "options": ["These", "This", "That"],
+        "answer": "That",
+        "scene": "🪁 Kite|🔭 Far"
+      },
+      {
+        "id": "6-5",
+        "prompt": "Two rulers are next to me. ___ are my rulers.",
+        "kind": "choice",
+        "options": ["Those", "These", "This"],
+        "answer": "These",
+        "scene": "📏📏 Rulers|🤚 Near"
+      },
+      {
+        "id": "6-6",
+        "prompt": "Which word goes with one thing far away?",
+        "kind": "choice",
+        "options": ["That", "These", "Those"],
+        "answer": "That",
+        "scene": "🔭 Far away|🎒 One bag"
+      },
+      {
+        "id": "6-7",
+        "prompt": "Which word goes with three things near you?",
+        "kind": "choice",
+        "options": ["That", "This", "These"],
+        "answer": "These",
+        "scene": "📚 Three books|🤚 Near"
+      },
+      {
+        "id": "6-8",
+        "prompt": "Two school bags are far away. ___ are my school bags.",
+        "kind": "choice",
+        "options": ["That", "Those", "This"],
+        "answer": "Those",
+        "scene": "🎒🎒 Bags|🔭 Far"
+      },
+      {
+        "id": "6-9",
+        "prompt": "One pen is near my hand. ___ is my pen.",
+        "kind": "write",
+        "answer": "this",
+        "task": "short",
+        "scene": "🖊️ One pen|✋ Near"
+      },
+      {
+        "id": "6-10",
+        "prompt": "Choose the sentence for two books across the room.",
+        "kind": "choice",
+        "options": ["This is a book.", "These are books.", "Those are books."],
+        "answer": "Those are books.",
+        "scene": "📚 Two books|↔️ Across the room"
+      }
+    ]
+  },
+  {
+    "title": "Listen closely",
+    "ar": "اسمع واختار",
+    "icon": "🎧",
+    "questions": [
+      {
+        "prompt": "Listen. Choose the matching picture.",
+        "options": ["🪥 Brush teeth", "🪮 Comb hair", "🚿 Wash face"],
+        "answer": "🪮 Comb hair",
+        "scene": "🪥 A|🪮 B|🚿 C",
+        "passage": "",
+        "audio": "I comb my hair every morning.",
+        "kind": "choice",
+        "id": "7-1"
+      },
+      {
+        "prompt": "Listen. Which action comes first?",
+        "options": ["🎒 Pack my bag", "📚 Read a book", "🎵 Listen to music"],
+        "answer": "🎒 Pack my bag",
+        "scene": "🎒 A|📚 B|🎵 C",
+        "passage": "",
+        "audio": "First I pack my bag. Then I read a book.",
+        "kind": "choice",
+        "id": "7-2"
+      },
+      {
+        "id": "7-3",
+        "prompt": "Listen. What time do you hear?",
+        "kind": "choice",
+        "options": ["Eight o’clock", "Six o’clock", "Seven o’clock"],
+        "answer": "Seven o’clock",
+        "audio": "I walk to school at seven o’clock.",
+        "scene": "🎧 Listen|🕑 Time"
+      },
+      {
+        "id": "7-4",
+        "prompt": "Listen. What does the girl carry?",
+        "kind": "choice",
+        "options": ["A green hat", "A red bag", "A blue book"],
+        "answer": "A red bag",
+        "audio": "I carry a red bag to school.",
+        "scene": "🎧 Listen|🎒 What?"
+      },
+      {
+        "id": "7-5",
+        "prompt": "Listen. Which place is mentioned?",
+        "kind": "choice",
+        "options": ["The gym", "The library", "The playground"],
+        "answer": "The gym",
+        "audio": "We play in the gym after lunch.",
+        "scene": "🎧 Listen|🏫 Place"
+      },
+      {
+        "id": "7-6",
+        "prompt": "Listen. What happens last?",
+        "kind": "choice",
+        "options": ["Eat toast", "Wash my face", "Go to school"],
+        "answer": "Go to school",
+        "audio": "First I wash my face. Then I eat toast. Last I go to school.",
+        "scene": "🎧 First|🎧 Last"
+      },
+      {
+        "id": "7-7",
+        "prompt": "Listen. What does the boy eat?",
+        "kind": "choice",
+        "options": ["An orange", "An apple", "A banana"],
+        "answer": "An apple",
+        "audio": "I eat an apple at break time.",
+        "scene": "🎧 Listen|🍽️ Food"
+      },
+      {
+        "id": "7-8",
+        "prompt": "Listen. How many pencils does she have?",
+        "kind": "choice",
+        "options": ["Three", "Two", "Four"],
+        "answer": "Three",
+        "audio": "I have three pencils in my bag.",
+        "scene": "🎧 Listen|🔢 Count"
+      },
+      {
+        "id": "7-9",
+        "prompt": "Listen. Who is speaking?",
+        "kind": "choice",
+        "options": ["A bus driver", "A farmer", "A teacher"],
+        "answer": "A teacher",
+        "audio": "Good morning, class. Open your books, please.",
+        "scene": "🎧 Listen|💬 Who?"
+      },
+      {
+        "id": "7-10",
+        "prompt": "Listen. What should you open?",
+        "kind": "choice",
+        "options": ["The door", "Your book", "Your bag"],
+        "answer": "Your book",
+        "audio": "Please open your book and look at the picture.",
+        "scene": "🎧 Listen|👂 Instruction"
+      }
+    ]
+  },
+  {
+    "title": "Sound detective",
+    "ar": "أصوات الكلمات",
+    "icon": "🔎",
+    "questions": [
+      {
+        "prompt": "Which word starts with bl?",
+        "options": ["brush", "block", "shop"],
+        "answer": "block",
+        "scene": "🖌️ Brush|🧱 Block|🏪 Shop",
+        "passage": "",
+        "audio": "",
+        "kind": "choice",
+        "id": "8-1"
+      },
+      {
+        "prompt": "Which word ends in sh?",
+        "options": ["fish", "brick", "black"],
+        "answer": "fish",
+        "scene": "🐟 Fish|🧱 Brick|⚫ Black",
+        "passage": "",
+        "audio": "",
+        "kind": "choice",
+        "id": "8-2"
+      },
+      {
+        "prompt": "Write the first two letters of brown.",
+        "answer": "br",
+        "scene": "🟤 Brown|🖌️ Brush",
+        "rubric": "",
+        "strict": false,
+        "passage": "",
+        "kind": "write",
+        "id": "8-3",
+        "task": "short"
+      },
+      {
+        "id": "8-4",
+        "prompt": "Match each sound to a word that begins with it.",
+        "kind": "match",
+        "matches": {
+          "left": ["sh", "bl", "br"],
+          "right": ["bread", "shop", "blue"]
+        },
+        "answer": "1,2,0",
+        "scene": "👂 Listen|🔤 Sounds"
+      },
+      {
+        "id": "8-5",
+        "prompt": "Which word begins with sh?",
+        "kind": "choice",
+        "options": ["soon", "blue", "shoe"],
+        "answer": "shoe",
+        "scene": "👂 First sound|👟 Picture"
+      },
+      {
+        "id": "8-6",
+        "prompt": "Which word starts with br?",
+        "kind": "choice",
+        "options": ["ship", "brick", "black"],
+        "answer": "brick",
+        "scene": "👂 First sound|🔤 Letters"
+      },
+      {
+        "id": "8-7",
+        "prompt": "Which word starts like black?",
+        "kind": "choice",
+        "options": ["block", "bread", "shop"],
+        "answer": "block",
+        "scene": "⬛ Black|👂 First sound"
+      },
+      {
+        "id": "8-8",
+        "prompt": "Which word ends with sh?",
+        "kind": "choice",
+        "options": ["bag", "bed", "brush"],
+        "answer": "brush",
+        "scene": "👂 Last sound|🔤 Letters"
+      },
+      {
+        "id": "8-9",
+        "prompt": "Write the first two letters of sheep.",
+        "kind": "write",
+        "answer": "sh",
+        "task": "short",
+        "scene": "🐑 Animal|🔤 Start"
+      },
+      {
+        "id": "8-10",
+        "prompt": "Which word does not begin with bl?",
+        "kind": "choice",
+        "options": ["brown", "blue", "black"],
+        "answer": "brown",
+        "scene": "👂 Sounds|🔤 Sort"
+      }
+    ]
+  },
+  {
+    "title": "Picture spelling",
+    "ar": "إملاء بالصور",
+    "icon": "📝",
+    "questions": [
+      {
+        "prompt": "Spell the word for these.",
+        "answer": "shoes",
+        "scene": "👞👞 Pair",
+        "rubric": "",
+        "strict": false,
+        "passage": "",
+        "kind": "write",
+        "id": "9-1",
+        "task": "short"
+      },
+      {
+        "prompt": "Where do these books sit? Write the word.",
+        "answer": "shelf|bookshelf|a shelf",
+        "scene": "📚 Books|🪵 Wooden ledge",
+        "rubric": "",
+        "strict": false,
+        "passage": "",
+        "kind": "write",
+        "id": "9-2",
+        "task": "short"
+      },
+      {
+        "id": "9-3",
+        "prompt": "Choose the correct spelling.",
+        "kind": "choice",
+        "options": ["pencil", "pensil", "pencel"],
+        "answer": "pencil",
+        "scene": "✏️ Write|📓 Notebook"
+      },
+      {
+        "id": "9-4",
+        "prompt": "Write the word for the room where you have lessons.",
+        "kind": "write",
+        "answer": "classroom",
+        "task": "short",
+        "scene": "🪑 Desks|👩‍🏫 Teacher"
+      },
+      {
+        "id": "9-5",
+        "prompt": "Choose the spelling for the picture.",
+        "kind": "choice",
+        "options": ["bruhs", "brush", "brash"],
+        "answer": "brush",
+        "scene": "🪥 Picture"
+      },
+      {
+        "id": "9-6",
+        "prompt": "Write the colour you see.",
+        "kind": "write",
+        "answer": "blue",
+        "task": "short",
+        "scene": "🔵 Colour"
+      },
+      {
+        "id": "9-7",
+        "prompt": "Which word matches the picture?",
+        "kind": "choice",
+        "options": ["brad", "beard", "bread"],
+        "answer": "bread",
+        "scene": "🍞 Picture"
+      },
+      {
+        "id": "9-8",
+        "prompt": "Spell the word for the thing you carry your books in.",
+        "kind": "write",
+        "answer": "school bag|schoolbag|bag",
+        "task": "short",
+        "scene": "🎒 Picture"
+      },
+      {
+        "id": "9-9",
+        "prompt": "Find the correct spelling.",
+        "kind": "choice",
+        "options": ["teacher", "teecher", "teacer"],
+        "answer": "teacher",
+        "scene": "👩‍🏫 Picture"
+      },
+      {
+        "id": "9-10",
+        "prompt": "Write the word for the place where students go to learn.",
+        "kind": "write",
+        "answer": "school",
+        "task": "short",
+        "scene": "🏫 Picture"
+      }
+    ]
+  },
+  {
+    "title": "Find the word",
+    "ar": "بنك الكلمات",
+    "icon": "🧩",
+    "questions": [
+      {
+        "prompt": "I ___ milk with fruit.",
+        "options": ["blend", "wear", "comb"],
+        "answer": "blend",
+        "scene": "🥛 Milk|🍓 Fruit|🥤 Drink",
+        "passage": "",
+        "audio": "",
+        "kind": "choice",
+        "id": "10-1"
+      },
+      {
+        "prompt": "My ___ subject is Science.",
+        "options": ["long", "short", "favourite"],
+        "answer": "favourite",
+        "scene": "🔬 Science|❤️ I like it best",
+        "passage": "",
+        "audio": "",
+        "kind": "choice",
+        "id": "10-2"
+      },
+      {
+        "id": "10-3",
+        "prompt": "Match each word to its meaning.",
+        "kind": "match",
+        "matches": {
+          "left": ["Shelf", "Uniform", "Breakfast"],
+          "right": [
+            "Clothes for school",
+            "A morning meal",
+            "Where books can stand"
+          ]
+        },
+        "answer": "2,0,1",
+        "scene": "🔍 Word clues|🧩 Connect"
+      },
+      {
+        "id": "10-4",
+        "prompt": "I ___ my bread before I eat it.",
+        "kind": "choice",
+        "options": ["read", "toast", "comb"],
+        "answer": "toast",
+        "scene": "🍞 Bread|♨️ Hot"
+      },
+      {
+        "id": "10-5",
+        "prompt": "My books are on the ___.",
+        "kind": "choice",
+        "options": ["shelf", "spoon", "shoe"],
+        "answer": "shelf",
+        "scene": "📚 Books|🪑 Room"
+      },
+      {
+        "id": "10-6",
+        "prompt": "We play at ___ time.",
+        "kind": "choice",
+        "options": ["bed", "clock", "break"],
+        "answer": "break",
+        "scene": "🔔 Bell|🏃 Play"
+      },
+      {
+        "id": "10-7",
+        "prompt": "I use a ___ to draw a straight line.",
+        "kind": "choice",
+        "options": ["cup", "ruler", "bag"],
+        "answer": "ruler",
+        "scene": "📐 Straight line|🖍️ Draw"
+      },
+      {
+        "id": "10-8",
+        "prompt": "A ___ is a person who helps us learn.",
+        "kind": "choice",
+        "options": ["teacher", "clock", "desk"],
+        "answer": "teacher",
+        "scene": "👩‍🏫 Class|📚 Learn"
+      },
+      {
+        "id": "10-9",
+        "prompt": "Write the word. A ___ tells you the time.",
+        "kind": "write",
+        "answer": "clock",
+        "task": "short",
+        "scene": "🕰️ Picture"
+      },
+      {
+        "id": "10-10",
+        "prompt": "Which word means to carry things together in a bag?",
+        "kind": "choice",
+        "options": ["Taste", "Pack", "Wash"],
+        "answer": "Pack",
+        "scene": "🎒 School bag|📦 Put inside"
+      }
+    ]
+  },
+  {
+    "title": "Read with Haya",
+    "ar": "اقرأ مع هيا",
+    "icon": "📖",
+    "questions": [
+      {
+        "prompt": "Haya eats breakfast at six.",
+        "options": ["True", "False"],
+        "answer": "True",
+        "scene": "🌅 Wake|🍞 Eat|🏫 Go",
+        "passage": "Haya gets up at five. She eats breakfast at six. At seven, she goes to school.",
+        "audio": "",
+        "kind": "choice",
+        "id": "11-1"
+      },
+      {
+        "prompt": "When does Haya go to school?",
+        "answer": "At seven.|At 7 o’clock.|She goes to school at seven.",
+        "scene": "📖 Read|🏫 Find the time",
+        "rubric": "Accept seven or 7 in a short or full answer. It must refer to school, not another activity.",
+        "strict": false,
+        "passage": "Haya gets up at five. She eats breakfast at six. At seven, she goes to school.",
+        "kind": "write",
+        "id": "11-2",
+        "task": "writing"
+      },
+      {
+        "id": "11-3",
+        "prompt": "Which day does Haya have art?",
+        "kind": "choice",
+        "options": ["Friday", "Tuesday", "Monday"],
+        "answer": "Tuesday",
+        "passage": "On Tuesday Haya has art. She uses blue paint to draw the sea.",
+        "scene": "🎨 Art|📅 Day"
+      },
+      {
+        "id": "11-4",
+        "prompt": "What colour does Haya use?",
+        "kind": "choice",
+        "options": ["Blue", "Green", "Red"],
+        "answer": "Blue",
+        "passage": "On Tuesday Haya has art. She uses blue paint to draw the sea.",
+        "scene": "🎨 Paint|❓ Colour"
+      },
+      {
+        "id": "11-5",
+        "prompt": "What is in her bag?",
+        "kind": "choice",
+        "options": [
+          "Lunch and an apple",
+          "A ball and a ruler",
+          "A book and a pencil"
+        ],
+        "answer": "A book and a pencil",
+        "passage": "Haya packs a book and a pencil. She puts her lunch on the table.",
+        "scene": "🎒 Bag|🍽️ Table"
+      },
+      {
+        "id": "11-6",
+        "prompt": "What does Haya do first?",
+        "kind": "choice",
+        "options": ["Eat toast", "Wash her face", "Comb her hair"],
+        "answer": "Wash her face",
+        "passage": "Haya washes her face, then she combs her hair. After that, she eats toast.",
+        "scene": "🌅 Morning|🔢 Order"
+      },
+      {
+        "id": "11-7",
+        "prompt": "Who goes to school with Haya?",
+        "kind": "choice",
+        "options": ["Her brother", "Her teacher", "Her friend"],
+        "answer": "Her brother",
+        "passage": "Haya walks to school with her brother. Her friend meets her at the gate.",
+        "scene": "🏫 Gate|🚶 Walk"
+      },
+      {
+        "id": "11-8",
+        "prompt": "Where does Haya read?",
+        "kind": "choice",
+        "options": ["In the gym", "In the lab", "In the library"],
+        "answer": "In the library",
+        "passage": "Haya reads a story in the library. After lunch, she plays outside.",
+        "scene": "📖 Read|📍 Place"
+      },
+      {
+        "id": "11-9",
+        "prompt": "When does Haya play outside?",
+        "kind": "choice",
+        "options": ["Before school", "After lunch", "Before breakfast"],
+        "answer": "After lunch",
+        "passage": "Haya reads a story in the library. After lunch, she plays outside.",
+        "scene": "🍽️ Lunch|⏰ When?"
+      },
+      {
+        "id": "11-10",
+        "prompt": "How many crayons does Haya have?",
+        "kind": "choice",
+        "options": ["Four", "Two", "Three"],
+        "answer": "Four",
+        "passage": "Haya has four crayons. She lends one to her friend.",
+        "scene": "🖍️ Crayons|🔢 Count"
+      }
+    ]
+  },
+  {
+    "title": "Read on your own",
+    "ar": "أقرأ لوحدي",
+    "icon": "📚",
+    "questions": [
+      {
+        "prompt": "Reem has five classes.",
+        "options": ["True", "False"],
+        "answer": "False",
+        "scene": "🚗 Travel|🏫 Classes|🏀 PE",
+        "passage": "Reem goes to school by car. She has six classes. On Monday she plays basketball in PE.",
+        "audio": "",
+        "kind": "choice",
+        "id": "12-1"
+      },
+      {
+        "prompt": "Which class do both friends like?",
+        "options": ["English", "Arabic", "Art"],
+        "answer": "Art",
+        "scene": "👬 Friends|🎨 Paint|🐟 Fish",
+        "passage": "Fahad likes English. Bader likes Arabic. Both friends enjoy Art. They paint fish together.",
+        "audio": "",
+        "kind": "choice",
+        "id": "12-2"
+      },
+      {
+        "id": "12-3",
+        "prompt": "What does the class make?",
+        "kind": "choice",
+        "options": ["A paper boat", "A paper hat", "A paper plane"],
+        "answer": "A paper boat",
+        "passage": "We have art today. Our teacher gives us paper and we make a boat.",
+        "scene": "🎨 Art|📄 Paper"
+      },
+      {
+        "id": "12-4",
+        "prompt": "What does Sami eat first?",
+        "kind": "choice",
+        "options": ["An orange", "A banana", "A sandwich"],
+        "answer": "A sandwich",
+        "passage": "Sami eats a sandwich at lunch. Then he eats an orange.",
+        "scene": "🍽️ Lunch|🔢 Order"
+      },
+      {
+        "id": "12-5",
+        "prompt": "What happens at eight o’clock?",
+        "kind": "choice",
+        "options": ["Sami goes home", "School starts", "Break starts"],
+        "answer": "School starts",
+        "passage": "School starts at eight. The break is at ten. Sami goes home at two.",
+        "scene": "🏫 School|⏰ Time"
+      },
+      {
+        "id": "12-6",
+        "prompt": "Where does Dana find her ruler?",
+        "kind": "choice",
+        "options": ["Under her chair", "On her desk", "In her bag"],
+        "answer": "Under her chair",
+        "passage": "Dana looks in her bag for a ruler. She sees it under her chair.",
+        "scene": "📏 Ruler|🔎 Find"
+      },
+      {
+        "id": "12-7",
+        "prompt": "Which class does the boy like best?",
+        "kind": "choice",
+        "options": ["Science", "Art", "Music"],
+        "answer": "Music",
+        "passage": "I like science and art. Music is my favourite because I like singing.",
+        "scene": "🎵 Singing|💬 Favourite"
+      },
+      {
+        "id": "12-8",
+        "prompt": "Who waters the school plant?",
+        "kind": "choice",
+        "options": ["Their teacher", "Mona", "Ali"],
+        "answer": "Mona",
+        "passage": "Ali wants to water the plant, but Mona waters it first. Their teacher smiles.",
+        "scene": "🪴 Plant|💧 Water"
+      },
+      {
+        "id": "12-9",
+        "prompt": "What does the group do after reading?",
+        "kind": "choice",
+        "options": ["Draw a picture", "Open a storybook", "Go home"],
+        "answer": "Draw a picture",
+        "passage": "We read a short story. Next, we draw a picture of the garden.",
+        "scene": "📚 Read|🎨 Draw"
+      },
+      {
+        "id": "12-10",
+        "prompt": "Why does Ali take an umbrella?",
+        "kind": "choice",
+        "options": ["It is sunny.", "He wants to draw.", "It is raining."],
+        "answer": "It is raining.",
+        "passage": "Ali looks outside. It is raining, so he takes an umbrella to school.",
+        "scene": "🌧️ Weather|🎒 Leave"
+      }
+    ]
+  },
+  {
+    "title": "One or many",
+    "ar": "مفرد وجمع",
+    "icon": "🍎",
+    "questions": [
+      {
+        "prompt": "One apple. Two ___.",
+        "answer": "apples",
+        "scene": "🍎 One|🍎🍎 Two",
+        "rubric": "",
+        "strict": false,
+        "passage": "",
+        "kind": "write",
+        "id": "13-1",
+        "task": "short"
+      },
+      {
+        "prompt": "Choose the word for the picture.",
+        "options": ["hat", "hats"],
+        "answer": "hats",
+        "scene": "🎩🎩 Two",
+        "passage": "",
+        "audio": "",
+        "kind": "choice",
+        "id": "13-2"
+      },
+      {
+        "id": "13-3",
+        "prompt": "Match one to many.",
+        "kind": "match",
+        "matches": {
+          "left": ["One pen", "One book", "One box"],
+          "right": ["Three books", "Four boxes", "Two pens"]
+        },
+        "answer": "2,0,1",
+        "scene": "🔢 Count|📦 One and many"
+      },
+      {
+        "id": "13-4",
+        "prompt": "There ___ two pencils on the desk.",
+        "kind": "choice",
+        "options": ["am", "are", "is"],
+        "answer": "are",
+        "scene": "✏️✏️ Two pencils|🪑 Desk"
+      },
+      {
+        "id": "13-5",
+        "prompt": "There ___ one book on the shelf.",
+        "kind": "choice",
+        "options": ["is", "are", "am"],
+        "answer": "is",
+        "scene": "📕 One book|📚 Shelf"
+      },
+      {
+        "id": "13-6",
+        "prompt": "Which word means more than one box?",
+        "kind": "choice",
+        "options": ["box", "boxs", "boxes"],
+        "answer": "boxes",
+        "scene": "📦📦 Two boxes"
+      },
+      {
+        "id": "13-7",
+        "prompt": "Which word means more than one bus?",
+        "kind": "choice",
+        "options": ["busis", "buses", "bus"],
+        "answer": "buses",
+        "scene": "🚌🚌 Two buses"
+      },
+      {
+        "id": "13-8",
+        "prompt": "One bag. Three ___.",
+        "kind": "write",
+        "answer": "bags",
+        "task": "short",
+        "scene": "🎒🎒🎒 Three"
+      },
+      {
+        "id": "13-9",
+        "prompt": "The shoes ___ under the chair.",
+        "kind": "choice",
+        "options": ["is", "am", "are"],
+        "answer": "are",
+        "scene": "👟👟 Shoes|🪑 Chair"
+      },
+      {
+        "id": "13-10",
+        "prompt": "One child. Two ___.",
+        "kind": "choice",
+        "options": ["child", "children", "childs"],
+        "answer": "children",
+        "scene": "🧒🧒 Two pupils"
+      }
+    ]
+  },
+  {
+    "title": "Who is it?",
+    "ar": "ضمائر الفاعل",
+    "icon": "👥",
+    "questions": [
+      {
+        "prompt": "Ali and Haya like school. ___ like school.",
+        "options": ["It", "They", "He"],
+        "answer": "They",
+        "scene": "👦 Ali|👧 Haya|🏫 School",
+        "passage": "",
+        "audio": "",
+        "kind": "choice",
+        "id": "14-1"
+      },
+      {
+        "prompt": "You and I play together. ___ play together.",
+        "answer": "We",
+        "scene": "🫵 You|🙋 I|🤝 Together",
+        "rubric": "",
+        "strict": false,
+        "passage": "",
+        "kind": "write",
+        "id": "14-2",
+        "task": "short"
+      },
+      {
+        "id": "14-3",
+        "prompt": "Match each subject to a pronoun.",
+        "kind": "match",
+        "matches": {
+          "left": ["Omar", "Haya", "The books"],
+          "right": ["She", "They", "He"]
+        },
+        "answer": "2,0,1",
+        "scene": "👤 People|📚 Things"
+      },
+      {
+        "id": "14-4",
+        "prompt": "Match each subject to a pronoun.",
+        "kind": "match",
+        "matches": {
+          "left": ["My pencil", "Omar and I", "The teachers"],
+          "right": ["They", "It", "We"]
+        },
+        "answer": "1,2,0",
+        "scene": "✏️ A thing|👥 A group"
+      },
+      {
+        "id": "14-5",
+        "prompt": "Omar reads a book. ___ likes stories.",
+        "kind": "choice",
+        "options": ["We", "It", "He"],
+        "answer": "He",
+        "scene": "👦 Omar|📖 Story"
+      },
+      {
+        "id": "14-6",
+        "prompt": "My sister paints. ___ likes art.",
+        "kind": "choice",
+        "options": ["They", "She", "He"],
+        "answer": "She",
+        "scene": "👧 Sister|🎨 Art"
+      },
+      {
+        "id": "14-7",
+        "prompt": "The clock is on the wall. ___ is round.",
+        "kind": "choice",
+        "options": ["It", "He", "We"],
+        "answer": "It",
+        "scene": "🕘 Clock|🟠 Round"
+      },
+      {
+        "id": "14-8",
+        "prompt": "You and your cousin play. ___ both like games.",
+        "kind": "choice",
+        "options": ["He", "She", "You"],
+        "answer": "You",
+        "scene": "👋 You|🎲 Game"
+      },
+      {
+        "id": "14-9",
+        "prompt": "Replace “Reem and I” with one word. ___ read together.",
+        "kind": "write",
+        "answer": "we",
+        "task": "short",
+        "scene": "👭 Together|📚 Read"
+      },
+      {
+        "id": "14-10",
+        "prompt": "Which pronoun means the speaker alone?",
+        "kind": "choice",
+        "options": ["I", "We", "They"],
+        "answer": "I",
+        "scene": "🙋 The speaker|💬 Talk"
+      },
+      {
+        "id": "14-11",
+        "kind": "choice",
+        "prompt": "Omar helps Haya. Omar helps ___.",
+        "options": ["her", "she", "he"],
+        "answer": "her",
+        "scene": "🤝 Help|👧 Haya"
+      },
+      {
+        "id": "14-12",
+        "kind": "choice",
+        "prompt": "Which sentence keeps the meaning? We see Ali at school.",
+        "options": ["Ali reads a story.", "We see him.", "We see he."],
+        "answer": "We see him.",
+        "scene": "👀 See|👦 Ali"
+      },
+      {
+        "id": "14-13",
+        "kind": "choice",
+        "prompt": "Which pronoun fits? Our teacher helps Omar and me. She helps ___.",
+        "options": ["we", "them", "us"],
+        "answer": "us",
+        "scene": "👩‍🏫 Teacher|👥 Us"
+      }
+    ]
+  },
+  {
+    "title": "Every day",
+    "ar": "المضارع البسيط",
+    "icon": "📆",
+    "questions": [
+      {
+        "prompt": "She ___ her face every day.",
+        "options": ["wash", "washes", "washing"],
+        "answer": "washes",
+        "scene": "👧 She|💧 Water|🪞 Mirror",
+        "passage": "",
+        "audio": "",
+        "kind": "choice",
+        "id": "15-1"
+      },
+      {
+        "prompt": "When ___ Ali get up?",
+        "answer": "does",
+        "scene": "👦 Ali|🛏️ Wake|❔ When",
+        "rubric": "",
+        "strict": false,
+        "passage": "",
+        "kind": "write",
+        "id": "15-2",
+        "task": "short"
+      },
+      {
+        "prompt": "When ___ you go to school?",
+        "options": ["does", "is", "do"],
+        "answer": "do",
+        "scene": "🫵 You|🏫 School",
+        "passage": "",
+        "audio": "",
+        "kind": "choice",
+        "id": "15-3"
+      },
+      {
+        "id": "15-4",
+        "kind": "write",
+        "task": "correct",
+        "prompt": "Correct the sentence. She brush her teeth every morning.",
+        "answer": "She brushes her teeth every morning.",
+        "strict": true,
+        "scene": "👧 She|🪥 Action|🌅 Morning",
+        "rubric": "Correct third-person singular brush to brushes. Keep the original meaning."
+      },
+      {
+        "id": "15-5",
+        "prompt": "I ___ to school every morning.",
+        "kind": "choice",
+        "options": ["walking", "walk", "walks"],
+        "answer": "walk",
+        "scene": "🚶 Walk|🏫 School"
+      },
+      {
+        "id": "15-6",
+        "prompt": "Omar ___ a big breakfast each day.",
+        "kind": "choice",
+        "options": ["eats", "eat", "eating"],
+        "answer": "eats",
+        "scene": "👦 Omar|🍳 Breakfast"
+      },
+      {
+        "id": "15-7",
+        "prompt": "They ___ their bags before school.",
+        "kind": "choice",
+        "options": ["packs", "packing", "pack"],
+        "answer": "pack",
+        "scene": "🧒🧒 Pupils|🎒 Bags"
+      },
+      {
+        "id": "15-8",
+        "prompt": "Haya ___ to the library on Tuesdays.",
+        "kind": "choice",
+        "options": ["going", "goes", "go"],
+        "answer": "goes",
+        "scene": "👧 Haya|📚 Library"
+      },
+      {
+        "id": "15-9",
+        "prompt": "We ___ stories together.",
+        "kind": "choice",
+        "options": ["read", "reads", "reading"],
+        "answer": "read",
+        "scene": "👥 Together|📖 Story"
+      },
+      {
+        "id": "15-10",
+        "prompt": "My brother ___ TV after homework.",
+        "kind": "choice",
+        "options": ["watch", "watchs", "watches"],
+        "answer": "watches",
+        "scene": "👦 Brother|📺 TV"
+      },
+      {
+        "id": "15-11",
+        "prompt": "You ___ a ruler to draw straight lines.",
+        "kind": "choice",
+        "options": ["using", "use", "uses"],
+        "answer": "use",
+        "scene": "📏 Ruler|🖍️ Draw"
+      },
+      {
+        "id": "15-12",
+        "prompt": "The dog ___ by the door every morning.",
+        "kind": "choice",
+        "options": ["waits", "wait", "waiting"],
+        "answer": "waits",
+        "scene": "🐶 Dog|🚪 Door"
+      },
+      {
+        "id": "15-13",
+        "prompt": "Reem ___ her hands before lunch.",
+        "kind": "choice",
+        "options": ["wash", "washs", "washes"],
+        "answer": "washes",
+        "scene": "🫧 Bubbles|🍴 Lunch"
+      },
+      {
+        "id": "15-14",
+        "prompt": "Write the correct verb. Ali (fix) ___ his bike on Fridays.",
+        "kind": "write",
+        "answer": "fixes",
+        "task": "short",
+        "scene": "🚲 Bike|🔧 Repair"
+      },
+      {
+        "id": "15-15",
+        "prompt": "Mona ___ English after school.",
+        "kind": "choice",
+        "options": ["studies", "study", "studys"],
+        "answer": "studies",
+        "scene": "✏️ Study|📘 English"
+      },
+      {
+        "id": "15-16",
+        "prompt": "Ali ___ a red lunch box.",
+        "kind": "choice",
+        "options": ["have", "haves", "has"],
+        "answer": "has",
+        "scene": "👦 Ali|🍱 Lunch box"
+      },
+      {
+        "id": "15-17",
+        "prompt": "We ___ two English books.",
+        "kind": "choice",
+        "options": ["haves", "have", "has"],
+        "answer": "have",
+        "scene": "👥 We|📚 Two books"
+      },
+      {
+        "id": "15-18",
+        "prompt": "I ___ ready for school at seven.",
+        "kind": "choice",
+        "options": ["am", "is", "are"],
+        "answer": "am",
+        "scene": "🙋 I|🕖 Seven"
+      },
+      {
+        "id": "15-19",
+        "prompt": "The pencils ___ on the desk every morning.",
+        "kind": "choice",
+        "options": ["is", "am", "are"],
+        "answer": "are",
+        "scene": "✏️✏️ Pencils|🪑 Desk"
+      },
+      {
+        "id": "15-20",
+        "prompt": "Your bag ___ beside the chair.",
+        "kind": "choice",
+        "options": ["am", "is", "are"],
+        "answer": "is",
+        "scene": "🎒 Bag|🪑 Chair"
+      },
+      {
+        "id": "15-21",
+        "prompt": "I ___ eat dinner at school.",
+        "kind": "choice",
+        "options": ["don’t", "doesn’t", "isn’t"],
+        "answer": "don’t",
+        "scene": "🙋 I|🍽️ Dinner"
+      },
+      {
+        "id": "15-22",
+        "prompt": "My sister ___ ride the bus every day.",
+        "kind": "choice",
+        "options": ["don’t", "aren’t", "doesn’t"],
+        "answer": "doesn’t",
+        "scene": "👧 Sister|🚌 Bus"
+      },
+      {
+        "id": "15-23",
+        "prompt": "They ___ play basketball in the library.",
+        "kind": "choice",
+        "options": ["isn’t", "don’t", "doesn’t"],
+        "answer": "don’t",
+        "scene": "👥 They|📚 Library"
+      },
+      {
+        "id": "15-24",
+        "prompt": "Omar doesn’t ___ to bed at four.",
+        "kind": "choice",
+        "options": ["go", "goes", "going"],
+        "answer": "go",
+        "scene": "🛏️ Bed|🕓 Four"
+      },
+      {
+        "id": "15-25",
+        "prompt": "The dog doesn’t ___ on the sofa.",
+        "kind": "choice",
+        "options": ["sits", "sitting", "sit"],
+        "answer": "sit",
+        "scene": "🐶 Dog|🛋️ Sofa"
+      },
+      {
+        "id": "15-26",
+        "prompt": "We ___ wear hats in class.",
+        "kind": "choice",
+        "options": ["isn’t", "don’t", "doesn’t"],
+        "answer": "don’t",
+        "scene": "👥 We|🧢 Hat"
+      },
+      {
+        "id": "15-27",
+        "prompt": "Use the full form. She ___ not drink milk at break time.",
+        "kind": "write",
+        "answer": "does",
+        "task": "short",
+        "scene": "👧 She|🥛 Milk"
+      },
+      {
+        "id": "15-28",
+        "prompt": "Which sentence is correct?",
+        "kind": "choice",
+        "options": [
+          "He don’t brush his hair at school.",
+          "He doesn’t brushes his hair at school.",
+          "He doesn’t brush his hair at school."
+        ],
+        "answer": "He doesn’t brush his hair at school.",
+        "scene": "👦 He|🪮 Comb"
+      },
+      {
+        "id": "15-29",
+        "prompt": "Which sentence means Omar catches the bus every day?",
+        "kind": "choice",
+        "options": [
+          "Omar catching the bus every day.",
+          "Omar catches the bus every day.",
+          "Omar catch the bus every day."
+        ],
+        "answer": "Omar catches the bus every day.",
+        "scene": "👦 Omar|🚌 Bus"
+      },
+      {
+        "id": "15-30",
+        "prompt": "___ your friends walk to school?",
+        "kind": "choice",
+        "options": ["Do", "Does", "Is"],
+        "answer": "Do",
+        "scene": "👥 Friends|🚶 Walk"
+      },
+      {
+        "id": "15-31",
+        "prompt": "___ Haya like music?",
+        "kind": "choice",
+        "options": ["Do", "Are", "Does"],
+        "answer": "Does",
+        "scene": "👧 Haya|🎶 Music"
+      },
+      {
+        "id": "15-32",
+        "prompt": "Does Ali ___ breakfast at home?",
+        "kind": "choice",
+        "options": ["eating", "eat", "eats"],
+        "answer": "eat",
+        "scene": "👦 Ali|🍞 Breakfast"
+      },
+      {
+        "id": "15-33",
+        "prompt": "What time ___ you get home?",
+        "kind": "choice",
+        "options": ["do", "does", "is"],
+        "answer": "do",
+        "scene": "🏠 Home|🕑 Time"
+      },
+      {
+        "id": "15-34",
+        "prompt": "Where does Reem ___ after school?",
+        "kind": "choice",
+        "options": ["goes", "going", "go"],
+        "answer": "go",
+        "scene": "👧 Reem|📍 Place"
+      },
+      {
+        "id": "15-35",
+        "prompt": "___ his mother work at the school?",
+        "kind": "choice",
+        "options": ["Are", "Does", "Do"],
+        "answer": "Does",
+        "scene": "👩 Mother|🏫 School"
+      },
+      {
+        "id": "15-36",
+        "prompt": "Do they wear uniforms? Yes, ___.",
+        "kind": "choice",
+        "options": ["they do", "they does", "they are"],
+        "answer": "they do",
+        "scene": "👥 They|👕 Uniforms"
+      },
+      {
+        "id": "15-37",
+        "prompt": "Does the bell ring at six? No, ___.",
+        "kind": "choice",
+        "options": ["it don’t", "it isn’t", "it doesn’t"],
+        "answer": "it doesn’t",
+        "scene": "🔔 Bell|🕕 Six"
+      },
+      {
+        "id": "15-38",
+        "prompt": "Does Salma like art? Yes, ___.",
+        "kind": "choice",
+        "options": ["she is", "she does", "she do"],
+        "answer": "she does",
+        "scene": "👧 Salma|🎨 Art"
+      },
+      {
+        "id": "15-39",
+        "prompt": "Complete the question. ___ we read on Fridays?",
+        "kind": "write",
+        "answer": "do",
+        "task": "short",
+        "scene": "📅 Friday|📖 Read"
+      },
+      {
+        "id": "15-40",
+        "prompt": "Who ___ the board every day?",
+        "kind": "choice",
+        "options": ["clean", "cleaning", "cleans"],
+        "answer": "cleans",
+        "scene": "🧽 Clean|⬛ Board"
+      },
+      {
+        "id": "15-41",
+        "prompt": "Which phrase tells us about a routine?",
+        "kind": "choice",
+        "options": ["Yesterday at noon", "Every morning", "Right now"],
+        "answer": "Every morning",
+        "scene": "📅 Days|⏰ Time words"
+      },
+      {
+        "id": "15-42",
+        "prompt": "I read every day. Which phrase can replace “every day”?",
+        "kind": "choice",
+        "options": ["each day", "last night", "right now"],
+        "answer": "each day",
+        "scene": "📖 Read|📆 Days"
+      },
+      {
+        "id": "15-43",
+        "prompt": "Find a sentence about a routine.",
+        "kind": "choice",
+        "options": [
+          "She went to the lab yesterday.",
+          "She is going to the lab now.",
+          "She goes to the lab on Mondays."
+        ],
+        "answer": "She goes to the lab on Mondays.",
+        "scene": "🔬 Lab|📅 Monday"
+      },
+      {
+        "id": "15-44",
+        "prompt": "Match each subject to the right verb phrase.",
+        "kind": "match",
+        "matches": {
+          "left": ["I", "My sister", "The bus"],
+          "right": ["stops at the gate", "brushes her teeth", "eat toast"]
+        },
+        "answer": "2,1,0",
+        "scene": "🙋 Who?|🎬 Action"
+      },
+      {
+        "id": "15-45",
+        "prompt": "Match each subject to a phrase that fits.",
+        "kind": "match",
+        "matches": {
+          "left": ["We", "Ali", "Haya and Reem"],
+          "right": ["washes his hands", "carry their bags", "eat our lunch"]
+        },
+        "answer": "2,0,1",
+        "scene": "👥 People|🔤 Verb forms"
+      },
+      {
+        "id": "15-46",
+        "prompt": "Match each group to a word or phrase it goes with.",
+        "kind": "match",
+        "matches": {
+          "left": ["I / you / we / they", "He / she / it", "A time phrase"],
+          "right": ["every morning", "do", "does"]
+        },
+        "answer": "1,2,0",
+        "scene": "❓ Ask|📚 School"
+      },
+      {
+        "id": "15-47",
+        "prompt": "Choose the sentence with the right word order.",
+        "kind": "choice",
+        "options": [
+          "Usually eat I breakfast at home.",
+          "I usually eat breakfast at home.",
+          "I eat usually breakfast at home."
+        ],
+        "answer": "I usually eat breakfast at home.",
+        "scene": "🍳 Breakfast|🏠 Home"
+      },
+      {
+        "id": "15-48",
+        "prompt": "Which sentence goes with one person named Noor?",
+        "kind": "choice",
+        "options": [
+          "Noor carries a bag.",
+          "Noor carry a bag.",
+          "Noor carrying a bag."
+        ],
+        "answer": "Noor carries a bag.",
+        "scene": "👧 Noor|🎒 Bag"
+      },
+      {
+        "id": "15-49",
+        "prompt": "One word. He (do) ___ his homework on Sundays.",
+        "kind": "write",
+        "answer": "does",
+        "task": "short",
+        "scene": "👦 He|📒 Homework"
+      },
+      {
+        "id": "15-50",
+        "prompt": "One word. She (carry) ___ books to school.",
+        "kind": "write",
+        "answer": "carries",
+        "task": "short",
+        "scene": "👧 She|📚 Books"
+      },
+      {
+        "id": "15-51",
+        "prompt": "My friend and I ___ the classroom after art.",
+        "kind": "choice",
+        "options": ["clean", "cleans", "cleaning"],
+        "answer": "clean",
+        "scene": "👭 Friends|🧽 Clean"
+      },
+      {
+        "id": "15-52",
+        "prompt": "Which is the correct question?",
+        "kind": "choice",
+        "options": [
+          "You does brush your teeth every day?",
+          "Do you brushes your teeth every day?",
+          "Do you brush your teeth every day?"
+        ],
+        "answer": "Do you brush your teeth every day?",
+        "scene": "🪥 Teeth|💬 Question"
+      },
+      {
+        "id": "15-53",
+        "prompt": "Which is correct about the timetable?",
+        "kind": "choice",
+        "options": [
+          "Lessons starting at eight.",
+          "Lessons start at eight.",
+          "Lessons starts at eight."
+        ],
+        "answer": "Lessons start at eight.",
+        "scene": "🏫 Lessons|🕗 Eight"
+      },
+      {
+        "id": "15-54",
+        "prompt": "Choose the sentence for a weekly habit.",
+        "kind": "choice",
+        "options": [
+          "He plays football every Friday.",
+          "He played football last Friday.",
+          "He is playing football now."
+        ],
+        "answer": "He plays football every Friday.",
+        "scene": "⚽ Football|📆 Friday"
+      },
+      {
+        "id": "15-55",
+        "prompt": "Sara ___ at six, then eats breakfast.",
+        "kind": "choice",
+        "options": ["get up", "getting up", "gets up"],
+        "answer": "gets up",
+        "scene": "🛏️ Bed|🕕 Six"
+      }
+    ]
+  },
+  {
+    "title": "At or on?",
+    "ar": "الساعة واليوم",
+    "icon": "🗓️",
+    "questions": [
+      {
+        "prompt": "I go to school ___ seven o’clock.",
+        "options": ["at", "on", "in"],
+        "answer": "at",
+        "scene": "🕖 Seven|🎒 School bag",
+        "passage": "",
+        "audio": "",
+        "kind": "choice",
+        "id": "16-1"
+      },
+      {
+        "prompt": "We play football ___ Friday.",
+        "answer": "on",
+        "scene": "📆 Friday|⚽ Football",
+        "rubric": "",
+        "strict": false,
+        "passage": "",
+        "kind": "write",
+        "id": "16-2",
+        "task": "short"
+      },
+      {
+        "id": "16-3",
+        "prompt": "Match each phrase to the time it names.",
+        "kind": "match",
+        "matches": {
+          "left": ["At seven o’clock", "On Friday", "On Tuesday morning"],
+          "right": ["A day", "The morning of a named day", "A clock time"]
+        },
+        "answer": "2,0,1",
+        "scene": "⏰ Clock|📅 Calendar"
+      },
+      {
+        "id": "16-4",
+        "prompt": "We have art ___ Monday.",
+        "kind": "choice",
+        "options": ["is", "on", "at"],
+        "answer": "on",
+        "scene": "🎨 Art|📅 Monday"
+      },
+      {
+        "id": "16-5",
+        "prompt": "I get up ___ six o’clock.",
+        "kind": "choice",
+        "options": ["at", "on", "do"],
+        "answer": "at",
+        "scene": "🛏️ Bed|🕕 Six"
+      },
+      {
+        "id": "16-6",
+        "prompt": "School starts ___ eight o’clock.",
+        "kind": "choice",
+        "options": ["on", "does", "at"],
+        "answer": "at",
+        "scene": "🔔 Bell|🕗 Eight"
+      },
+      {
+        "id": "16-7",
+        "prompt": "We go to the library ___ Wednesdays.",
+        "kind": "choice",
+        "options": ["were", "on", "at"],
+        "answer": "on",
+        "scene": "📚 Library|📅 Wednesday"
+      },
+      {
+        "id": "16-8",
+        "prompt": "Our class has a game ___ Friday morning.",
+        "kind": "choice",
+        "options": ["on", "at", "does"],
+        "answer": "on",
+        "scene": "🎲 Game|📅 Friday morning"
+      },
+      {
+        "id": "16-9",
+        "prompt": "Write at or on. We eat lunch ___ noon.",
+        "kind": "write",
+        "answer": "at",
+        "task": "short",
+        "scene": "🍴 Lunch|☀️ Noon"
+      },
+      {
+        "id": "16-10",
+        "prompt": "Which sentence is correct?",
+        "kind": "choice",
+        "options": [
+          "I read nine on o’clock.",
+          "I read at nine o’clock.",
+          "I read on nine o’clock."
+        ],
+        "answer": "I read at nine o’clock.",
+        "scene": "📖 Read|🕘 Nine"
+      }
+    ]
+  },
+  {
+    "title": "Fix the sentence",
+    "ar": "الحروف والترقيم",
+    "icon": "🔤",
+    "questions": [
+      {
+        "prompt": "Add capitals and punctuation. i like english",
+        "answer": "I like English.",
+        "scene": "🔠 Capital|💬 Sentence|🔎 Ending",
+        "rubric": "",
+        "strict": true,
+        "passage": "",
+        "kind": "write",
+        "id": "17-1",
+        "task": "punctuate"
+      },
+      {
+        "prompt": "Add capitals and punctuation. when do you get up",
+        "answer": "When do you get up?",
+        "scene": "💬 Question|🔎 Ending",
+        "rubric": "",
+        "strict": true,
+        "passage": "",
+        "kind": "write",
+        "id": "17-2",
+        "task": "punctuate"
+      },
+      {
+        "id": "17-3",
+        "kind": "write",
+        "task": "punctuate",
+        "prompt": "Punctuate this question. does reem have art on monday",
+        "answer": "Does Reem have Art on Monday?|Does Reem have art on Monday?",
+        "strict": true,
+        "scene": "👧 Name|📅 Day|❔ Question",
+        "rubric": "Capitalise the first word, Reem and Monday. End with a question mark. Accept art or Art."
+      },
+      {
+        "id": "17-4",
+        "prompt": "Fix this sentence. we read on tuesday",
+        "kind": "write",
+        "answer": "We read on Tuesday.",
+        "task": "punctuate",
+        "strict": true,
+        "scene": "🔤 Capital|📅 Day|✍️ Finish"
+      },
+      {
+        "id": "17-5",
+        "prompt": "Fix this question. where is my bag",
+        "kind": "write",
+        "answer": "Where is my bag?",
+        "task": "punctuate",
+        "strict": true,
+        "scene": "🎒 Bag|❓ Question"
+      },
+      {
+        "id": "17-6",
+        "prompt": "Fix this sentence. omar goes to school",
+        "kind": "write",
+        "answer": "Omar goes to school.",
+        "task": "punctuate",
+        "strict": true,
+        "scene": "👦 Name|🏫 School"
+      },
+      {
+        "id": "17-7",
+        "prompt": "Fix this question. do you like art",
+        "kind": "write",
+        "answer": "Do you like art?",
+        "task": "punctuate",
+        "strict": true,
+        "scene": "🎨 Art|❓ Question"
+      },
+      {
+        "id": "17-8",
+        "prompt": "Fix this sentence. i eat lunch at noon",
+        "kind": "write",
+        "answer": "I eat lunch at noon.",
+        "task": "punctuate",
+        "strict": true,
+        "scene": "🙋 I|🍽️ Lunch"
+      },
+      {
+        "id": "17-9",
+        "prompt": "Which sentence is punctuated correctly?",
+        "kind": "choice",
+        "options": [
+          "Haya likes school?",
+          "Haya likes school.",
+          "haya likes school."
+        ],
+        "answer": "Haya likes school.",
+        "scene": "👧 Name|✍️ Finish"
+      },
+      {
+        "id": "17-10",
+        "prompt": "Which mark completes “What time is it___”?",
+        "kind": "choice",
+        "options": ["?", ".", ","],
+        "answer": "?",
+        "scene": "⏰ Time|💬 Ask"
+      }
+    ]
+  },
+  {
+    "title": "Build a sentence",
+    "ar": "رتّب الكلمات",
+    "icon": "🧱",
+    "questions": [
+      {
+        "prompt": "Put the words in order. teeth / I / my / brush",
+        "answer": "I brush my teeth.",
+        "scene": "🙋 Who|🪥 Action|🦷 What",
+        "rubric": "",
+        "strict": true,
+        "passage": "",
+        "kind": "write",
+        "id": "18-1",
+        "task": "order"
+      },
+      {
+        "prompt": "Put the words in order. early / gets / Reem / up",
+        "answer": "Reem gets up early.",
+        "scene": "👧 Who|🛏️ Action|🌅 When",
+        "rubric": "",
+        "strict": true,
+        "passage": "",
+        "kind": "write",
+        "id": "18-2",
+        "task": "order"
+      },
+      {
+        "id": "18-3",
+        "prompt": "Put the words in order. bag / my / I / pack",
+        "kind": "write",
+        "answer": "I pack my bag.",
+        "task": "order",
+        "strict": true,
+        "scene": "🙋 Who?|🎒 Action"
+      },
+      {
+        "id": "18-4",
+        "prompt": "Put the words in order. class / we / in / read",
+        "kind": "write",
+        "answer": "We read in class.",
+        "task": "order",
+        "strict": true,
+        "scene": "👥 Who?|📖 Action"
+      },
+      {
+        "id": "18-5",
+        "prompt": "Put the words in order. a / see / clock / I",
+        "kind": "write",
+        "answer": "I see a clock.",
+        "task": "order",
+        "strict": true,
+        "scene": "🙋 I|🕰️ Object"
+      },
+      {
+        "id": "18-6",
+        "prompt": "Put the words in order. is / library / the / quiet",
+        "kind": "write",
+        "answer": "The library is quiet.",
+        "task": "order",
+        "strict": true,
+        "scene": "📚 Place|🤫 Quiet"
+      },
+      {
+        "id": "18-7",
+        "prompt": "Put the words in order. time / it / what / is",
+        "kind": "write",
+        "answer": "What time is it?",
+        "task": "order",
+        "strict": true,
+        "scene": "⏰ Time|❓ Question"
+      },
+      {
+        "id": "18-8",
+        "prompt": "Which puts the words in order?",
+        "kind": "choice",
+        "options": [
+          "We lunch after play.",
+          "We play after lunch.",
+          "After play we lunch."
+        ],
+        "answer": "We play after lunch.",
+        "scene": "🏀 Play|🍽️ Lunch"
+      },
+      {
+        "id": "18-9",
+        "prompt": "Put the words in order. her / washes / Haya / face",
+        "kind": "write",
+        "answer": "Haya washes her face.",
+        "task": "order",
+        "strict": true,
+        "scene": "👧 Haya|🫧 Wash"
+      },
+      {
+        "id": "18-10",
+        "prompt": "Put the words in order. do / when / read / you",
+        "kind": "write",
+        "answer": "When do you read?",
+        "task": "order",
+        "strict": true,
+        "scene": "📚 Read|❓ Question"
+      }
+    ]
+  },
+  {
+    "title": "Tell me about your day",
+    "ar": "احكي عن يومك",
+    "icon": "🎒",
+    "questions": [
+      {
+        "prompt": "Write one sentence about your morning.",
+        "answer": "I eat breakfast in the morning.",
+        "scene": "🌄 Wake|🪥 Get ready|🥛 Eat",
+        "rubric": "Accept any plausible morning activity in one English sentence. Do not require the example or a particular time.",
+        "strict": false,
+        "passage": "",
+        "kind": "write",
+        "id": "19-1",
+        "task": "writing"
+      },
+      {
+        "prompt": "What is your favourite subject? Write a sentence.",
+        "answer": "My favourite subject is Art.",
+        "scene": "🎨 Art|🔬 Science|🔢 Maths",
+        "rubric": "Accept any school subject and any equivalent sentence stating a preference.",
+        "strict": false,
+        "passage": "",
+        "kind": "write",
+        "id": "19-2",
+        "task": "writing"
+      },
+      {
+        "id": "19-3",
+        "kind": "write",
+        "task": "writing",
+        "prompt": "Look at the pictures. Write two sentences about this school morning.",
+        "answer": "The child eats breakfast. Then the child goes to school.",
+        "scene": "🍞 Breakfast|🎒 Pack|🏫 School",
+        "rubric": "Accept any two meaningful English sentences describing the illustrated events. Accept different subjects, verbs and sensible details. Do not require using the example's exact words."
+      },
+      {
+        "id": "19-4",
+        "prompt": "Write when you get up. Use a full sentence.",
+        "kind": "write",
+        "answer": "I get up at six o’clock.",
+        "task": "writing",
+        "rubric": "Accept any plausible waking time and a complete sentence.",
+        "scene": "🛏️ Wake up|⏰ Time"
+      },
+      {
+        "id": "19-5",
+        "prompt": "Write one sentence about what is in your school bag.",
+        "kind": "write",
+        "answer": "There is a book in my school bag.",
+        "task": "writing",
+        "rubric": "Accept any plausible school item and a complete sentence.",
+        "scene": "🎒 Bag|✏️ Objects"
+      },
+      {
+        "id": "19-6",
+        "prompt": "Write two sentences about what you do before school.",
+        "kind": "write",
+        "answer": "I brush my teeth. I put on my shoes.",
+        "task": "writing",
+        "rubric": "Accept any two plausible before-school actions in complete sentences.",
+        "scene": "🌅 Morning|🪥 Get ready"
+      },
+      {
+        "id": "19-7",
+        "prompt": "Write one sentence about a place you like at school.",
+        "kind": "write",
+        "answer": "I like our library.",
+        "task": "writing",
+        "rubric": "Accept any school place and a complete sentence.",
+        "scene": "🏫 School|💛 Favourite"
+      },
+      {
+        "id": "19-8",
+        "prompt": "Look at the pictures. Write what you do first and next.",
+        "kind": "write",
+        "answer": "First I wash my face. Next I eat breakfast.",
+        "task": "writing",
+        "rubric": "Accept two complete sentences in the visual order with first and next or equivalents.",
+        "scene": "🫧 Wash|🍳 Breakfast"
+      },
+      {
+        "id": "19-9",
+        "prompt": "Write a question you can ask about school.",
+        "kind": "write",
+        "answer": "Where is the library?",
+        "task": "writing",
+        "rubric": "Accept any relevant grammatical question about school.",
+        "scene": "🏫 School|❓ Ask"
+      },
+      {
+        "id": "19-10",
+        "prompt": "Which sentence tells us a part of a school day?",
+        "kind": "choice",
+        "options": [
+          "The bus is blue.",
+          "I eat a snack at break time.",
+          "A fish swims in the sea."
+        ],
+        "answer": "I eat a snack at break time.",
+        "scene": "🔔 Break|📝 Write"
+      }
+    ]
+  },
+  {
+    "title": "Unit check",
+    "ar": "اختبار الوحدة",
+    "icon": "⭐",
+    "questions": [
+      {
+        "prompt": "Which word begins with br?",
+        "options": ["blue", "brick", "shop"],
+        "answer": "brick",
+        "scene": "🔵 Blue|🧱 Brick|🏪 Shop",
+        "passage": "",
+        "audio": "",
+        "kind": "choice",
+        "id": "20-1"
+      },
+      {
+        "prompt": "They ___ dinner at seven.",
+        "options": ["eats", "eating", "eat"],
+        "answer": "eat",
+        "scene": "👨‍👩‍👧 Family|🍽️ Dinner|🕖 Seven",
+        "passage": "",
+        "audio": "",
+        "kind": "choice",
+        "id": "20-2"
+      },
+      {
+        "prompt": "Does Reem play basketball on Monday?",
+        "options": ["Yes", "No"],
+        "answer": "Yes",
+        "scene": "📚 Read|🏀 Sport",
+        "passage": "Reem goes to school by car. She has six classes. On Monday she plays basketball in PE.",
+        "audio": "",
+        "kind": "choice",
+        "id": "20-3"
+      },
+      {
+        "prompt": "Write a sentence. on / play / Friday / I / football",
+        "answer": "I play football on Friday.|On Friday, I play football.|On Friday I play football.",
+        "scene": "🙋 Who|⚽ What|📅 When",
+        "rubric": "",
+        "strict": true,
+        "passage": "",
+        "kind": "write",
+        "id": "20-4",
+        "task": "order"
+      },
+      {
+        "id": "20-5",
+        "kind": "write",
+        "task": "correct",
+        "prompt": "Correct the sentence. We plays football on Friday.",
+        "answer": "We play football on Friday.",
+        "strict": true,
+        "scene": "👬 We|⚽ Football|📅 Friday",
+        "rubric": "Fix subject–verb agreement and preserve the day and activity."
+      },
+      {
+        "id": "20-6",
+        "prompt": "Match the object to what it helps you do.",
+        "kind": "match",
+        "matches": {
+          "left": ["Clock", "Pencil", "Ruler"],
+          "right": ["Write a word", "Draw a straight line", "Tell the time"]
+        },
+        "answer": "2,0,1",
+        "scene": "🎒 School kit|🧩 Match"
+      },
+      {
+        "id": "20-7",
+        "prompt": "Look across the room. ___ are my shoes.",
+        "kind": "choice",
+        "options": ["Those", "This", "These"],
+        "answer": "Those",
+        "scene": "👟👟 Shoes|🔭 Far"
+      },
+      {
+        "id": "20-8",
+        "prompt": "We read ___ Tuesdays.",
+        "kind": "choice",
+        "options": ["at", "does", "on"],
+        "answer": "on",
+        "scene": "📚 Read|📅 Tuesdays"
+      },
+      {
+        "id": "20-9",
+        "prompt": "Listen. Which meal does Omar eat?",
+        "kind": "choice",
+        "options": ["Breakfast", "Lunch", "Dinner"],
+        "answer": "Lunch",
+        "audio": "I’m Omar. I eat lunch at two o’clock.",
+        "scene": "🎧 Listen|🍽️ Meal"
+      },
+      {
+        "id": "20-10",
+        "prompt": "Fix the punctuation. where do you go after school",
+        "kind": "write",
+        "answer": "Where do you go after school?",
+        "task": "punctuate",
+        "strict": true,
+        "scene": "🏫 School|❓ Question"
+      }
+    ]
+  },
+  {
+    "title": "Yesterday at school",
+    "ar": "الماضي البسيط",
+    "icon": "🗓️",
+    "questions": [
+      {
+        "id": "21-1",
+        "prompt": "Yesterday, we ___ basketball.",
+        "kind": "choice",
+        "options": ["play", "plays", "played"],
+        "answer": "played",
+        "scene": "📅 Yesterday|🏀 Basketball"
+      },
+      {
+        "id": "21-2",
+        "prompt": "I ___ to the library last week.",
+        "kind": "choice",
+        "options": ["goes", "went", "go"],
+        "answer": "went",
+        "scene": "📚 Library|📅 Last week"
+      },
+      {
+        "id": "21-3",
+        "prompt": "Haya ___ toast yesterday.",
+        "kind": "choice",
+        "options": ["ate", "eat", "eats"],
+        "answer": "ate",
+        "scene": "👧 Haya|🍞 Toast"
+      },
+      {
+        "id": "21-4",
+        "prompt": "We ___ our hands before lunch yesterday.",
+        "kind": "choice",
+        "options": ["wash", "washes", "washed"],
+        "answer": "washed",
+        "scene": "🫧 Wash|🍴 Before lunch"
+      },
+      {
+        "id": "21-5",
+        "prompt": "Match each verb to the form we use for yesterday.",
+        "kind": "match",
+        "matches": {
+          "left": ["go", "eat", "play"],
+          "right": ["played", "ate", "went"]
+        },
+        "answer": "2,1,0",
+        "scene": "📅 Yesterday|🔤 Verb change"
+      },
+      {
+        "id": "21-6",
+        "prompt": "Match the verb to its past form.",
+        "kind": "match",
+        "matches": {
+          "left": ["have", "see", "watch"],
+          "right": ["saw", "watched", "had"]
+        },
+        "answer": "2,0,1",
+        "scene": "🔤 Verbs|💬 Remember"
+      },
+      {
+        "id": "21-7",
+        "prompt": "___ you visit the gym yesterday?",
+        "kind": "choice",
+        "options": ["Do", "Does", "Did"],
+        "answer": "Did",
+        "scene": "🏀 Gym|❓ Ask"
+      },
+      {
+        "id": "21-8",
+        "prompt": "Did Omar ___ a story yesterday?",
+        "kind": "choice",
+        "options": ["reading", "read", "reads"],
+        "answer": "read",
+        "scene": "👦 Omar|📖 Story"
+      },
+      {
+        "id": "21-9",
+        "prompt": "She didn’t ___ football yesterday.",
+        "kind": "choice",
+        "options": ["play", "played", "plays"],
+        "answer": "play",
+        "scene": "⚽ Football|📅 Yesterday"
+      },
+      {
+        "id": "21-10",
+        "prompt": "Did they wash their hands? Yes, ___.",
+        "kind": "choice",
+        "options": ["they do", "they does", "they did"],
+        "answer": "they did",
+        "scene": "👥 They|🫧 Hands"
+      },
+      {
+        "id": "21-11",
+        "prompt": "We ___ at the library yesterday.",
+        "kind": "choice",
+        "options": ["is", "were", "are"],
+        "answer": "were",
+        "scene": "👥 We|📚 Library"
+      },
+      {
+        "id": "21-12",
+        "prompt": "I ___ at school yesterday morning.",
+        "kind": "choice",
+        "options": ["was", "am", "were"],
+        "answer": "was",
+        "scene": "🙋 I|🏫 School"
+      },
+      {
+        "id": "21-13",
+        "prompt": "Write the past form. Last night I (watch) ___ a film.",
+        "kind": "write",
+        "answer": "watched",
+        "task": "short",
+        "scene": "🌙 Last night|🎬 Film"
+      },
+      {
+        "id": "21-14",
+        "prompt": "Write the past form. I (have) ___ lunch an hour ago.",
+        "kind": "write",
+        "answer": "had",
+        "task": "short",
+        "scene": "🍽️ Lunch|⏰ An hour ago"
+      },
+      {
+        "id": "21-15",
+        "prompt": "Write the past form. She (like) ___ the story yesterday.",
+        "kind": "write",
+        "answer": "liked",
+        "task": "short",
+        "scene": "📖 Story|👍 Like"
+      }
+    ]
+  }
+]

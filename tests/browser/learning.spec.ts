@@ -64,7 +64,7 @@ test("parent adds child, child completes quiz, parent reviews persisted answers"
   await page
     .getByLabel("اسم ولي الأمر", { exact: true })
     .fill("ولي أمر الاختبار");
-  await page.getByLabel("البريد الإلكتروني", { exact: true }).fill(email);
+  await page.getByLabel("اسم المستخدم أو البريد الإلكتروني", { exact: true }).fill(email);
   await page
     .getByLabel("كلمة المرور", { exact: true })
     .fill("Test-password-9876");
@@ -114,7 +114,7 @@ test("parent adds child, child completes quiz, parent reviews persisted answers"
   await expect(page).toHaveURL("/");
   await page.goto("/login?mode=student");
   await page.getByLabel("اسم مستخدم الطالب", { exact: true }).fill(username);
-  await page.getByLabel("رمز الدخول", { exact: true }).fill("73918264");
+  await page.getByLabel("كلمة المرور أو رمز الدخول", { exact: true }).fill("73918264");
   await page
     .getByRole("button", { name: "دخول إلى مساحتي", exact: true })
     .click();
@@ -176,7 +176,7 @@ test("parent adds child, child completes quiz, parent reviews persisted answers"
   await page.getByRole("button", { name: "خروج", exact: true }).click();
   await expect(page).toHaveURL("/");
   await page.goto("/login");
-  await page.getByLabel("البريد الإلكتروني", { exact: true }).fill(email);
+  await page.getByLabel("اسم المستخدم أو البريد الإلكتروني", { exact: true }).fill(email);
   await page
     .getByLabel("كلمة المرور", { exact: true })
     .fill("Test-password-9876");

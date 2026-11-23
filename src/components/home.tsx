@@ -123,7 +123,7 @@ export function Home({ lessons }: { lessons: readonly RegisteredLesson[] }) {
           <p>
             ثلاث مراحل، واثنا عشر صفًا.
             <br />
-            نبدأ من المتوسطة ودرس العلوم المتاح.
+            ابدأ من إنجليزي الصف الثاني أو دروس الصف الثامن.
           </p>
         </div>
         <div className="stage-catalog">

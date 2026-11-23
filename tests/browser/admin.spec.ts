@@ -132,7 +132,7 @@ test("admin dashboard links to /admin and the page stays within 360px", async ({
     .fill(`kid-${Date.now()}`);
   await dialog.getByLabel("الصف").selectOption("8");
   await dialog.getByRole("radio", { name: "بنت" }).check();
-  await dialog.getByLabel("رمز الدخول (٦–١٢ رقمًا)").fill("12345678");
+  await dialog.getByLabel(/^رمز الدخول/).fill("12345678");
   await dialog.getByRole("button", { name: "إنشاء الأسرة" }).click();
   await expect(
     page.getByRole("status").filter({ hasText: "أُنشئت الأسرة" }),

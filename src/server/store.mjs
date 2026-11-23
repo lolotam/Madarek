@@ -1,3 +1,4 @@
+import { englishStore } from "./english.mjs";
 import { DatabaseSync } from "node:sqlite";
 import {
   randomBytes,
@@ -75,18 +76,21 @@ function parseGender(value) {
   if (value !== "male" && value !== "female") fail("اختيار الجنس مطلوب.");
   return value;
 }
+function validStudentSecret(value) {
+  return typeof value === "string" && (/^\d{6,12}$/.test(value) || (value.trim().length >= 8 && value.length <= 128));
+}
 function readChild(input, index) {
   const run = () => {
     if (!input || typeof input !== "object" || Array.isArray(input))
       fail("تحقّقي من الحقول المطلوبة وطولها.");
     const name = field(input.name, 60),
       username = field(input.username, 32).toLowerCase(),
-      pin = field(input.pin, 12),
+      pin = field(input.pin, 128),
       grade = parseGrade(input.grade),
       gender = parseGender(input.gender);
     if (!/^[\p{L}\p{N}_-]{3,32}$/u.test(username))
       fail("اسم المستخدم 3–32 حرفًا دون مسافات.");
-    if (!/^\d{6,12}$/.test(pin)) fail("رمز الدخول من 6 إلى 12 رقمًا.");
+    if (!validStudentSecret(pin)) fail("رمز الدخول ٦–١٢ رقمًا أو كلمة مرور من ٨ إلى ١٢٨ حرفًا.");
     return { name, grade, gender, username, pin };
   };
   if (index == null) return run();
@@ -424,6 +428,7 @@ export function createStore(filename, { now = Date.now } = {}) {
         updatedAt: row?.updated_at ?? null,
       },
       attempts,
+      englishAttempts: english.history(id),
       practice: db
         .prepare(
           "SELECT answer,feedback,created_at AS createdAt FROM practice WHERE user_id=? ORDER BY created_at DESC LIMIT 30",
@@ -452,16 +457,17 @@ export function createStore(filename, { now = Date.now } = {}) {
     typeof id === "string"
       ? db.prepare("SELECT * FROM lesson_videos WHERE id=?").get(id)
       : undefined;
+  const english = englishStore(db,{requireRole,fail});
   const api = {
+    english,
     close() {
       db.close();
     },
     publicUser: safeUser,
     registerFamily(input) {
-      const name = field(input.name, 60),
-        email = field(input.email, 200).toLowerCase();
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
-        fail("أدخلي بريدًا إلكترونيًا صحيحًا.");
+      const name = field(input.name, 60);
+      const username = input.username ? parseUsername(input.username) : null;
+      const email = input.email || !username ? parseEmail(input.email) : null;
       const password = field(input.password, 128);
       if (password.length < 10) fail("كلمة المرور لا تقل عن 10 أحرف.");
       const rawChildren = input.children;
@@ -485,8 +491,8 @@ export function createStore(filename, { now = Date.now } = {}) {
       try {
         try {
           db.prepare(
-            "INSERT INTO users(id,name,role,email,secret,created_at) VALUES(?,?,?,?,?,?)",
-          ).run(id, name, "parent", email, hash(password), Date.now());
+            "INSERT INTO users(id,name,role,email,username,secret,created_at) VALUES(?,?,?,?,?,?,?)",
+          ).run(id, name, "parent", email, username, hash(password), Date.now());
         } catch (e) {
           if (String(e).includes("UNIQUE"))
             fail("تعذّر التسجيل بهذه البيانات. جرّبي تسجيل الدخول.");
@@ -537,9 +543,9 @@ export function createStore(filename, { now = Date.now } = {}) {
     loginParent(email, password) {
       const user = db
         .prepare(
-          "SELECT * FROM users WHERE email=? AND role IN ('parent','admin')",
+          "SELECT * FROM users WHERE (email=? OR username=?) AND role IN ('parent','admin')",
         )
-        .get(field(email, 200).toLowerCase());
+        .get(field(email, 200).toLowerCase(), field(email, 200).toLowerCase());
       const valid = verify(field(password, 128), user?.secret ?? dummyHash);
       if (!user || !valid || user.disabled_at)
         fail("بيانات الدخول غير صحيحة.", 401);
@@ -572,8 +578,8 @@ export function createStore(filename, { now = Date.now } = {}) {
     },
     resetChildPin(parentId, childId, pin) {
       api.getChild(parentId, childId);
-      if (typeof pin !== "string" || !/^\d{6,12}$/.test(pin))
-        fail("رمز الدخول من 6 إلى 12 رقمًا.");
+      if (typeof pin !== "string" || !validStudentSecret(pin))
+        fail("رمز الدخول ٦–١٢ رقمًا أو كلمة مرور من ٨ إلى ١٢٨ حرفًا.");
       db.prepare("UPDATE users SET secret=? WHERE id=?").run(
         hash(pin),
         childId,
@@ -591,7 +597,7 @@ export function createStore(filename, { now = Date.now } = {}) {
       const user = db
         .prepare("SELECT * FROM users WHERE username=? AND role='student'")
         .get(field(username, 32).toLowerCase());
-      const valid = verify(field(pin, 12), user?.secret ?? dummyHash);
+      const valid = verify(field(pin, 128), user?.secret ?? dummyHash);
       if (!user || !valid || user.disabled_at)
         fail("اسم المستخدم أو رمز الدخول غير صحيح.", 401);
       return safeUser(user);
@@ -912,7 +918,10 @@ export function createStore(filename, { now = Date.now } = {}) {
         if (nextGender !== target.gender) changed.push("gender");
       } else {
         const name = field(input.name, 60);
-        const email = parseEmail(input.email);
+        const username = input.username ? parseUsername(input.username) : target.username;
+        const email = input.email || !username ? parseEmail(input.email) : null;
+        if(username!==target.username && db.prepare("SELECT id FROM users WHERE username=? AND id!=?").get(username,target.id))
+          fail("اسم المستخدم غير متاح.");
         const emailChanged = email !== target.email;
         if (emailChanged) {
           const taken = db
@@ -921,9 +930,10 @@ export function createStore(filename, { now = Date.now } = {}) {
           if (taken) fail("هذا البريد الإلكتروني غير متاح.");
         }
         try {
-          db.prepare("UPDATE users SET name=?,email=? WHERE id=?").run(
+          db.prepare("UPDATE users SET name=?,email=?,username=? WHERE id=?").run(
             name,
             email,
+            username,
             target.id,
           );
         } catch (e) {
@@ -931,6 +941,7 @@ export function createStore(filename, { now = Date.now } = {}) {
             fail("هذا البريد الإلكتروني غير متاح.");
           throw e;
         }
+        if(username!==target.username){revokeUserSessions(target.id);changed.push("username");}
         if (emailChanged) {
           revokeUserSessions(target.id);
           changed.push("email");
@@ -949,8 +960,8 @@ export function createStore(filename, { now = Date.now } = {}) {
       const target = raw(input.userId);
       if (!target) fail("الحساب غير متاح.", 404);
       if (target.role === "student") {
-        if (typeof input.pin !== "string" || !/^\d{6,12}$/.test(input.pin))
-          fail("رمز الدخول من 6 إلى 12 رقمًا.");
+        if (typeof input.pin !== "string" || !validStudentSecret(input.pin))
+          fail("رمز الدخول ٦–١٢ رقمًا أو كلمة مرور من ٨ إلى ١٢٨ حرفًا.");
         db.prepare("UPDATE users SET secret=? WHERE id=?").run(
           hash(input.pin),
           target.id,
@@ -1275,8 +1286,8 @@ export function createStore(filename, { now = Date.now } = {}) {
     },
     promoteAdmin(email) {
       const user = db
-        .prepare("SELECT * FROM users WHERE email=?")
-        .get(email.toLowerCase());
+        .prepare("SELECT * FROM users WHERE (email=? OR username=?) AND role IN ('parent','admin')")
+        .get(email.toLowerCase(), email.toLowerCase());
       if (!user) fail("أنشئ حساب ولي أمر أولًا.");
       if (db.prepare("SELECT id FROM users WHERE parent_id=?").get(user.id))
         fail("استخدم حساب إدارة منفصلًا عن حساب الأسرة.");

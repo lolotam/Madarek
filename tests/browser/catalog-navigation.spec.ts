@@ -59,12 +59,12 @@ test("homepage groups twelve grade cards 5/4/3 and upcoming cards are not links"
   await expect(
     page.locator('#grades [data-stage="secondary"][data-grade]'),
   ).toHaveCount(3);
-  await expect(page.locator("#grades a[data-grade]")).toHaveCount(1);
+  await expect(page.locator("#grades a[data-grade]")).toHaveCount(2);
   await expect(page.locator('#grades a[data-grade="8"]')).toHaveAttribute(
     "href",
     "/stage/intermediate#grade-8",
   );
-  await expect(page.locator("#grades article[data-grade]")).toHaveCount(11);
+  await expect(page.locator("#grades article[data-grade]")).toHaveCount(10);
   await expect(page.locator("#grades article[data-grade] a")).toHaveCount(0);
   await expect(page.locator('#grades article[data-grade="1"]')).toContainText(
     "في رحلتنا القادمة",
@@ -159,7 +159,7 @@ test("publication changes grade and subject availability together on the fixture
   try {
     await publishOnFixture(page, false);
     await page.goto("/");
-    await expect(page.locator("#grades a[data-grade]")).toHaveCount(0);
+    await expect(page.locator("#grades a[data-grade]")).toHaveCount(1);
     await expect(page.locator('#grades article[data-grade="8"]')).toContainText(
       "في رحلتنا القادمة",
     );

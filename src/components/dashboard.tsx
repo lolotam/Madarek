@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { api, useSession, User } from "./providers";
 import { VideoCarousel } from "./video-carousel";
+import { GradeDetails, markText, markSource, type EnglishAttempt } from "./english-lesson";
 import { Result, ResultDetails } from "./quiz";
 import { lessonPath } from "@/content/curriculum";
 import {
@@ -30,6 +31,7 @@ import { Avatar } from "./avatar/avatar";
 import type { AvatarConfig } from "./shop/types";
 import type { Mastery, RewardSummary } from "./rewards/types";
 type ChildData = {
+  englishAttempts?: EnglishAttempt[];
   user: User;
   progress: { sections: string[] };
   attempts: Result[];
@@ -143,7 +145,7 @@ export function Dashboard({ initial }: { initial: Snapshot }) {
               value={children.reduce((n, c) => n + c.attempts.length, 0)}
               label="محاولات محفوظة"
             />
-            <Stat icon={BookOpen} value={1} label="درس متاح في أول نسخة" />
+            <Stat icon={BookOpen} value={21} label="دروس متاحة" />
           </div>
           <div className="section-heading">
             <h2>رحلات أبنائك</h2>
@@ -215,13 +217,12 @@ export function Dashboard({ initial }: { initial: Snapshot }) {
                     name="pin"
                     aria-label="رمز الدخول"
                     type="password"
-                    inputMode="numeric"
-                    pattern="[0-9]{6,12}"
+                    pattern="([0-9]{6,12}|.{8,128})"
                     minLength={6}
-                    maxLength={12}
+                    maxLength={128}
                     autoComplete="new-password"
                   />
-                  <small>٦–١٢ رقمًا. يُحفظ للطفل.</small>
+                  <small>٦–١٢ رقمًا أو كلمة مرور من ٨ أحرف على الأقل. يُحفظ للطفل.</small>
                 </label>
               </div>
               <p className="micro-copy">
@@ -252,7 +253,8 @@ export function Dashboard({ initial }: { initial: Snapshot }) {
           <VideoCarousel lessonId="platform" title="دليل استخدام مدارك" />
         </>
       )}
-      {user.role === "student" && (
+      {user.role === "student" && user.grade===2 && <EnglishHistory data={student}/>}
+      {user.role === "student" && user.grade!==2 && (
         <>
           <RewardsHero
             rewards={student.rewards}
@@ -306,6 +308,7 @@ export function Dashboard({ initial }: { initial: Snapshot }) {
           />
           <RewardLog entries={student.rewards.recent} />
           <History attempts={student.attempts} />
+          <EnglishHistory data={student}/>
           <VideoCarousel lessonId="platform" title="كيف تستخدمين مدارك؟" />
         </>
       )}
@@ -419,6 +422,7 @@ function ChildPanel({ child }: { child: ChildData }) {
         </div>
       )}
       <History attempts={child.attempts} />
+      <EnglishHistory data={child}/>
       {child.practice.length > 0 && (
         <details className="practice-history">
           <summary>إجابات تدريب «علّلي» ({child.practice.length})</summary>
@@ -444,15 +448,14 @@ function ChildPanel({ child }: { child: ChildData }) {
       {resetting && (
         <form onSubmit={reset} className="pin-reset">
           <label className="field">
-            <span>رمز جديد من ٦–١٢ رقمًا</span>
+            <span>رمز جديد من ٦–١٢ رقمًا أو كلمة مرور من ٨ أحرف على الأقل</span>
             <input
               name="pin"
               type="password"
-              inputMode="numeric"
-              pattern="[0-9]{6,12}"
+              pattern="([0-9]{6,12}|.{8,128})"
               required
               minLength={6}
-              maxLength={12}
+              maxLength={128}
             />
           </label>
           <button className="button outline small" disabled={busy}>
@@ -493,4 +496,18 @@ function History({ attempts }: { attempts: Result[] }) {
       )}
     </section>
   );
+}
+
+function EnglishHistory({data}:{data:ChildData}){
+  const rows=data.englishAttempts || [];
+  if(data.user.grade!==2 && !rows.length)return null;
+  const latest=new Map<string,EnglishAttempt>();
+  for(const r of rows)if(!latest.has(r.qid))latest.set(r.qid,r);
+  const marked=[...latest.values()].filter(r=>r.score!==null);
+  const earned=marked.reduce((sum,r)=>sum+(r.score??0),0)/100;
+  return <section className="panel history"><h3>الإنجليزية · My School Day</h3><p>درجات {data.user.name} · آخر محاولة لكل سؤال</p>
+    {marked.length>0&&<p>المجموع · <bdi>{earned} / {marked.length}</bdi></p>}
+    {latest.size>marked.length&&<p>بانتظار المراجعة · {latest.size-marked.length}</p>}<Link className="text-link" href="/grade/2/english">افتح دروس الوحدة</Link>
+    {rows.map(r=><details className="attempt" key={r.id}><summary><span>سؤال <bdi>{r.qid}</bdi></span><b>{markText(r)}</b></summary><p dir="ltr">{r.prompt}</p><p>الإجابة · <bdi>{r.answerText ?? r.answer}</bdi></p><GradeDetails row={r}/><p>{r.feedback} · {markSource(r.source)}</p></details>)}
+  </section>;
 }

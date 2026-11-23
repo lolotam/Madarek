@@ -12,7 +12,7 @@ import { store } from "@/server/db";
 export const dynamic = "force-dynamic";
 
 export function generateStaticParams() {
-  return [{ grade: "8" }];
+  return [{ grade: "8" }, { grade: "2" }];
 }
 
 export const dynamicParams = false;

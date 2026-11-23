@@ -1,3 +1,4 @@
+import "../grade/2/english/school.css";
 import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import type { ComponentProps } from "react";
@@ -10,7 +11,8 @@ export const metadata = {
   robots: { index: false, follow: false },
 };
 
-export default async function Page() {
+export default async function Page({searchParams}:{searchParams:Promise<{tab?:string}>}) {
+  const {tab}=await searchParams;
   const user = store.sessionUser((await cookies()).get("hana_session")?.value);
   if (!user) redirect("/login");
   if (user.role !== "admin") notFound();
@@ -22,6 +24,7 @@ export default async function Page() {
   type Props = ComponentProps<typeof AdminDashboard>;
   return (
     <AdminDashboard
+      initialTab={tab==="ai"?"ai":"users"}
       selfId={user.id}
       initialUsers={users as Props["initialUsers"]}
       initialSettings={settings as Props["initialSettings"]}

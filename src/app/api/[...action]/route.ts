@@ -82,7 +82,7 @@ export async function POST(
         action === "register"
           ? store.registerFamily(body)
           : action === "login"
-            ? store.loginParent(body.email, body.password)
+            ? store.loginParent(body.username ?? body.email, body.password)
             : store.loginChild(body.username, body.pin);
       if (!signed) return response({ error: "تعذّر تسجيل الدخول." }, 401);
       const res = response({ user: signed });

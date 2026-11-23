@@ -66,7 +66,8 @@ test("grade eight subjects come from evidenced sources, including home economics
 
 test("availability is derived only from registered published lessons", () => {
   const unpublished = registeredLessons(false);
-  assert.equal(unpublished.length, 1);
+  assert.equal(unpublished.length, 21);
+  assert.equal(subjectIndexHref(unpublished, 2, "english"), "/grade/2/english");
   assert.equal(unpublished[0].lessonId, "nutrients");
   assert.equal(unpublished[0].published, false);
   assert.equal(subjectAvailable(unpublished, 8, "science"), false);
