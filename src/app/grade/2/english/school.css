@@ -740,6 +740,34 @@
   }
 }
 
+.school-audio-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem 1rem;
+  margin-block-end: 1rem;
+}
+.school-audio-toolbar .breadcrumbs {
+  margin: 0;
+}
+.school-audio-speed {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: #51329d;
+  font-weight: 700;
+}
+.school-audio-speed select {
+  min-height: 2.75rem;
+  padding-inline: 0.5rem;
+  border: 1px solid #d8caee;
+  border-radius: 0.6rem;
+  background: #fff;
+  color: #312659;
+  font: inherit;
+  cursor: pointer;
+}
 .school-question-audio {
   display: flex;
   flex-wrap: wrap;

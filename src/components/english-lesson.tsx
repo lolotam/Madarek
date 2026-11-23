@@ -8,7 +8,11 @@ import {
   EnglishSpellingRecorder,
   type SpellingReview,
 } from "./english-spelling-recorder";
-import { EnglishAudioButton } from "./english-audio";
+import {
+  EnglishAnswerRecording,
+  EnglishAudioButton,
+  EnglishAudioSpeed,
+} from "./english-audio";
 import { playApplause } from "./english-applause";
 import { sceneDocument } from "@/content/english-scene.mjs";
 import { api, useSession } from "./providers";
@@ -101,11 +105,9 @@ export function GradeDetails({ row }: { row: LessonGrade & { id?: number } }) {
           <p>
             اللي اتسمع · <bdi lang="en">{row.recording.transcript}</bdi>
           </p>
-          <audio
-            controls
-            preload="none"
+          <EnglishAnswerRecording
             src={`/api/english/spelling?attempt=${row.id}`}
-            aria-label="اسمع إجابتك المحفوظة"
+            label="اسمع إجابتك المحفوظة"
           />
         </div>
       )}
@@ -486,15 +488,18 @@ export function EnglishLesson({
   }
   return (
     <section id="practice" className="container section school school-lesson">
-      <div className="breadcrumbs">
-        {grammar ? (
-          <Link href="/grade/2/english/grammar">شرح القواعد</Link>
-        ) : (
-          <>
-            <Link href="/grade/2/english">My School Day</Link> / درس{" "}
-            {page.toLocaleString("ar-u-nu-arab")} من ٢٠
-          </>
-        )}
+      <div className="school-audio-toolbar">
+        <div className="breadcrumbs">
+          {grammar ? (
+            <Link href="/grade/2/english/grammar">شرح القواعد</Link>
+          ) : (
+            <>
+              <Link href="/grade/2/english">My School Day</Link> / درس{" "}
+              {page.toLocaleString("ar-u-nu-arab")} من ٢٠
+            </>
+          )}
+        </div>
+        <EnglishAudioSpeed />
       </div>
       <header className="school-heading">
         <div>

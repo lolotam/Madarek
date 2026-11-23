@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { grammarPath, grammarRules } from "@/content/english-grammar";
 import { questionCount } from "@/server/english.mjs";
-import { EnglishAudioButton } from "./english-audio";
+import { EnglishAudioButton, EnglishAudioSpeed } from "./english-audio";
 import { Diagram } from "./english-lesson";
 
 export function QuestionBadge({ count }: { count: number }) {
@@ -45,9 +45,12 @@ export function GrammarGuide({
 }) {
   return (
     <section className="container section school school-guide">
-      <div className="breadcrumbs">
-        <Link href="/grade/2/english">الإنجليزية</Link> /{" "}
-        <Link href={grammarPath}>شرح القواعد</Link>
+      <div className="school-audio-toolbar">
+        <div className="breadcrumbs">
+          <Link href="/grade/2/english">الإنجليزية</Link> /{" "}
+          <Link href={grammarPath}>شرح القواعد</Link>
+        </div>
+        <EnglishAudioSpeed />
       </div>
       <header className="school-guide-hero" data-rule={rule.id}>
         <div>

@@ -2,6 +2,7 @@
 
 import { Mic, Square } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { EnglishAnswerRecording } from "./english-audio";
 
 const seconds = 12;
 const rate = 16000;
@@ -241,7 +242,11 @@ export function EnglishSpellingRecorder({
         </div>
       )}
       {draft && (
-        <audio controls src={draft.url} aria-label="اسمع تسجيلك قبل الإرسال" />
+        <EnglishAnswerRecording
+          src={draft.url}
+          label="اسمع تسجيلك قبل الإرسال"
+          preload="metadata"
+        />
       )}
       {error && <p role="alert">{error}</p>}
       {phase === "recording" && (

@@ -277,9 +277,10 @@ test("iPad practice shows counts, lets pupils drag and swap matches, and opens g
   await expect(page.locator(".school-clock canvas")).toBeVisible();
 });
 
-test("English prompts, listening recordings, passages and grammar examples play recorded audio", async ({
+test("English audio plays at the selected pronunciation speed across lessons", async ({
   page,
 }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
   await page.addInitScript(() => {
     const NativeAudio = window.Audio;
     const clips: HTMLAudioElement[] = [];
@@ -292,7 +293,21 @@ test("English prompts, listening recordings, passages and grammar examples play 
       englishTestClips: clips,
     });
   });
-  async function play(label: string, filename: string) {
+  function playback(filename: string) {
+    return page.evaluate((name) => {
+      const { englishTestClips } = window as unknown as {
+        englishTestClips: HTMLAudioElement[];
+      };
+      const clip = englishTestClips.find((audio) => audio.src.endsWith(name));
+      if (!clip) return null;
+      return {
+        playing: clip.readyState >= 2 && !clip.paused,
+        speed: clip.playbackRate,
+        preservesPitch: clip.preservesPitch,
+      };
+    }, filename);
+  }
+  async function play(label: string, filename: string, speed: number) {
     const downloaded = page.waitForResponse((response) =>
       response.url().endsWith(filename),
     );
@@ -301,21 +316,19 @@ test("English prompts, listening recordings, passages and grammar examples play 
       .first()
       .click();
     expect((await downloaded).ok()).toBe(true);
-    await expect
-      .poll(() =>
-        page.evaluate((name) => {
-          const { englishTestClips } = window as unknown as {
-            englishTestClips: HTMLAudioElement[];
-          };
-          const clip = englishTestClips.find((a) => a.src.endsWith(name));
-          return !!clip && clip.readyState >= 2 && !clip.paused;
-        }, filename),
-      )
-      .toBe(true);
+    await expect.poll(() => playback(filename)).toEqual({
+      playing: true,
+      speed,
+      preservesPitch: true,
+    });
   }
   await page.goto("/grade/2/english/4");
-  await play("اسمع السؤال", "/4-1-prompt.mp3");
-  await play("اسمع الاختيارات", "/4-1-options.mp3");
+  const speed = page.getByRole("combobox", { name: "سرعة النطق" });
+  await expect(speed).toBeVisible();
+  await expect(speed).toHaveValue("1");
+  await speed.selectOption("0.75");
+  await play("اسمع السؤال", "/4-1-prompt.mp3", 0.75);
+  await play("اسمع الاختيارات", "/4-1-options.mp3", 0.75);
   await page.getByRole("button", { name: "السؤال التالي" }).click();
   await expect
     .poll(() =>
@@ -328,11 +341,22 @@ test("English prompts, listening recordings, passages and grammar examples play 
     )
     .toBe(true);
   await page.goto("/grade/2/english/7");
-  await play("اسمع التسجيل", "/7-1-listening.mp3");
+  await expect(speed).toHaveValue("0.75");
+  await play("اسمع التسجيل", "/7-1-listening.mp3", 0.75);
+  await speed.selectOption("1.25");
+  await expect.poll(() => playback("/7-1-listening.mp3")).toMatchObject({
+    speed: 1.25,
+  });
   await page.goto("/grade/2/english/11");
-  await play("اسمع القطعة", "/11-1-passage.mp3");
+  await play("اسمع القطعة", "/11-1-passage.mp3", 1.25);
   await page.goto("/grade/2/english/grammar/pronouns");
-  await play("اسمع المثال", "/grammar-pronouns-1-1.mp3");
+  await expect(speed.last()).toHaveValue("1.25");
+  await speed.first().selectOption("0.5");
+  await expect(speed.last()).toHaveValue("0.5");
+  await play("اسمع المثال", "/grammar-pronouns-1-1.mp3", 0.5);
+  await page.reload();
+  await expect(speed.first()).toHaveValue("0.5");
+  await expect(speed.last()).toHaveValue("0.5");
 });
 
 test("AI Settings opens the device flow and fills the model selector after authentication", async ({
