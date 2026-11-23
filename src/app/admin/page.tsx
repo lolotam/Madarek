@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import type { ComponentProps } from "react";
 import { store } from "@/server/db";
+import { AdminEnglishContent } from "@/components/admin-english-content";
 import { AdminDashboard } from "@/components/admin";
 
 export const dynamic = "force-dynamic";
@@ -11,8 +12,12 @@ export const metadata = {
   robots: { index: false, follow: false },
 };
 
-export default async function Page({searchParams}:{searchParams:Promise<{tab?:string}>}) {
-  const {tab}=await searchParams;
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ tab?: string }>;
+}) {
+  const { tab } = await searchParams;
   const user = store.sessionUser((await cookies()).get("hana_session")?.value);
   if (!user) redirect("/login");
   if (user.role !== "admin") notFound();
@@ -24,7 +29,9 @@ export default async function Page({searchParams}:{searchParams:Promise<{tab?:st
   type Props = ComponentProps<typeof AdminDashboard>;
   return (
     <AdminDashboard
-      initialTab={tab==="ai"?"ai":"users"}
+      key={tab}
+      initialTab={tab === "ai" || tab === "content" ? tab : "users"}
+      englishContent={<AdminEnglishContent />}
       selfId={user.id}
       initialUsers={users as Props["initialUsers"]}
       initialSettings={settings as Props["initialSettings"]}

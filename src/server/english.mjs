@@ -3,6 +3,13 @@ import lessons from "./english-lessons.json" with { type: "json" };
 export const questions = new Map(
   lessons.flatMap((l) => l.questions.map((q) => [q.id, q])),
 );
+export function isSpellingRecordingQuestion(id) {
+  return (
+    typeof id === "string" &&
+    /^9-\d+$/.test(id) &&
+    questions.get(id)?.kind === "write"
+  );
+}
 export function questionCount(page) {
   return lessons[page - 1]?.questions.length ?? 0;
 }
@@ -85,7 +92,10 @@ export function englishStore(db, { requireRole, fail }) {
     id INTEGER PRIMARY KEY, user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     nonce TEXT NOT NULL, qid TEXT NOT NULL, answer TEXT NOT NULL, score INTEGER CHECK(score BETWEEN 0 AND 100),
     source TEXT NOT NULL, feedback TEXT NOT NULL, model TEXT, created_at INTEGER NOT NULL, UNIQUE(user_id,nonce));
-    CREATE INDEX IF NOT EXISTS english_history ON english_attempts(user_id,id);`);
+    CREATE INDEX IF NOT EXISTS english_history ON english_attempts(user_id,id);
+    CREATE TABLE IF NOT EXISTS english_recordings (
+      attempt_id INTEGER PRIMARY KEY REFERENCES english_attempts(id) ON DELETE CASCADE,
+      transcript TEXT NOT NULL, wav BLOB NOT NULL);`);
   const columns = db
     .prepare("PRAGMA table_info(english_attempts)")
     .all()
@@ -100,6 +110,11 @@ export function englishStore(db, { requireRole, fail }) {
     if (!r) return r;
     const question = questions.get(r.qid);
     const match = question?.kind === "match";
+    const voice =
+      isSpellingRecordingQuestion(r.qid) &&
+      db
+        .prepare("SELECT transcript FROM english_recordings WHERE attempt_id=?")
+        .get(r.id);
     return {
       ...r,
       correct: r.score == null ? null : r.score === 100,
@@ -107,6 +122,7 @@ export function englishStore(db, { requireRole, fail }) {
       possible: 1,
       detail: r.detail ? JSON.parse(r.detail) : null,
       prompt: question?.prompt,
+      ...(voice && { recording: voice }),
       ...(match && {
         matchResults: matchedPairs(question, r.answer),
         answerText: r.answer
@@ -157,6 +173,40 @@ export function englishStore(db, { requireRole, fail }) {
     }
     return question;
   }
+  function submit(uid, { qid, answer, nonce }, source) {
+    requireRole(uid, ["student"]);
+    const q = questionForAnswer(qid, answer);
+    if (typeof nonce !== "string" || !/^[a-z0-9-]{12,80}$/i.test(nonce))
+      fail("تحقّق من الإجابة.");
+    const model = selected(),
+      m = mark(q, answer);
+    const send = !source && model && q.kind === "write";
+    const created = db
+      .prepare(
+        `INSERT INTO english_attempts(user_id,nonce,qid,answer,score,source,feedback,model,created_at,detail)
+        VALUES(?,?,?,?,?,?,?,?,?,?) ON CONFLICT(user_id,nonce) DO NOTHING`,
+      )
+      .run(
+        uid,
+        nonce,
+        qid,
+        answer,
+        send ? null : m.score,
+        send ? "waiting" : (source ?? m.source),
+        send ? "الإجابة محفوظة وجارٍ تقييمها." : m.feedback,
+        send ? model : null,
+        Date.now(),
+        !send && m.detail ? JSON.stringify(m.detail) : null,
+      );
+    const r = result(
+      db
+        .prepare("SELECT * FROM english_attempts WHERE user_id=? AND nonce=?")
+        .get(uid, nonce),
+    );
+    if (r.qid !== qid || r.answer !== answer)
+      fail("المحاولة مستخدمة لإجابة أخرى.", 409);
+    return { attempt: r, created: !!created.changes };
+  }
   return {
     history,
     selected,
@@ -173,39 +223,44 @@ export function englishStore(db, { requireRole, fail }) {
             : grade.feedback,
       };
     },
-    submit(uid, { qid, answer, nonce }) {
+    submit,
+    submitRecording(uid, { qid, answer, nonce }, { transcript, wav }) {
       requireRole(uid, ["student"]);
-      const q = questionForAnswer(qid, answer);
-      if (typeof nonce !== "string" || !/^[a-z0-9-]{12,80}$/i.test(nonce))
-        fail("تحقّق من الإجابة.");
-      const model = selected(),
-        m = mark(q, answer);
-      const send = model && q.kind === "write";
-      const created = db
-        .prepare(
-          `INSERT INTO english_attempts(user_id,nonce,qid,answer,score,source,feedback,model,created_at,detail)
-        VALUES(?,?,?,?,?,?,?,?,?,?) ON CONFLICT(user_id,nonce) DO NOTHING`,
-        )
-        .run(
+      if (!isSpellingRecordingQuestion(qid))
+        fail("التسجيل متاح لأسئلة التهجئة فقط.", 400);
+      db.exec("BEGIN IMMEDIATE");
+      try {
+        const { attempt, created } = submit(
           uid,
-          nonce,
-          qid,
-          answer,
-          send ? null : m.score,
-          send ? "waiting" : m.source,
-          send ? "الإجابة محفوظة وجارٍ تقييمها." : m.feedback,
-          send ? model : null,
-          Date.now(),
-          !send && m.detail ? JSON.stringify(m.detail) : null,
+          { qid, answer, nonce },
+          "whisper",
         );
-      const r = result(
-        db
-          .prepare("SELECT * FROM english_attempts WHERE user_id=? AND nonce=?")
-          .get(uid, nonce),
-      );
-      if (r.qid !== qid || r.answer !== answer)
-        fail("المحاولة مستخدمة لإجابة أخرى.", 409);
-      return { attempt: r, created: !!created.changes };
+        if (created) {
+          db.prepare(
+            "INSERT INTO english_recordings(attempt_id,transcript,wav) VALUES(?,?,?)",
+          ).run(attempt.id, transcript, wav);
+        } else if (!attempt.recording) {
+          fail("رقم المحاولة مرتبط بإجابة مكتوبة.", 409);
+        }
+        db.exec("COMMIT");
+        return {
+          ...attempt,
+          recording: created ? { transcript } : attempt.recording,
+        };
+      } catch (e) {
+        db.exec("ROLLBACK");
+        throw e;
+      }
+    },
+    recording(viewerId, attemptId) {
+      const viewer = requireRole(viewerId, ["student", "parent", "admin"]);
+      return db
+        .prepare(
+          `SELECT r.wav FROM english_recordings r
+         JOIN english_attempts a ON a.id=r.attempt_id JOIN users u ON u.id=a.user_id
+         WHERE r.attempt_id=? AND (u.id=? OR u.parent_id=? OR ?='admin')`,
+        )
+        .get(attemptId, viewer.id, viewer.id, viewer.role);
     },
     finish(attempt, score, source, feedback, detail = null) {
       db.prepare(

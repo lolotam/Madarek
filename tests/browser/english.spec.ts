@@ -19,6 +19,7 @@ test("a mobile pupil opens a school-day lesson, submits and reloads a saved answ
           name: "Pupil",
           username: name,
           pin: secret,
+          englishMascot: "barq",
           grade: 2,
           gender: "male",
         },
@@ -46,6 +47,10 @@ test("a mobile pupil opens a school-day lesson, submits and reloads a saved answ
   await page.getByLabel("كلمة المرور أو رمز الدخول").fill(secret);
   await page.getByRole("button", { name: "دخول إلى مساحتي" }).click();
   await expect(page).toHaveURL(/\/grade\/2\/english\/1$/);
+  await expect(page.locator(".school-mascot")).toHaveAttribute(
+    "aria-label",
+    /برق/,
+  );
   const firstQuestion = page.locator(".school-work h2");
   const question = await firstQuestion.textContent();
   const next = page.getByRole("button", { name: "السؤال التالي" });
@@ -57,6 +62,10 @@ test("a mobile pupil opens a school-day lesson, submits and reloads a saved answ
     "incorrect",
   );
   await expect(page.locator(".school-miss")).toHaveText("×");
+  await expect(page.locator(".school-mascot img")).toHaveAttribute(
+    "src",
+    /barq\/retry\.gif$/,
+  );
   await expect(page.locator(".school-work")).toHaveAttribute(
     "data-answer-shake",
     "",
@@ -82,6 +91,10 @@ test("a mobile pupil opens a school-day lesson, submits and reloads a saved answ
     "أحسنت! إجابتك صحيحة · 100٪",
   );
   await expect(page.locator(".school-confetti span")).toHaveCount(24);
+  await expect(page.locator(".school-mascot img")).toHaveAttribute(
+    "src",
+    /barq\/correct\.gif$/,
+  );
   await expect(page.locator("html")).toHaveAttribute("data-applause", "played");
   await expect(firstQuestion).toHaveText(question!);
   const attempts = await (
@@ -142,6 +155,17 @@ test("a mobile pupil opens a school-day lesson, submits and reloads a saved answ
     page.getByText("I like english.", { exact: true }),
   ).toBeVisible();
   expect((await page.request.get("/api/english/models")).status()).toBe(403);
+  await page.getByText("غيّر شخصيتك", { exact: true }).click();
+  await expect(page.getByRole("radio", { name: "برق" })).toBeChecked();
+  await page.getByRole("radio", { name: "لوز" }).check();
+  await page.getByRole("button", { name: "حفظ الشخصية" }).click();
+  await expect(page.getByText("تم حفظ شخصيتك.", { exact: true })).toBeVisible();
+  await page.goto("/grade/2/english/9");
+  await expect(page.locator(".school-mascot")).toHaveAttribute(
+    "aria-label",
+    /لوز/,
+  );
+  await expect(page.getByRole("button", { name: "سجّل تهجئتك" })).toBeVisible();
 });
 
 test("a visitor submits and sees each question graded before moving on", async ({
@@ -366,4 +390,12 @@ test("AI Settings opens the device flow and fills the model selector after authe
   await select.selectOption("model-b");
   await page.getByRole("button", { name: "حفظ الموديل" }).click();
   await expect.poll(() => model).toBe("model-b");
+  await page.goto("/admin?tab=content");
+  const content = page.locator(".admin-english-content");
+  await expect(
+    content.getByRole("heading", { name: "إنجليزي الصف الثاني" }),
+  ).toBeVisible();
+  await expect(content).toContainText("٥٣١ مقطعًا");
+  await content.getByText("الدروس والأسئلة", { exact: true }).click();
+  await expect(content.locator("li")).toHaveCount(20);
 });

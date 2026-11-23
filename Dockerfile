@@ -14,6 +14,16 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npm run build
 
+FROM node:24-bookworm-slim AS transcription
+WORKDIR /build
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates cmake curl g++ make && rm -rf /var/lib/apt/lists/*
+RUN curl --fail --silent --show-error --location --retry 3 https://codeload.github.com/ggml-org/whisper.cpp/tar.gz/refs/tags/v1.8.3 -o source.tar.gz \
+    && echo '870ba21409cdf66697dc4db15ebdb13bc67037d76c7cc63756c81471d8f1731a  source.tar.gz' | sha256sum -c - \\n    && tar -xzf source.tar.gz --strip-components=1 \
+    && cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DGGML_NATIVE=OFF -DGGML_OPENMP=OFF -DWHISPER_BUILD_TESTS=OFF -DWHISPER_BUILD_SERVER=OFF \
+    && cmake --build build --target whisper-cli --parallel 2
+RUN curl --fail --silent --show-error --location --retry 3 'https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.en-q5_1.bin?download=true' -o model.bin \
+    && echo '4baf70dd0d7c4247ba2b81fafd9c01005ac77c2f9ef064e00dcf195d0e2fdd2f  model.bin' | sha256sum -c -
+
 FROM node:24-bookworm-slim AS runner
 WORKDIR /app
 ENV NODE_ENV=production \
@@ -22,14 +32,18 @@ ENV NODE_ENV=production \
     HOSTNAME=0.0.0.0 \
     DATABASE_PATH=/app/.data/learning.sqlite \
     AUDIO_LIBRARY_PATH=/app/.data/audio \
-    NARRATION_DIR=/app/src/server/narration
+    NARRATION_DIR=/app/src/server/narration \
+    ENGLISH_WHISPER_MODEL=/opt/madarek/whisper-base.en.bin
 
+COPY --from=transcription /build/build/bin/whisper-cli /usr/local/bin/whisper-cli
+COPY --from=transcription /build/model.bin /opt/madarek/whisper-base.en.bin
 COPY --from=build --chown=node:node /app/.next/standalone ./
 COPY --from=build --chown=node:node /app/.next/static ./.next/static
 COPY --from=build --chown=node:node /app/public ./public
 # Narration scripts are read from disk at runtime, and the admin/audio CLIs
 # (scripts/*.mjs) import src/server/*.mjs; both use only Node built-ins.
 COPY --from=build --chown=node:node /app/src/server ./src/server
+COPY --from=build --chown=node:node /app/src/content/english-mascots.mjs ./src/content/english-mascots.mjs
 COPY --from=build --chown=node:node /app/scripts ./scripts
 
 # All state (SQLite database + generated audio) lives here. Mount a persistent

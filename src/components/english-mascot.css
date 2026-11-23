@@ -1,0 +1,89 @@
+.school-mascot-choice {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  margin: 0.8rem 0;
+}
+.school-mascot-choice legend {
+  padding: 0;
+  font-weight: 750;
+}
+.school-mascot-choice > div {
+  display: grid;
+  gap: 0.45rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: 30rem;
+}
+.school-mascot-option {
+  cursor: pointer;
+  position: relative;
+  color: #382c63;
+  border: 1px solid #d8d0ec;
+  border-radius: 0.9rem;
+  background: #faf8ff;
+  text-align: center;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  gap: 0.2rem;
+  padding: 0.4rem 0.2rem;
+}
+.school-mascot-option:has(input:checked) {
+  border-color: #7252ba;
+  background: #ece3ff;
+}
+.school-mascot-option:focus-within {
+  outline: 2px solid #7252ba;
+  outline-offset: 2px;
+}
+.school-mascot-option input {
+  position: absolute;
+  top: 0.4rem;
+  left: 0.4rem;
+  accent-color: #7252ba;
+}
+.school-mascot-option img {
+  width: min(100%, 4.25rem);
+  height: auto;
+}
+.school-mascot {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #3b2e62;
+  padding: 0.2rem 0.8rem;
+  background: #f1eafa;
+  border-radius: 1rem;
+  width: fit-content;
+}
+.school-mascot img {
+  display: block;
+  width: clamp(3.35rem, 13vw, 5.25rem);
+  height: auto;
+}
+.school-mascot strong,
+.school-mascot span {
+  display: block;
+}
+.school-mascot span {
+  font-size: 0.85rem;
+}
+.school-mascot-settings {
+  margin-block: 0.8rem 1rem;
+  padding: 0.9rem 1.1rem;
+}
+.school-mascot-settings summary {
+  cursor: pointer;
+  font-weight: 750;
+}
+.school-mascot-settings .school-mascot {
+  margin-block-start: 0.5rem;
+}
+@media (max-width: 520px) {
+  .school-mascot {
+    padding-inline: 0.35rem;
+  }
+  .school-mascot span {
+    font-size: 0.78rem;
+  }
+}

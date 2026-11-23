@@ -16,6 +16,7 @@ import {
   KeyRound,
 } from "lucide-react";
 import { api, useSession, User } from "./providers";
+import { EnglishMascot, EnglishMascotChoice } from "./english-mascot";
 import { VideoCarousel } from "./video-carousel";
 import { GradeDetails, markText, markSource, type EnglishAttempt } from "./english-lesson";
 import { Result, ResultDetails } from "./quiz";
@@ -125,6 +126,29 @@ export function Dashboard({ initial }: { initial: Snapshot }) {
           <LogOut size={17} /> خروج
         </button>
       </div>
+      {user.role === "student" && (
+        <details className="school-mascot-settings panel">
+          <summary>غيّر شخصيتك</summary>
+          <EnglishMascot selected={user.englishMascot} outcome="idle" />
+          <form onSubmit={async event => {
+            event.preventDefault();
+            const mascot = new FormData(event.currentTarget).get("englishMascot");
+            setBusy(true);
+            setError("");
+            try {
+              await api("english/mascot", {mascot});
+              await reload();
+              await refresh();
+              setNotice("تم حفظ شخصيتك.");
+            } catch (cause) {
+              setError((cause as Error).message);
+            } finally { setBusy(false); }
+          }}>
+            <EnglishMascotChoice key={user.englishMascot} initial={user.englishMascot} />
+            <button type="submit" className="button primary small" disabled={busy}>حفظ الشخصية</button>
+          </form>
+        </details>
+      )}
       {notice && (
         <p className="feedback success" role="status">
           <CheckCircle2 size={18} />
@@ -225,6 +249,7 @@ export function Dashboard({ initial }: { initial: Snapshot }) {
                   <small>٦–١٢ رقمًا أو كلمة مرور من ٨ أحرف على الأقل. يُحفظ للطفل.</small>
                 </label>
               </div>
+              <EnglishMascotChoice />
               <p className="micro-copy">
                 لكل طالب صف وجنس محفوظان. المحتوى المتاح حاليًا: علوم الصف
                 الثامن.

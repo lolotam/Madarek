@@ -3,6 +3,11 @@ import Link from "next/link";
 import Script from "next/script";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { MatchingBoard, type MatchOptions } from "./english-matching";
+import { EnglishMascot } from "./english-mascot";
+import {
+  EnglishSpellingRecorder,
+  type SpellingReview,
+} from "./english-spelling-recorder";
 import { EnglishAudioButton } from "./english-audio";
 import { playApplause } from "./english-applause";
 import { sceneDocument } from "@/content/english-scene.mjs";
@@ -37,6 +42,7 @@ export type EnglishAttempt = {
   name?: string;
   answerText?: string;
   matchResults?: boolean[];
+  recording?: { transcript: string };
 };
 type LessonGrade = Pick<
   EnglishAttempt,
@@ -47,6 +53,7 @@ type LessonGrade = Pick<
   | "detail"
   | "source"
   | "matchResults"
+  | "recording"
 >;
 type LessonResult = LessonGrade &
   ({ id: number; preview?: never } | { id?: never; preview: true });
@@ -69,6 +76,7 @@ export function markSource(source: string) {
       {
         key: "مفتاح الإجابة",
         ai: "تقييم Codex",
+        whisper: "تفريغ Whisper وتصحيح التهجئة",
         teacher: "مراجعة المدرّسة",
         fallback: "مفتاح الإجابة · Codex غير متصل",
         waiting: "قيد التقييم",
@@ -77,7 +85,7 @@ export function markSource(source: string) {
     )[source] || source
   );
 }
-export function GradeDetails({ row }: { row: LessonGrade }) {
+export function GradeDetails({ row }: { row: LessonGrade & { id?: number } }) {
   return (
     <>
       {row.earned !== null && (
@@ -87,6 +95,19 @@ export function GradeDetails({ row }: { row: LessonGrade }) {
             {row.earned} / {row.possible}
           </bdi>
         </p>
+      )}
+      {row.recording && row.id && (
+        <div className="school-spelling">
+          <p>
+            اللي اتسمع · <bdi lang="en">{row.recording.transcript}</bdi>
+          </p>
+          <audio
+            controls
+            preload="none"
+            src={`/api/english/spelling?attempt=${row.id}`}
+            aria-label="اسمع إجابتك المحفوظة"
+          />
+        </div>
       )}
       {row.detail && (
         <>
@@ -406,6 +427,39 @@ export function EnglishLesson({
       setBusy(false);
     }
   }
+  async function evaluateRecording(
+    wav: Blob,
+    attemptNonce: string,
+    receipt?: string,
+  ): Promise<SpellingReview | undefined> {
+    if (busy || row) return;
+    edited.current = true;
+    prepareAudio();
+    setBusy(true);
+    setError("");
+    try {
+      const response = await fetch("/api/english/spelling", {
+        method: "POST",
+        headers: {
+          "Content-Type": "audio/wav",
+          "X-Question-Id": q.id,
+          "X-Attempt-Nonce": attemptNonce,
+          ...(receipt && { "X-Recognition-Receipt": receipt }),
+        },
+        body: wav,
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "تعذّر تقييم التسجيل.");
+      if (!receipt) return result as SpellingReview;
+      setDraft(result.answer);
+      showResult(result);
+    } catch (error) {
+      setError((error as Error).message);
+      throw error;
+    } finally {
+      setBusy(false);
+    }
+  }
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (loading || busy || row || !readyToSubmit) return;
@@ -469,6 +523,16 @@ export function EnglishLesson({
         }
       >
         <div className="school-steps">
+          <EnglishMascot
+            selected={user?.englishMascot}
+            outcome={
+              outcome === "pending"
+                ? "idle"
+                : outcome === "correct"
+                  ? "correct"
+                  : "retry"
+            }
+          />
           <b>
             سؤال {(step + 1).toLocaleString("ar-u-nu-arab")} من{" "}
             {lesson.questions.length.toLocaleString("ar-u-nu-arab")}
@@ -507,12 +571,16 @@ export function EnglishLesson({
           </blockquote>
         )}
         <Diagram q={q} />
-        {clockHour >= 0 && <ClockModel key={q.id} hour={clockHour} />}
-        {page === 6 && step < 2 && <Pencils key={q.id} far={step === 0} />}
+        {clockHour >= 0 && (
+          <ClockModel key={`clock-${q.id}`} hour={clockHour} />
+        )}
+        {page === 6 && step < 2 && (
+          <Pencils key={`pencils-${q.id}`} far={step === 0} />
+        )}
         <h2 dir="ltr" lang="en">
           {q.prompt}
         </h2>
-        <div className="school-question-audio" key={q.id}>
+        <div className="school-question-audio" key={`audio-${q.id}`}>
           <EnglishAudioButton
             clip={`${q.id}-prompt`}
             label="اسمع السؤال"
@@ -585,6 +653,16 @@ export function EnglishLesson({
               </label>
             )}
           </fieldset>
+          {page === 9 &&
+            q.kind === "write" &&
+            user?.role === "student" &&
+            !row && (
+              <EnglishSpellingRecorder
+                key={q.id}
+                onEvaluate={evaluateRecording}
+                busy={busy}
+              />
+            )}
           <button
             type="submit"
             className="button primary"

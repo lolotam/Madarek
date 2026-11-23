@@ -15,6 +15,7 @@ export type User = {
   parentId?: string | null;
   grade?: number | null;
   gender?: "male" | "female" | null;
+  englishMascot?: string | null;
 };
 export async function api(path: string, data?: unknown) {
   const res = await fetch("/api/" + path, {

@@ -103,6 +103,63 @@ test("matching validates a complete one-to-one answer and gives partial credit",
   }
 });
 
+test("spelling records a Whisper transcript and protects playback", async () => {
+  const { spellingAnswer } =
+    await import("../src/server/english-transcription.mjs");
+  assert.equal(spellingAnswer("S-H-O-E-S."), "shoes");
+  assert.equal(spellingAnswer("Ess aitch oh pee ess."), "shops");
+  const db = createStore(":memory:");
+  try {
+    const parent = db.registerFamily({
+      name: "Parent",
+      username: "family-spell",
+      password: "password-long-enough",
+      children: [
+        {
+          name: "A",
+          username: "spelling-child",
+          pin: "123456",
+          grade: 2,
+          gender: "male",
+        },
+        {
+          name: "B",
+          username: "other-child",
+          pin: "123456",
+          grade: 2,
+          gender: "male",
+        },
+      ],
+    });
+    const child = db.loginChild("spelling-child", "123456");
+    const other = db.loginChild("other-child", "123456");
+    const wav = Buffer.from("recorded sound");
+    const request = { qid: "9-1", answer: "shoes", nonce: "spelling-audio-01" };
+    const voice = { transcript: "S-H-O-E-S.", wav };
+    const recorded = db.english.submitRecording(child.id, request, voice);
+    assert.equal(recorded.score, 100);
+    assert.equal(recorded.source, "whisper");
+    assert.equal(
+      db.english.history(child.id)[0].recording.transcript,
+      "S-H-O-E-S.",
+    );
+    assert.equal(
+      db.english.submitRecording(child.id, request, voice).id,
+      recorded.id,
+    );
+    assert.deepEqual(
+      Buffer.from(db.english.recording(parent.id, recorded.id).wav),
+      wav,
+    );
+    assert.equal(db.english.recording(other.id, recorded.id), undefined);
+    assert.throws(() =>
+      db.english.submitRecording(child.id, { ...request, qid: "4-1" }, voice),
+    );
+  } finally {
+    db.close();
+  }
+});
+
 test("model scores require typed, bounded rubric points and a correction", async () => {
   const { validateMark } = await import("../src/server/english-model.ts");
   const { assess, rubricFor } =

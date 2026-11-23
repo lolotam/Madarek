@@ -1,3 +1,4 @@
+import { defaultEnglishMascot, isEnglishMascot } from "../content/english-mascots.mjs";
 import { englishStore } from "./english.mjs";
 import { DatabaseSync } from "node:sqlite";
 import {
@@ -55,6 +56,7 @@ const safeUser = (u) =>
         parentId: u.parent_id,
         grade: u.grade ?? null,
         gender: u.gender ?? null,
+        englishMascot: u.role === "student" ? u.english_mascot ?? defaultEnglishMascot : null,
       }
     : null;
 const CHILD_INDEX = ["١", "٢", "٣", "٤", "٥", "٦"];
@@ -91,7 +93,9 @@ function readChild(input, index) {
     if (!/^[\p{L}\p{N}_-]{3,32}$/u.test(username))
       fail("اسم المستخدم 3–32 حرفًا دون مسافات.");
     if (!validStudentSecret(pin)) fail("رمز الدخول ٦–١٢ رقمًا أو كلمة مرور من ٨ إلى ١٢٨ حرفًا.");
-    return { name, grade, gender, username, pin };
+    const englishMascot = input.englishMascot || defaultEnglishMascot;
+    if (!isEnglishMascot(englishMascot)) fail("اختر شخصية مساعدة من القائمة.");
+    return { name, grade, gender, username, pin, englishMascot };
   };
   if (index == null) return run();
   try {
@@ -151,6 +155,8 @@ export function createStore(filename, { now = Date.now } = {}) {
     db.exec(
       "ALTER TABLE users ADD COLUMN gender TEXT CHECK(gender IN ('male','female'))",
     );
+  if (!userColumns.has("english_mascot"))
+    db.exec("ALTER TABLE users ADD COLUMN english_mascot TEXT");
   if (!userColumns.has("disabled_at"))
     db.exec("ALTER TABLE users ADD COLUMN disabled_at INTEGER");
   const attemptColumns = new Set(
@@ -499,7 +505,7 @@ export function createStore(filename, { now = Date.now } = {}) {
           throw e;
         }
         const insertChild = db.prepare(
-          "INSERT INTO users(id,name,role,username,secret,parent_id,created_at,grade,gender) VALUES(?,?,?,?,?,?,?,?,?)",
+          "INSERT INTO users(id,name,role,username,secret,parent_id,created_at,grade,gender,english_mascot) VALUES(?,?,?,?,?,?,?,?,?,?)",
         );
         for (let i = 0; i < children.length; i++) {
           const c = children[i];
@@ -514,6 +520,7 @@ export function createStore(filename, { now = Date.now } = {}) {
               Date.now(),
               c.grade,
               c.gender,
+              c.englishMascot,
             );
           } catch (e) {
             if (String(e).includes("UNIQUE"))
@@ -557,7 +564,7 @@ export function createStore(filename, { now = Date.now } = {}) {
       const id = randomUUID();
       try {
         db.prepare(
-          "INSERT INTO users(id,name,role,username,secret,parent_id,created_at,grade,gender) VALUES(?,?,?,?,?,?,?,?,?)",
+          "INSERT INTO users(id,name,role,username,secret,parent_id,created_at,grade,gender,english_mascot) VALUES(?,?,?,?,?,?,?,?,?,?)",
         ).run(
           id,
           child.name,
@@ -568,6 +575,7 @@ export function createStore(filename, { now = Date.now } = {}) {
           Date.now(),
           child.grade,
           child.gender,
+          child.englishMascot,
         );
       } catch (e) {
         if (String(e).includes("UNIQUE"))
@@ -575,6 +583,12 @@ export function createStore(filename, { now = Date.now } = {}) {
         throw e;
       }
       return safeUser(raw(id));
+    },
+    saveEnglishMascot(userId, mascot) {
+      requireRole(userId, ["student"]);
+      if (!isEnglishMascot(mascot)) fail("اختر شخصية مساعدة من القائمة.");
+      db.prepare("UPDATE users SET english_mascot=? WHERE id=?").run(mascot,userId);
+      return safeUser(raw(userId));
     },
     resetChildPin(parentId, childId, pin) {
       api.getChild(parentId, childId);

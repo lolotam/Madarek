@@ -1,4 +1,6 @@
 "use client";
+import { EnglishMascotChoice } from "./english-mascot";
+import { defaultEnglishMascot } from "@/content/english-mascots.mjs";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -29,6 +31,7 @@ type ChildDraft = {
   gender: string;
   username: string;
   pin: string;
+  englishMascot: string;
 };
 // A counter, not crypto.randomUUID(): that API is missing on plain-HTTP LAN
 // origins, and these ids are only React keys.
@@ -40,12 +43,19 @@ const emptyChild = (): ChildDraft => ({
   gender: "",
   username: "",
   pin: "",
+  englishMascot: defaultEnglishMascot,
 });
 const rowMotion = {
   duration: 0.25,
 };
 
-export function Auth({ initialMode = "login",returnLesson }: { initialMode?: string;returnLesson?:string }) {
+export function Auth({
+  initialMode = "login",
+  returnLesson,
+}: {
+  initialMode?: string;
+  returnLesson?: string;
+}) {
   const reduceMotion = useReducedMotion();
   const [mode, setMode] = useState(initialMode),
     [error, setError] = useState(""),
@@ -101,7 +111,9 @@ export function Auth({ initialMode = "login",returnLesson }: { initialMode?: str
       if (mode === "register") {
         await api("register", {
           name: data.name,
-          ...(String(data.identifier).includes("@") ? {email:data.identifier} : {username:data.identifier}),
+          ...(String(data.identifier).includes("@")
+            ? { email: data.identifier }
+            : { username: data.identifier }),
           password: data.password,
           children: children.map((row) => ({
             name: row.name,
@@ -109,13 +121,25 @@ export function Auth({ initialMode = "login",returnLesson }: { initialMode?: str
             gender: row.gender,
             username: row.username,
             pin: row.pin,
+            englishMascot: row.englishMascot,
           })),
         });
       } else {
-        await api(mode === "student" ? "student-login" : mode, mode === "student" ? data : {username:data.identifier,password:data.password});
+        await api(
+          mode === "student" ? "student-login" : mode,
+          mode === "student"
+            ? data
+            : { username: data.identifier, password: data.password },
+        );
       }
       await refresh();
-      router.push(returnLesson === "21" ? "/grade/2/english/grammar/past#practice" : returnLesson ? "/grade/2/english/"+returnLesson : "/dashboard");
+      router.push(
+        returnLesson === "21"
+          ? "/grade/2/english/grammar/past#practice"
+          : returnLesson
+            ? "/grade/2/english/" + returnLesson
+            : "/dashboard",
+      );
       router.refresh();
     } catch (e) {
       setError((e as Error).message);
@@ -393,8 +417,18 @@ export function Auth({ initialMode = "login",returnLesson }: { initialMode?: str
                           )}
                         </button>
                       </div>
-                      <small>٦–١٢ رقمًا أو كلمة مرور من ٨ أحرف على الأقل. يُحفظ للطفل.</small>
+                      <small>
+                        ٦–١٢ رقمًا أو كلمة مرور من ٨ أحرف على الأقل. يُحفظ
+                        للطفل.
+                      </small>
                     </label>
+                    <EnglishMascotChoice
+                      name={`mascot-${row.id}`}
+                      value={row.englishMascot}
+                      onChange={(id) =>
+                        updateChild(row.id, { englishMascot: id })
+                      }
+                    />
                     <button
                       type="button"
                       className="text-link child-remove"

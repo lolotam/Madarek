@@ -1,4 +1,5 @@
 "use client";
+import { EnglishMascotChoice } from "./english-mascot";
 import { EnglishAdmin } from "./english-admin";
 import { FormEvent, useEffect, useId, useState } from "react";
 import Link from "next/link";
@@ -177,15 +178,17 @@ function Notice({
 }
 
 export function AdminDashboard({
-  initialTab="users",
+  initialTab = "users",
   selfId,
   initialUsers,
   initialSettings,
   initialAudit,
   initialSnapshot,
+  englishContent,
   initialVideos,
 }: {
-  initialTab?: "users"|"ai";
+  initialTab?: "users" | "ai" | "content";
+  englishContent: React.ReactNode;
   selfId: string;
   initialUsers: UserList;
   initialSettings: SettingsView;
@@ -232,8 +235,16 @@ export function AdminDashboard({
             <Settings2 size={18} /> إعدادات الخدمات
           </Tabs.Trigger>
           <Tabs.Trigger value="ai">
-            {tab === "ai" && <motion.span className="admin-tab-ink" layoutId={reduceMotion ? undefined : "admin-tab-ink"}/>}
-            <Settings2 size={18}/> <span lang="en" dir="ltr">AI Settings</span>
+            {tab === "ai" && (
+              <motion.span
+                className="admin-tab-ink"
+                layoutId={reduceMotion ? undefined : "admin-tab-ink"}
+              />
+            )}
+            <Settings2 size={18} />{" "}
+            <span lang="en" dir="ltr">
+              AI Settings
+            </span>
           </Tabs.Trigger>
           <Tabs.Trigger value="content">
             {tab === "content" ? (
@@ -271,10 +282,12 @@ export function AdminDashboard({
           <h2 className="sr-only">إعدادات الخدمات</h2>
           <SettingsTab initial={initialSettings} />
         </Tabs.Content>
-        <Tabs.Content value="ai"><EnglishAdmin/></Tabs.Content>
+        <Tabs.Content value="ai">
+          <EnglishAdmin />
+        </Tabs.Content>
         <Tabs.Content value="content">
           <h2 className="sr-only">المحتوى</h2>
-          <ContentTab initial={initialSnapshot} />
+          <ContentTab initial={initialSnapshot} english={englishContent} />
         </Tabs.Content>
         <Tabs.Content value="videos">
           <h2 className="sr-only">الفيديوهات</h2>
@@ -822,17 +835,27 @@ function EditPersonDialog({
             </fieldset>
           </>
         ) : (
-          <><label className="field">اسم المستخدم<input name="username" defaultValue={person.username ?? ""} minLength={3} maxLength={32}/></label>
-          <label className="field" htmlFor={`edit-email-${person.id}`}>
-            <span>البريد الإلكتروني</span>
-            <input
-              id={`edit-email-${person.id}`}
-              name="email"
-              type="email"
-              defaultValue={person.email ?? ""}
-              maxLength={200}
-            />
-          </label></>
+          <>
+            <label className="field">
+              اسم المستخدم
+              <input
+                name="username"
+                defaultValue={person.username ?? ""}
+                minLength={3}
+                maxLength={32}
+              />
+            </label>
+            <label className="field" htmlFor={`edit-email-${person.id}`}>
+              <span>البريد الإلكتروني</span>
+              <input
+                id={`edit-email-${person.id}`}
+                name="email"
+                type="email"
+                defaultValue={person.email ?? ""}
+                maxLength={200}
+              />
+            </label>
+          </>
         )}
         <button className="button primary" disabled={busy}>
           {busy ? "جارٍ الحفظ…" : "حفظ التعديلات"}
@@ -957,11 +980,14 @@ function CreateFamilyDialog({
       pin: form.get(`child-${i}-pin`),
       grade: form.get(`child-${i}-grade`),
       gender: form.get(`child-${i}-gender`),
+      englishMascot: form.get(`child-${i}-mascot`),
     }));
     try {
       await api("admin/families", {
         name: form.get("name"),
-        ...(String(form.get("email")).includes("@") ? {email:form.get("email")} : {username:form.get("email")}),
+        ...(String(form.get("email")).includes("@")
+          ? { email: form.get("email") }
+          : { username: form.get("email") }),
         password: form.get("password"),
         children,
       });
@@ -1077,7 +1103,9 @@ function CreateFamilyDialog({
               </div>
             </fieldset>
             <label className="field" htmlFor={`child-${i}-pin`}>
-              <span>رمز الدخول (٦–١٢ رقمًا أو كلمة مرور من ٨ أحرف على الأقل)</span>
+              <span>
+                رمز الدخول (٦–١٢ رقمًا أو كلمة مرور من ٨ أحرف على الأقل)
+              </span>
               <input
                 id={`child-${i}-pin`}
                 name={`child-${i}-pin`}
@@ -1089,6 +1117,7 @@ function CreateFamilyDialog({
                 autoComplete="new-password"
               />
             </label>
+            <EnglishMascotChoice name={`child-${i}-mascot`} />
           </fieldset>
         ))}
         <div className="button-row">
@@ -1289,7 +1318,13 @@ function SettingsTab({ initial }: { initial: SettingsView }) {
   );
 }
 
-function ContentTab({ initial }: { initial: Snapshot }) {
+function ContentTab({
+  initial,
+  english,
+}: {
+  initial: Snapshot;
+  english: React.ReactNode;
+}) {
   const [data, setData] = useState(initial);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -1328,6 +1363,7 @@ function ContentTab({ initial }: { initial: Snapshot }) {
           <span>محاولات الاختبار</span>
         </div>
       </div>
+      {english}
       <div className="panel admin-panel">
         <Settings2 size={30} />
         <h3>علوم الصف الثامن</h3>
