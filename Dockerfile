@@ -18,7 +18,8 @@ FROM node:24-bookworm-slim AS transcription
 WORKDIR /build
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates cmake curl g++ make && rm -rf /var/lib/apt/lists/*
 RUN curl --fail --silent --show-error --location --retry 3 https://codeload.github.com/ggml-org/whisper.cpp/tar.gz/refs/tags/v1.8.3 -o source.tar.gz \
-    && echo '870ba21409cdf66697dc4db15ebdb13bc67037d76c7cc63756c81471d8f1731a  source.tar.gz' | sha256sum -c - \\n    && tar -xzf source.tar.gz --strip-components=1 \
+    && echo '870ba21409cdf66697dc4db15ebdb13bc67037d76c7cc63756c81471d8f1731a  source.tar.gz' | sha256sum -c - \
+    && tar -xzf source.tar.gz --strip-components=1 \
     && cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DGGML_NATIVE=OFF -DGGML_OPENMP=OFF -DWHISPER_BUILD_TESTS=OFF -DWHISPER_BUILD_SERVER=OFF \
     && cmake --build build --target whisper-cli --parallel 2
 RUN curl --fail --silent --show-error --location --retry 3 'https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.en-q5_1.bin?download=true' -o model.bin \
